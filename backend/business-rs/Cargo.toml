@@ -1,0 +1,12 @@
+[package]
+name = "business-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+graphql_client = { version = "0.11.0", features = ["reqwest"] }
+reqwest = "0.11.12"
+serde = { version = "1.0.145", features = ["serde_derive"] }
+tokio = { version = "1.21.2", features = ["full"] }

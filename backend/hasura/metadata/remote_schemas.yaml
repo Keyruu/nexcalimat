@@ -1,0 +1,104 @@
+- name: spacex
+  definition:
+    url: https://api.spacex.land/graphql/
+    timeout_seconds: 60
+    customization: {}
+  permissions:
+    - role: user
+      definition:
+        schema: |
+          schema {
+            query: Query
+          }
+          type Distance {
+            feet: Float
+            meters: Float
+          }
+          type Dragon {
+            active: Boolean
+            crew_capacity: Int
+            description: String
+            diameter: Distance
+            dry_mass_kg: Int
+            dry_mass_lb: Int
+            first_flight: String
+            heat_shield: DragonHeatShield
+            height_w_trunk: Distance
+            id: ID
+            launch_payload_mass: Mass
+            launch_payload_vol: Volume
+            name: String
+            orbit_duration_yr: Int
+            pressurized_capsule: DragonPressurizedCapsule
+            return_payload_mass: Mass
+            return_payload_vol: Volume
+            sidewall_angle_deg: Float
+            thrusters: [DragonThrust]
+            trunk: DragonTrunk
+            type: String
+            wikipedia: String
+          }
+          type DragonHeatShield {
+            dev_partner: String
+            material: String
+            size_meters: Float
+            temp_degrees: Int
+          }
+          type DragonPressurizedCapsule {
+            payload_volume: Volume
+          }
+          type DragonThrust {
+            amount: Int
+            fuel_1: String
+            fuel_2: String
+            pods: Int
+            thrust: Force
+            type: String
+          }
+          type DragonTrunk {
+            cargo: DragonTrunkCargo
+            trunk_volume: Volume
+          }
+          type DragonTrunkCargo {
+            solar_array: Int
+            unpressurized_cargo: Boolean
+          }
+          type Force {
+            kN: Float
+            lbf: Float
+          }
+          type Mass {
+            kg: Int
+            lb: Int
+          }
+          type Query {
+            dragon(id: ID!): Dragon
+            dragons(limit: Int, offset: Int): [Dragon]
+          }
+          type Rocket {
+            active: Boolean
+            boosters: Int
+            company: String
+            cost_per_launch: Int
+            country: String
+            description: String
+            diameter: Distance
+            engines: RocketEngines
+            id: ID
+          }
+          type RocketEngines {
+            engine_loss_max: String
+            layout: String
+            number: Int
+            propellant_1: String
+            propellant_2: String
+            thrust_sea_level: Force
+            thrust_to_weight: Float
+            thrust_vacuum: Force
+            type: String
+            version: String
+          }
+          type Volume {
+            cubic_feet: Int
+            cubic_meters: Int
+          }

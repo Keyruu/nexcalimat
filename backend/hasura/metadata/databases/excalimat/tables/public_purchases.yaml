@@ -1,0 +1,10 @@
+table:
+  name: purchases
+  schema: public
+object_relationships:
+  - name: account
+    using:
+      foreign_key_constraint_on: account_id
+  - name: product
+    using:
+      foreign_key_constraint_on: product_id
