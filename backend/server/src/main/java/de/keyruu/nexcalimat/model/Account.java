@@ -1,6 +1,5 @@
 package de.keyruu.nexcalimat.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,13 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 
+import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @SQLDelete(sql = "UPDATE account SET deleted_at = now() WHERE id = ?")
-@Where(clause = "deleted_at IS NOT NULL")
+@Where(clause = "deleted_at is null")
 public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Account {
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
-  @Column(name = "ext_id", nullable = false)
+  @Column(name = "ext_id", nullable = false, unique = true)
   private String extId;
 
   @Email
@@ -45,6 +45,7 @@ public class Account {
   private String picture;
 
   @Column(name = "pin_hash")
+  @Ignore
   private String pinHash;
 
   public Integer getId() {
