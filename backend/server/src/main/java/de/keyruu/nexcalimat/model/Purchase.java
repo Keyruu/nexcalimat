@@ -15,7 +15,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @SQLDelete(sql = "UPDATE account SET deleted_at = now() WHERE id = ?")
-@Where(clause = "deleted_at IS NOT NULL")
+@Where(clause = "deleted_at is null")
 public class Purchase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
