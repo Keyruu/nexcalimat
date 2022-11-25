@@ -1,7 +1,5 @@
 package de.keyruu.nexcalimat;
 
-import java.util.List;
-
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 

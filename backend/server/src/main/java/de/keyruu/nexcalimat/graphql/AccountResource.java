@@ -12,7 +12,6 @@ import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.keyruu.nexcalimat.graphql.pojo.PinInput;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
