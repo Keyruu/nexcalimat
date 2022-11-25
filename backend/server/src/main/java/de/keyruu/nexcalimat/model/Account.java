@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @CreationTimestamp
   @Column(name = "created_at")
@@ -40,7 +40,7 @@ public class Account {
   private String name;
 
   @Column(nullable = false)
-  private Integer balance;
+  private Long balance;
 
   private String picture;
 
@@ -48,11 +48,11 @@ public class Account {
   @Ignore
   private String pinHash;
 
-  public Integer getId() {
+  public Long getId() {
     return this.id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -96,11 +96,11 @@ public class Account {
     this.name = name;
   }
 
-  public Integer getBalance() {
+  public Long getBalance() {
     return this.balance;
   }
 
-  public void setBalance(Integer balance) {
+  public void setBalance(Long balance) {
     this.balance = balance;
   }
 

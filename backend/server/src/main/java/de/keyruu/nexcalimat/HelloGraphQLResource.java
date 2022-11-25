@@ -10,6 +10,7 @@ import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import de.keyruu.nexcalimat.security.JwtUtils;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.jwt.auth.principal.ParseException;
 import io.smallrye.jwt.build.Jwt;
@@ -29,7 +30,7 @@ public class HelloGraphQLResource {
 	@Description("Say hello")
 	@RolesAllowed("tablet")
 	public String sayHello() throws ParseException {
-		return "Hello " + _jwtUtils.getPinJwtUser();
+		return "Hello " + _jwtUtils.getPinJwtAccountId();
 	}
 
 	@Query

@@ -19,7 +19,7 @@ import org.hibernate.annotations.Where;
 public class Purchase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @CreationTimestamp
   @Column(name = "created_at")
@@ -37,11 +37,11 @@ public class Purchase {
   @Column(name = "paid_price", nullable = false)
   private Integer paidPrice;
 
-  public Integer getId() {
+  public Long getId() {
     return this.id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

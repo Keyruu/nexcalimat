@@ -1,4 +1,4 @@
-package de.keyruu.nexcalimat.model;
+package de.keyruu.nexcalimat.graphql.pojo;
 
 public class PinInput {
   private String pin;
