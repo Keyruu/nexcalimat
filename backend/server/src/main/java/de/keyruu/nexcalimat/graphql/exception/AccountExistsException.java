@@ -4,5 +4,5 @@ import io.smallrye.graphql.api.ErrorCode;
 
 @ErrorCode("account-exists")
 public class AccountExistsException extends RuntimeException {
-
+    //
 }
