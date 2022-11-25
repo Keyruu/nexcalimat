@@ -13,10 +13,10 @@ public class JwtUtils {
 	JWTParser _parser;
 
 	@Inject
-	CurrentVertxRequest request;
+	CurrentVertxRequest _request;
 
 	public String getPinJwtAccountId() throws ParseException {
-		String pinJwt = request.getCurrent().request().getHeader("Authorization").replace("PIN ", "");
+		String pinJwt = _request.getCurrent().request().getHeader("Authorization").replace("PIN ", "");
 		return _parser.parse(pinJwt).getClaim("upn");
 	}
 }

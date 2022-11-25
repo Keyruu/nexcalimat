@@ -26,13 +26,13 @@ public class AccountService {
   AccountRepository _accountRepo;
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
-  String userIdClaim;
+  String _userIdClaim;
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
-  String nameClaim;
+  String _nameClaim;
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
-  String emailClaim;
+  String _emailClaim;
 
   @Transactional
   public Account signUp(String pin, JsonWebToken idToken) {
@@ -47,8 +47,8 @@ public class AccountService {
     }
 
     account.setExtId(extId);
-    account.setEmail((String) idToken.claim(emailClaim).get());
-    account.setName((String) idToken.claim(nameClaim).get());
+    account.setEmail((String) idToken.claim(_emailClaim).get());
+    account.setName((String) idToken.claim(_nameClaim).get());
     account.setBalance(0L);
     account.setPinHash(BcryptUtil.bcryptHash(pin));
 
@@ -70,6 +70,7 @@ public class AccountService {
     return Jwt.upn(account.getId().toString()).groups(Roles.CUSTOMER).sign();
   }
 
+  @Transactional
   public Boolean setPin(String pin, JsonWebToken idToken) {
     validatePin(pin);
 
@@ -90,8 +91,13 @@ public class AccountService {
 
   @Transactional
   public Account account(Account account) {
-    Account dbAccount = _accountRepo.findById(account.getId());
+    Optional<Account> dbAccountOptional = _accountRepo.findByIdOptional(account.getId());
 
+    if (dbAccountOptional.isEmpty()) {
+      throw new AccountNotFoundException();
+    }
+
+    Account dbAccount = dbAccountOptional.get();
     dbAccount.setBalance(account.getBalance());
     dbAccount.setPicture(account.getPicture());
     dbAccount.setName(account.getName());
@@ -104,7 +110,7 @@ public class AccountService {
   }
 
   private String getExtIdFromToken(JsonWebToken idToken) {
-    return (String) idToken.claim(userIdClaim).get();
+    return (String) idToken.claim(_userIdClaim).get();
   }
 
   private void validatePin(String pin) {
@@ -121,5 +127,4 @@ public class AccountService {
       return false;
     }
   }
-
 }

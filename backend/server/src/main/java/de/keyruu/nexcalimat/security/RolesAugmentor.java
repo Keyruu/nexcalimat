@@ -15,10 +15,10 @@ import io.smallrye.mutiny.Uni;
 @ApplicationScoped
 public class RolesAugmentor implements SecurityIdentityAugmentor {
   @ConfigProperty(name = "de.keyruu.nexcalimat.userGroupName")
-  String userGroupName;
+  String _userGroupName;
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.adminGroupName")
-  String adminGroupName;
+  String _adminGroupName;
 
   @Override
   public Uni<SecurityIdentity> augment(SecurityIdentity identity, AuthenticationRequestContext context) {
@@ -30,11 +30,11 @@ public class RolesAugmentor implements SecurityIdentityAugmentor {
     // from the original identity
     QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder(identity);
 
-    if (identity.getRoles().contains(userGroupName)) {
+    if (identity.getRoles().contains(_userGroupName)) {
       builder.addRole(Roles.USER);
     }
 
-    if (identity.getRoles().contains(adminGroupName)) {
+    if (identity.getRoles().contains(_adminGroupName)) {
       builder.addRole(Roles.ADMIN);
     }
 
