@@ -1,20 +1,30 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { Account } from '$lib/types/Account';
-	import { getImageUrl } from '$lib/utils/account_utils';
+	import type { Account } from '$lib/graphql/generated/graphql';
+	import { getImageUrl } from '$lib/utils/account_utils.js';
 	import { toEuro } from '$lib/utils/format_euro';
 
-	export let account: Account;
+	export let account:
+		| Account
+		| {
+				__typename?: 'Account' | undefined;
+				id: any;
+				name: string | null;
+				email: string | null;
+				balance: any;
+				picture: string | null;
+				extId: string | null;
+		  };
 
 	function navigateToLogin() {
-		goto(`/store/users/${account.ID}`);
+		goto(`/store/users/${account.id}`);
 	}
 
-	$: img = getImageUrl(account);
+	$: img = getImageUrl(account as Account);
 </script>
 
 <div
-	class="group card card-compact h-52 cursor-pointer bg-neutral shadow-md hover:bg-base-300 hover:shadow-xl"
+	class="card-compact group card h-52 cursor-pointer bg-neutral shadow-md hover:bg-base-300 hover:shadow-xl"
 	on:mouseup="{navigateToLogin}"
 >
 	<figure class="pt-5 pb-2">

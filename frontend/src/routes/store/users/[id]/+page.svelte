@@ -2,11 +2,12 @@
 	import { page } from '$app/stores';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
+	import { ACCOUNT_BY_ID } from '$lib/graphql/ACCOUNT_BY_ID';
+	import type { AccountByIdQuery, AccountByIdQueryVariables, PinLoginInput } from '$lib/graphql/generated/graphql';
 	import { loggedInAccount } from '$lib/stores/userstore';
-	import type { Account } from '$lib/types/Account';
 	import { AlertType } from '$lib/types/AlertType';
-	import type { PinInput } from '$lib/types/PinInput';
 	import { getImageUrl } from '$lib/utils/account_utils';
+	import { query } from 'svelte-apollo';
 	import { fade } from 'svelte/transition';
 
 	let pin: string;
@@ -14,17 +15,14 @@
 	let triggerSuccess: () => void;
 	let triggerMiss: () => void;
 
-	async function loadUser(): Promise<Account> {
-		const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/account/${$page.params.id}`);
-		if (res.status !== 200) {
-			throw new Error('User not found');
+	const account = query<AccountByIdQuery, AccountByIdQueryVariables>(ACCOUNT_BY_ID, {
+		variables: {
+			id: Number($page.params.id)
 		}
-		const json = await res.json();
-		return json.data;
-	}
+	});
 
 	async function handleSubmit() {
-		const body: PinInput = { account_id: Number($page.params.id), pin };
+		const body: PinLoginInput = { id: Number($page.params.id), pin };
 		console.log('submit was pressed', body);
 		const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/pin/login`, {
 			method: 'POST',
@@ -47,14 +45,14 @@
 </script>
 
 <div class="py-4">
-	{#await loadUser() then account}
+	{#if !$account.loading && $account.data?.account}
 		<div class="text-center">
 			<div class="avatar">
 				<div class="w-24 rounded-full">
-					<img alt="account" src="{`${getImageUrl(account)}`}" />
+					<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
 				</div>
 			</div>
-			<h1 class="text-3xl font-medium mt-5 mb-8">{account.name}</h1>
+			<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
 
 			<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
 		</div>
@@ -62,7 +60,7 @@
 		{#if $loggedInAccount}
 			<p class="mt-6" transition:fade>Successfully logged in {JSON.stringify($loggedInAccount)}</p>
 		{/if}
-	{:catch}
+	{:else if $account.error}
 		<Alert type="{AlertType.Error}">Could not load account!</Alert>
-	{/await}
+	{/if}
 </div>
