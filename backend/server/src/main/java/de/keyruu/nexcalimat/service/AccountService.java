@@ -113,7 +113,7 @@ public class AccountService {
     return (String) idToken.claim(_userIdClaim).get();
   }
 
-  private void validatePin(String pin) {
+  public static void validatePin(String pin) {
     if (isNumeric(pin) == false || pin.length() != 4) {
       throw new PinValidationException();
     }

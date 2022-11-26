@@ -30,9 +30,6 @@ public class AccountResource {
   @Inject
   JsonWebToken _jwt;
 
-  @ConfigProperty(name = "de.keyruu.nexcalimat.userGroupName")
-  String _userGroup;
-
   @Query
   @Description("Get all Accounts")
   @RolesAllowed({ Roles.CUSTOMER, Roles.ADMIN })
