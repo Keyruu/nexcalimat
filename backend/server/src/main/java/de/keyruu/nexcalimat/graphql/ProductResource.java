@@ -39,9 +39,18 @@ public class ProductResource {
   }
 
   @Mutation
+  @Description("Create Product")
+  @RolesAllowed(Roles.ADMIN)
+  @Transactional
+  public Product createProduct(Product product) {
+    _productRepository.persist(product);
+    return product;
+  }
+
+  @Mutation
   @Description("Update Product")
   @RolesAllowed(Roles.ADMIN)
-  public Product product(Product product) {
+  public Product updateProduct(Product product) {
     return _productService.updateProduct(product);
   }
 

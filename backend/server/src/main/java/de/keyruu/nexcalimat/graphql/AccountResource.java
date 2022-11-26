@@ -6,7 +6,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.graphql.Description;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -16,6 +15,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
+import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.AccountService;
 
@@ -26,6 +26,9 @@ public class AccountResource {
 
   @Inject
   AccountService _accountService;
+
+  @Inject
+  JwtUtils _jwtUtils;
 
   @Inject
   JsonWebToken _jwt;
@@ -76,6 +79,6 @@ public class AccountResource {
   @Description("Set new PIN")
   @RolesAllowed(Roles.USER)
   public Boolean setPin(String pin) {
-    return _accountService.setPin(pin, _jwt);
+    return _accountService.setPin(pin, _jwtUtils.getExtIdFromToken(_jwt));
   }
 }

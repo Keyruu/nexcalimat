@@ -3,6 +3,7 @@ package de.keyruu.nexcalimat.service;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 
@@ -12,7 +13,7 @@ public class ProductService {
   ProductRepository _productRepository;
 
   public Product updateProduct(Product product) {
-    Product dbProduct = _productRepository.findById(product.getId());
+    Product dbProduct = _productRepository.findByIdOptional(product.getId()).orElseThrow(ProductNotFoundException::new);
 
     dbProduct.setBundleSize(product.getBundleSize());
     dbProduct.setName(product.getName());

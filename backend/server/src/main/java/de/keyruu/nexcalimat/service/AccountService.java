@@ -16,6 +16,7 @@ import de.keyruu.nexcalimat.graphql.exception.WrongPinException;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
+import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.smallrye.jwt.build.Jwt;
@@ -24,6 +25,9 @@ import io.smallrye.jwt.build.Jwt;
 public class AccountService {
   @Inject
   AccountRepository _accountRepo;
+
+  @Inject
+  JwtUtils _jwtUtils;
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
   String _userIdClaim;
@@ -40,7 +44,7 @@ public class AccountService {
 
     Account account = new Account();
 
-    String extId = getExtIdFromToken(idToken);
+    String extId = _jwtUtils.getExtIdFromToken(idToken);
 
     if (_accountRepo.find("extId", extId).firstResultOptional().isPresent()) {
       throw new AccountExistsException();
@@ -71,10 +75,10 @@ public class AccountService {
   }
 
   @Transactional
-  public Boolean setPin(String pin, JsonWebToken idToken) {
+  public Boolean setPin(String pin, String extId) {
     validatePin(pin);
 
-    Optional<Account> accountOptional = _accountRepo.find("extId", getExtIdFromToken(idToken)).firstResultOptional();
+    Optional<Account> accountOptional = _accountRepo.find("extId", extId).firstResultOptional();
 
     if (accountOptional.isEmpty()) {
       throw new AccountNotFoundException();
@@ -107,10 +111,6 @@ public class AccountService {
     _accountRepo.persist(dbAccount);
 
     return account;
-  }
-
-  private String getExtIdFromToken(JsonWebToken idToken) {
-    return (String) idToken.claim(_userIdClaim).get();
   }
 
   public static void validatePin(String pin) {
