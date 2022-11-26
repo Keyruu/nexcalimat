@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.graphql.Description;
@@ -62,8 +63,16 @@ public class AccountResource {
   @Mutation
   @Description("Update Account")
   @RolesAllowed(Roles.ADMIN)
-  public Account account(Account account) {
-    return _accountService.account(account);
+  public Account updateAccount(Account account) {
+    return _accountService.updateAccount(account);
+  }
+
+  @Mutation
+  @Description("Delete Account")
+  @RolesAllowed(Roles.ADMIN)
+  @Transactional
+  public Boolean deleteAccount(Long id) {
+    return Boolean.valueOf(_accountRepository.deleteById(id));
   }
 
   @Mutation

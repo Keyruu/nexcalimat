@@ -90,7 +90,7 @@ public class AccountService {
   }
 
   @Transactional
-  public Account account(Account account) {
+  public Account updateAccount(Account account) {
     Optional<Account> dbAccountOptional = _accountRepo.findByIdOptional(account.getId());
 
     if (dbAccountOptional.isEmpty()) {
@@ -114,7 +114,7 @@ public class AccountService {
   }
 
   private void validatePin(String pin) {
-    if (!isNumeric(pin) || pin.length() != 4) {
+    if (isNumeric(pin) == false || pin.length() != 4) {
       throw new PinValidationException();
     }
   }
