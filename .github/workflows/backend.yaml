@@ -26,6 +26,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: backend/server/
-          file: src/main/docker/Dockerfile.native-micro
+          file: backend/server/src/main/docker/Dockerfile.native-micro
           push: true
           tags: ghcr.io/keyruu/nexcalimat/server:latest
