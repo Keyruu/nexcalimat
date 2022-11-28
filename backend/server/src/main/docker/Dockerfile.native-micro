@@ -27,4 +27,8 @@ COPY --chown=1001:root target/*-runner /work/application
 EXPOSE 8080
 USER 1001
 
+LABEL org.opencontainers.image.source=https://github.com/Keyruu/nexcalimat
+LABEL org.opencontainers.image.description="Server for nexcalimat"
+LABEL org.opencontainers.image.licenses=GPL-3.0-only
+
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
