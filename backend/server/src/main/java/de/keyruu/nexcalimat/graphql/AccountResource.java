@@ -35,14 +35,12 @@ public class AccountResource {
 
   @Query
   @Description("Get all Accounts")
-  @RolesAllowed({ Roles.CUSTOMER, Roles.ADMIN })
   public List<Account> accounts() {
     return _accountRepository.listAll();
   }
 
   @Query
   @Description("Get Account by ID")
-  @RolesAllowed({ Roles.CUSTOMER, Roles.USER, Roles.ADMIN })
   public Account account(Long id) {
     return _accountRepository.findById(id);
   }
@@ -51,6 +49,26 @@ public class AccountResource {
   @Description("Login with PIN")
   public String pinLogin(PinLogin login) {
     return _accountService.pinLogin(login);
+  }
+
+  @Query
+  @Description("Get deleted Accounts")
+  @RolesAllowed(Roles.ADMIN)
+  public List<Account> deletedAccounts() {
+    return _accountRepository.getEntityManager()
+        .createNamedQuery("deletedAccounts", Account.class)
+        .getResultList();
+  }
+
+  @Mutation
+  @Description("Erase an Account permanently")
+  @RolesAllowed(Roles.ADMIN)
+  @Transactional
+  public Boolean eraseAccount(Long id) {
+    return _accountRepository.getEntityManager()
+        .createNamedQuery("eraseAccount")
+        .setParameter("id", id)
+        .executeUpdate() == 1;
   }
 
   @Mutation

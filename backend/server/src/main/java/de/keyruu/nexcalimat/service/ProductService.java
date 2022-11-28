@@ -2,6 +2,7 @@ package de.keyruu.nexcalimat.service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.model.Product;
@@ -12,6 +13,7 @@ public class ProductService {
   @Inject
   ProductRepository _productRepository;
 
+  @Transactional
   public Product updateProduct(Product product) {
     Product dbProduct = _productRepository.findByIdOptional(product.getId()).orElseThrow(ProductNotFoundException::new);
 

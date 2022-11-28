@@ -11,12 +11,18 @@ import javax.validation.constraints.Email;
 
 import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @SQLDelete(sql = "UPDATE account SET deleted_at = now() WHERE id = ?")
 @Where(clause = "deleted_at is null")
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "deletedAccounts", query = "SELECT * FROM account WHERE deleted_at IS NOT null", resultClass = Account.class),
+    @NamedNativeQuery(name = "eraseAccount", query = "DELETE FROM account WHERE id = :id")
+})
 public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -33,7 +33,7 @@ public class AccountServiceTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "abcd", "0,56", "0.345", "1.456" })
+    @ValueSource(strings = { "abcd", "0,56", "0.345", "1.456", "55655" })
     void validateInvalidPins(String pin) {
         // given
         // when
