@@ -19,7 +19,7 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: Keyruu
+          username: keyruu
           password: ${{ secrets.GHCR_TOKEN }}
       - name: Build and push
         id: docker_build
@@ -28,4 +28,4 @@ jobs:
           context: backend/server/
           file: "{context}/src/main/docker/Dockerfile.native-micro"
           push: true
-          tags: ghcr.io/Keyruu/nexcalimat/server:latest
+          tags: ghcr.io/keyruu/nexcalimat/server:latest
