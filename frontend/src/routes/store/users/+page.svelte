@@ -14,9 +14,7 @@
 		{#if $accounts.data?.accounts && $accounts.data?.accounts.length}
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 				{#each $accounts.data.accounts as account (account?.id)}
-					{#if account}
-						<UserCard account="{account}" />
-					{/if}
+					<UserCard account="{account}" />
 				{/each}
 			</div>
 		{:else}

@@ -4,17 +4,7 @@
 	import { getImageUrl } from '$lib/utils/account_utils.js';
 	import { toEuro } from '$lib/utils/format_euro';
 
-	export let account:
-		| Account
-		| {
-				__typename?: 'Account' | undefined;
-				id: any;
-				name: string | null;
-				email: string | null;
-				balance: any;
-				picture: string | null;
-				extId: string | null;
-		  };
+	export let account: Account;
 
 	function navigateToLogin() {
 		goto(`/store/users/${account.id}`);

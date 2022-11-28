@@ -5,7 +5,7 @@ documents:
 generates:
   src/lib/graphql/generated/graphql.ts:
     config:
-      avoidOptionals: true
+      maybeValue: "T"
     plugins:
       - "typescript"
       - "typescript-operations"
