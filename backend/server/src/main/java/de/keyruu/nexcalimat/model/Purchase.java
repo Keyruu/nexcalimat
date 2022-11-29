@@ -7,14 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
-@SQLDelete(sql = "UPDATE purchase SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE purchase SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted_at is null")
 public class Purchase {
   @Id
@@ -29,9 +31,11 @@ public class Purchase {
   private LocalDateTime deletedAt;
 
   @ManyToOne
+  @JoinColumn(name = "account_id")
   private Account account;
 
   @ManyToOne
+  @JoinColumn(name = "product_id")
   private Product product;
 
   @Column(name = "paid_price", nullable = false)

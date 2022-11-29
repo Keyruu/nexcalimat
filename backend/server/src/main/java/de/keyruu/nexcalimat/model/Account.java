@@ -1,23 +1,29 @@
 package de.keyruu.nexcalimat.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 
 import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NamedNativeQueries;
 import org.hibernate.annotations.NamedNativeQuery;
+import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
-@SQLDelete(sql = "UPDATE account SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE account SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted_at is null")
 @NamedNativeQueries({
     @NamedNativeQuery(name = "deletedAccounts", query = "SELECT * FROM account WHERE deleted_at IS NOT null", resultClass = Account.class),
@@ -53,6 +59,11 @@ public class Account {
   @Column(name = "pin_hash")
   @Ignore
   private String pinHash;
+
+  @SQLDelete(sql = "UPDATE purchase SET deleted_at = now() WHERE id = ?")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
+  @Ignore
+  private Set<Purchase> purchases = new HashSet<>();
 
   public Long getId() {
     return this.id;
@@ -124,5 +135,13 @@ public class Account {
 
   public void setPinHash(String pinHash) {
     this.pinHash = pinHash;
+  }
+
+  public Set<Purchase> getPurchases() {
+    return purchases;
+  }
+
+  public void setPurchases(Set<Purchase> purchases) {
+    this.purchases = purchases;
   }
 }

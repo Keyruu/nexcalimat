@@ -1,19 +1,25 @@
 package de.keyruu.nexcalimat.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 
+import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
-@SQLDelete(sql = "UPDATE product SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE product SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted_at is null")
 public class Product {
   @Id
@@ -40,6 +46,10 @@ public class Product {
 
   @Column(nullable = false)
   private ProductType type;
+
+  @OneToMany(mappedBy = "product")
+  @Ignore
+  private Set<Purchase> purchases = new HashSet<>();
 
   public Long getId() {
     return this.id;
@@ -103,5 +113,18 @@ public class Product {
 
   public void setType(ProductType type) {
     this.type = type;
+  }
+
+  public Set<Purchase> getPurchases() {
+    return purchases;
+  }
+
+  public void setPurchases(Set<Purchase> purchases) {
+    this.purchases = purchases;
+  }
+
+  @PreRemove
+  void beforeDelete() {
+    this.purchases.forEach(p -> p.setProduct(null));
   }
 }
