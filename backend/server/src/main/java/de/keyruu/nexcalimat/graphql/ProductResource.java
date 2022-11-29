@@ -55,10 +55,10 @@ public class ProductResource {
   }
 
   @Mutation
-  @Description("Delete Account")
+  @Description("Delete Product")
   @RolesAllowed(Roles.ADMIN)
   @Transactional
-  public Boolean deleteAccount(Long id) {
+  public Boolean deleteProduct(Long id) {
     return Boolean.valueOf(_productRepository.deleteById(id));
   }
 }
