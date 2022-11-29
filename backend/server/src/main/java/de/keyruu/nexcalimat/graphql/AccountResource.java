@@ -63,12 +63,8 @@ public class AccountResource {
   @Mutation
   @Description("Erase an Account permanently")
   @RolesAllowed(Roles.ADMIN)
-  @Transactional
   public Boolean eraseAccount(Long id) {
-    return _accountRepository.getEntityManager()
-        .createNamedQuery("eraseAccount")
-        .setParameter("id", id)
-        .executeUpdate() == 1;
+    return _accountService.eraseAccountData(id);
   }
 
   @Mutation

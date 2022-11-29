@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.ResultCheckStyle;
@@ -18,6 +20,9 @@ import org.hibernate.annotations.Where;
 @Entity
 @SQLDelete(sql = "UPDATE purchase SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted_at is null")
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "erasePurchase", query = "DELETE FROM purchase WHERE account_id = :accountId")
+})
 public class Purchase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

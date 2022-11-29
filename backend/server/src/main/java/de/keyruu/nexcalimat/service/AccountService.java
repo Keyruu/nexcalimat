@@ -16,6 +16,7 @@ import de.keyruu.nexcalimat.graphql.exception.WrongPinException;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
+import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
@@ -25,6 +26,9 @@ import io.smallrye.jwt.build.Jwt;
 public class AccountService {
   @Inject
   AccountRepository _accountRepo;
+
+  @Inject
+  PurchaseRepository _purchaseRepo;
 
   @Inject
   JwtUtils _jwtUtils;
@@ -111,6 +115,19 @@ public class AccountService {
     _accountRepo.persist(dbAccount);
 
     return account;
+  }
+
+  @Transactional
+  public Boolean eraseAccountData(Long id) {
+    _purchaseRepo.getEntityManager()
+        .createNamedQuery("erasePurchase")
+        .setParameter("accountId", id)
+        .executeUpdate();
+
+    return _accountRepo.getEntityManager()
+        .createNamedQuery("eraseAccount")
+        .setParameter("id", id)
+        .executeUpdate() == 1;
   }
 
   public static void validatePin(String pin) {
