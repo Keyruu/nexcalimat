@@ -1,0 +1,11 @@
+mutation {
+  makePurchase(productId: DB_PRODUCT_ID) {
+    paidPrice
+    account {
+      name
+    }
+    product {
+      name
+    }
+  }
+}

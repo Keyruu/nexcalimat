@@ -1,0 +1,3 @@
+query {
+  pinLogin(login: {id: DB_ID, pin: "0000"})
+}
