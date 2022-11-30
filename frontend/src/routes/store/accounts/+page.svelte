@@ -5,6 +5,7 @@
 	import { GET_ACCOUNTS } from '$lib/graphql/GET_ACCOUNTS';
 	import { AlertType } from '$lib/types/AlertType.js';
 	import { query } from 'svelte-apollo';
+	import { _ } from 'svelte-i18n';
 
 	const accounts = query<AccountsQuery, AccountsQueryVariables>(GET_ACCOUNTS);
 </script>
@@ -18,9 +19,9 @@
 				{/each}
 			</div>
 		{:else}
-			<Alert type="{AlertType.Error}">No data!</Alert>
+			<Alert type="{AlertType.Error}">{$_('errors.no-data')}</Alert>
 		{/if}
 	{:else if $accounts.error}
-		<Alert type="{AlertType.Error}">Could not load accounts!</Alert>
+		<Alert type="{AlertType.Error}">{$_('errors.no-accounts')}</Alert>
 	{/if}
 </div>

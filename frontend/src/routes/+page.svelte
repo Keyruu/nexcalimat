@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import { _ } from 'svelte-i18n';
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center text-center">
@@ -7,11 +8,11 @@
 	<div class="flex items-center gap-2">
 		<a href="/store/accounts" class="btn-primary btn-wide btn my-2 gap-2 normal-case">
 			<Icon icon="mdi:store" style="font-size: 24px" />
-			Store Login</a
+			{$_('homepage.store-login')}</a
 		>
 		<a href="/admin/login" class="btn-primary btn-wide btn my-2 gap-2 normal-case">
 			<Icon icon="mdi:account-wrench" style="font-size: 24px" />
-			Admin Login</a
+			{$_('homepage.admin-login')}</a
 		>
 	</div>
 </div>

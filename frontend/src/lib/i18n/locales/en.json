@@ -1,0 +1,21 @@
+{
+    "homepage": {
+        "store-login": "Store Login",
+        "admin-login": "Admin login"
+    },
+    "header": {
+        "signup": "Signup"
+    },
+    "steps": {
+        "select-account": "Select account",
+        "login": "Login",
+        "choose-product": "Choose product",
+        "buy-product": "Buy product"
+    },
+    "errors": {
+        "no-data": "No data",
+        "no-accounts": "Could not load accounts!",
+        "no-account": "Could not load account!",
+        "account-not-found": "Account not found!"
+    }
+}

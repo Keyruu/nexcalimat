@@ -9,6 +9,7 @@
 	import { getImageUrl } from '$lib/utils/account_utils';
 	import { query } from 'svelte-apollo';
 	import { fade } from 'svelte/transition';
+	import { _ } from 'svelte-i18n';
 
 	let pin: string;
 
@@ -45,22 +46,26 @@
 </script>
 
 <div class="py-4">
-	{#if !$account.loading && $account.data?.account}
-		<div class="text-center">
-			<div class="avatar">
-				<div class="w-24 rounded-full">
-					<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
+	{#if !$account.loading}
+		{#if $account.data?.account}
+			<div class="text-center">
+				<div class="avatar">
+					<div class="w-24 rounded-full">
+						<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
+					</div>
 				</div>
+				<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
+
+				<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
 			</div>
-			<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
 
-			<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
-		</div>
-
-		{#if $loggedInAccount}
-			<p class="mt-6" transition:fade>Successfully logged in {JSON.stringify($loggedInAccount)}</p>
+			{#if $loggedInAccount}
+				<p class="mt-6" transition:fade>Successfully logged in {JSON.stringify($loggedInAccount)}</p>
+			{/if}
+		{:else}
+			<Alert type="{AlertType.Error}">{$_('errors.account-not-found')}</Alert>
 		{/if}
 	{:else if $account.error}
-		<Alert type="{AlertType.Error}">Could not load account!</Alert>
+		<Alert type="{AlertType.Error}">{$_('errors.no-account')}</Alert>
 	{/if}
 </div>

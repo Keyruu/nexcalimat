@@ -23,7 +23,7 @@
 </script>
 
 <svelte:head>
-	<title>Excalimat</title>
+	<title>nexcalimat</title>
 </svelte:head>
 
 <div class="flex h-screen flex-col overflow-hidden">

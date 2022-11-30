@@ -2,27 +2,28 @@
 	import { page } from '$app/stores';
 	import { loggedInAccount } from '$lib/stores/accountStore';
 	import { onDestroy } from 'svelte';
+	import { _ } from 'svelte-i18n';
 
 	const steps = [
 		{
 			id: 1,
 			route: '/store/accounts',
-			text: 'Select account'
+			text: $_('steps.select-account')
 		},
 		{
 			id: 2,
 			route: '/store/accounts/[id]',
-			text: 'Login'
+			text: $_('steps.login')
 		},
 		{
 			id: 3,
 			route: '/store/accounts/[id]/products',
-			text: 'Choose product'
+			text: $_('steps.choose-product')
 		},
 		{
 			id: 4,
 			route: '/store/accounts/[id]/checkout',
-			text: 'Buy product'
+			text: $_('steps.buy-product')
 		}
 	];
 

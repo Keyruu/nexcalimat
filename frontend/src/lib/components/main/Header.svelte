@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
+	import { _ } from 'svelte-i18n';
 </script>
 
 <header class="navbar bg-neutral text-neutral-content">
@@ -11,10 +11,7 @@
 	<div class="flex-none">
 		<ul class="menu menu-horizontal p-0">
 			<li>
-				<a href="/statistics">
-					<Icon icon="mdi:chart-bar" />
-					Statistics</a
-				>
+				<a class="font-semibold" href="/signup">{$_('header.signup')}</a>
 			</li>
 		</ul>
 	</div>
