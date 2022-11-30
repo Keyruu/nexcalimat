@@ -1,0 +1,8 @@
+mutation {
+  updateAccount(account: {id: DB_ID, name: "Der Frosch mit Maske", email: "frosch@keyruu.de", balance: 1000, extId: "dubinsky"}) {
+    name
+    email
+    balance
+    extId
+  }
+}

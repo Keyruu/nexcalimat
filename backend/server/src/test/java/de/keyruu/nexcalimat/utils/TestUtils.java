@@ -17,6 +17,16 @@ public class TestUtils {
     return a;
   }
 
+  public static Account hai() {
+    Account a = new Account();
+    a.setEmail("hai@keyruu.de");
+    a.setName("Der dicke Hai");
+    a.setBalance(0L);
+    a.setExtId("hai");
+    a.setPinHash(BcryptUtil.bcryptHash("0000"));
+    return a;
+  }
+
   public static Account even() {
     Account a = new Account();
     a.setEmail("even@keyruu.de");

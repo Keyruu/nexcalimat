@@ -31,6 +31,7 @@ import io.smallrye.jwt.build.Jwt;
 
 public class GraphQLTest {
   Account dubinsky = TestUtils.dubinsky();
+  Account hai = TestUtils.hai();
   Account even = TestUtils.even();
   Product peitsche = TestUtils.peitsche();
   Product yoyo = TestUtils.yoyo();
@@ -58,10 +59,11 @@ public class GraphQLTest {
 
   @BeforeEach
   @Transactional
-  void testData() {
-    _accountRepository.persist(dubinsky, even);
+  public void testData() {
+    _accountRepository.persist(dubinsky, even, hai);
     _productRepository.persist(peitsche, yoyo);
     _purchaseRepository.persist(purchase1, purchase2, purchase3);
+    _accountRepository.delete(hai);
   }
 
   @AfterEach
