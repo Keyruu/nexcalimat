@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -35,9 +36,11 @@ public class GraphQLTest {
   Account even = TestUtils.even();
   Product peitsche = TestUtils.peitsche();
   Product yoyo = TestUtils.yoyo();
-  Purchase purchase1 = TestUtils.purchase(dubinsky, peitsche, 6000);
+  Purchase purchase1 = TestUtils.purchase(dubinsky, peitsche, 7000);
   Purchase purchase2 = TestUtils.purchase(even, peitsche, 5000);
   Purchase purchase3 = TestUtils.purchase(even, yoyo, 80);
+  Purchase purchase4 = TestUtils.purchase(dubinsky, peitsche, 9000);
+  Purchase expiredPurchase = TestUtils.purchase(dubinsky, yoyo, 90);
 
   @Inject
   AccountService _accountService;
@@ -62,8 +65,15 @@ public class GraphQLTest {
   public void testData() {
     _accountRepository.persist(dubinsky, even, hai);
     _productRepository.persist(peitsche, yoyo);
-    _purchaseRepository.persist(purchase1, purchase2, purchase3);
+    _purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
     _accountRepository.delete(hai);
+    _purchaseRepository.delete(purchase4);
+    _purchaseRepository.persist(expiredPurchase);
+    _purchaseRepository.getEntityManager()
+        .createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
+        .setParameter("created", LocalDateTime.now().minusMinutes(10))
+        .setParameter("id", expiredPurchase.getId())
+        .executeUpdate();
   }
 
   @AfterEach

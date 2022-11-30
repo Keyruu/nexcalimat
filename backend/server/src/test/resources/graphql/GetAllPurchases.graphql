@@ -1,0 +1,11 @@
+query {
+  purchases {
+    account {
+      name
+    }
+    paidPrice
+    product {
+      name
+    }
+  }
+}
