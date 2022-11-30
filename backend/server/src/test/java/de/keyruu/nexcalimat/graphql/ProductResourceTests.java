@@ -1,7 +1,6 @@
 package de.keyruu.nexcalimat.graphql;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.util.Set;
@@ -25,8 +24,8 @@ public class ProductResourceTests extends GraphQLTest {
                 .post("/graphql")
                 .then()
                 .statusCode(200)
-                .body(containsString(
-                        "{\"code\":\"unauthorized\",\"exception\":\"io.quarkus.security.UnauthorizedException\"}"));
+                .body("errors[0].extensions.code", is("unauthorized"))
+                .body("errors[0].extensions.exception", is("io.quarkus.security.UnauthorizedException"));
     }
 
     @Test
@@ -38,8 +37,11 @@ public class ProductResourceTests extends GraphQLTest {
                 .post("/graphql")
                 .then()
                 .statusCode(200)
-                .body(is(
-                        "{\"data\":{\"products\":[{\"name\":\"Die Peitsche des Mönchs\",\"price\":6000,\"bundleSize\":6,\"type\":\"COLD_DRINK\"},{\"name\":\"Das Yoyo von Long\",\"price\":80,\"bundleSize\":20,\"type\":\"HOT_DRINK\"}]}}"));
+                .body("data.products.size()", is(2))
+                .body("data.products[0].name", is("Die Peitsche des Mönchs"))
+                .body("data.products[0].price", is(6000))
+                .body("data.products[1].name", is("Das Yoyo von Long"))
+                .body("data.products[1].price", is(80));
     }
 
     @Test
@@ -52,8 +54,9 @@ public class ProductResourceTests extends GraphQLTest {
                 .post("/graphql")
                 .then()
                 .statusCode(200)
-                .body(is(
-                        "{\"data\":{\"product\":{\"name\":\"Die Peitsche des Mönchs\",\"price\":6000,\"bundleSize\":6,\"type\":\"COLD_DRINK\"}}}"));
+                .body("data.product.name", is("Die Peitsche des Mönchs"))
+                .body("data.product.price", is(6000))
+                .body("data.product.id", is(peitsche.getId().intValue()));
     }
 
     @Test
@@ -66,8 +69,9 @@ public class ProductResourceTests extends GraphQLTest {
                 .post("/graphql")
                 .then()
                 .statusCode(200)
-                .body(is(
-                        "{\"data\":{\"updateProduct\":{\"name\":\"Die noch größere Peitsche des Mönchs\",\"price\":6000,\"bundleSize\":6,\"type\":\"COLD_DRINK\"}}}"));
+                .body("data.updateProduct.name", is("Die noch größere Peitsche des Mönchs"))
+                .body("data.updateProduct.price", is(6000))
+                .body("data.updateProduct.id", is(peitsche.getId().intValue()));
     }
 
     private String setProductInput(String graphQLBody) {

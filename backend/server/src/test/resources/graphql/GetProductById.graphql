@@ -1,5 +1,6 @@
 query {
   product(id: PRODUCT_ID) {
+    id
     name
     price
     bundleSize

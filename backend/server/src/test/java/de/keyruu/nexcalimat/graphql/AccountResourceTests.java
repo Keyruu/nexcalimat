@@ -1,7 +1,6 @@
 package de.keyruu.nexcalimat.graphql;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.notNullValue;
@@ -30,8 +29,10 @@ public class AccountResourceTests extends GraphQLTest {
         .post("/graphql")
         .then()
         .statusCode(200)
-        .body(startsWith(
-            "{\"data\":{\"signUp\":{\"email\":\"rather@short.de\",\"extId\":\"rather\",\"name\":\"Rather Short\",\"balance\":0,"));
+        .body("data.signUp.email", is("rather@short.de"))
+        .body("data.signUp.extId", is("rather"))
+        .body("data.signUp.name", is("Rather Short"))
+        .body("data.signUp.balance", is(0));
   }
 
   @Test
@@ -43,7 +44,7 @@ public class AccountResourceTests extends GraphQLTest {
         .post("/graphql")
         .then()
         .statusCode(200)
-        .body(containsString("\"code\":\"account-exists\""));
+        .body("errors[0].extensions.code", is("account-exists"));
   }
 
   @Test
@@ -54,7 +55,7 @@ public class AccountResourceTests extends GraphQLTest {
         .post("/graphql")
         .then()
         .statusCode(200)
-        .body(startsWith("{\"data\":{\"pinLogin\":\"ey"));
+        .body("data.pinLogin", startsWith("ey"));
   }
 
   @Test
@@ -65,8 +66,9 @@ public class AccountResourceTests extends GraphQLTest {
         .post("/graphql")
         .then()
         .statusCode(200)
-        .body(is(
-            "{\"data\":{\"accounts\":[{\"name\":\"Dieter Dubinsky\",\"email\":\"dubinsky@keyruu.de\",\"balance\":0,\"extId\":\"dubinsky\"},{\"name\":\"Even Longer\",\"email\":\"even@keyruu.de\",\"balance\":0,\"extId\":\"even\"}]}}"));
+        .body("data.accounts.size()", is(2))
+        .body("data.accounts[0].name", is("Dieter Dubinsky"))
+        .body("data.accounts[1].name", is("Even Longer"));
   }
 
   @Test

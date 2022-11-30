@@ -20,7 +20,8 @@ public class PurchaseResourceTests extends GraphQLTest {
         .post("/graphql")
         .then()
         .statusCode(200)
-        .body(is(
-            "{\"data\":{\"makePurchase\":{\"paidPrice\":6000,\"account\":{\"name\":\"Dieter Dubinsky\"},\"product\":{\"name\":\"Die Peitsche des Mönchs\"}}}}"));
+        .body("data.makePurchase.paidPrice", is(6000))
+        .body("data.makePurchase.account.name", is("Dieter Dubinsky"))
+        .body("data.makePurchase.product.name.", is("Die Peitsche des Mönchs"));
   }
 }

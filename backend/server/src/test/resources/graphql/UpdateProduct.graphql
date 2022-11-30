@@ -1,5 +1,6 @@
 mutation {
   updateProduct(product: PRODUCT_INPUT) {
+    id
     name
     price
     bundleSize
