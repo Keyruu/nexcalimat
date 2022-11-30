@@ -1,0 +1,9 @@
+query {
+  deletedAccounts {
+    name
+    email
+    balance
+    extId
+    deletedAt
+  }
+}
