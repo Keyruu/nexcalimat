@@ -6,7 +6,7 @@
 	import type { AccountByIdQuery, AccountByIdQueryVariables, PinLoginInput } from '$lib/graphql/generated/graphql';
 	import { loggedInAccount } from '$lib/stores/accountStore';
 	import { AlertType } from '$lib/types/AlertType';
-	import { getImageUrl } from '$lib/utils/account_utils';
+	import { getImageUrl } from '$lib/utils/accountUtils';
 	import { query } from 'svelte-apollo';
 	import { fade } from 'svelte/transition';
 	import { _ } from 'svelte-i18n';

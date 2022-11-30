@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { Account } from '$lib/graphql/generated/graphql';
-	import { getImageUrl } from '$lib/utils/account_utils.js';
-	import { toEuro } from '$lib/utils/format_euro';
+	import { getImageUrl } from '$lib/utils/accountUtils.js';
+	import { toEuro } from '$lib/utils/formatEuro';
 
 	export let account: Account;
 
