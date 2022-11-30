@@ -1,27 +1,27 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { loggedInAccount } from '$lib/stores/userstore';
+	import { loggedInAccount } from '$lib/stores/accountStore';
 	import { onDestroy } from 'svelte';
 
 	const steps = [
 		{
 			id: 1,
-			route: '/store/users',
-			text: 'Select user'
+			route: '/store/accounts',
+			text: 'Select account'
 		},
 		{
 			id: 2,
-			route: '/store/users/[id]',
+			route: '/store/accounts/[id]',
 			text: 'Login'
 		},
 		{
 			id: 3,
-			route: '/store/users/[id]/products',
+			route: '/store/accounts/[id]/products',
 			text: 'Choose product'
 		},
 		{
 			id: 4,
-			route: '/store/users/[id]/checkout',
+			route: '/store/accounts/[id]/checkout',
 			text: 'Buy product'
 		}
 	];

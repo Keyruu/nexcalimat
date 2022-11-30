@@ -4,7 +4,7 @@
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
 	import { ACCOUNT_BY_ID } from '$lib/graphql/ACCOUNT_BY_ID';
 	import type { AccountByIdQuery, AccountByIdQueryVariables, PinLoginInput } from '$lib/graphql/generated/graphql';
-	import { loggedInAccount } from '$lib/stores/userstore';
+	import { loggedInAccount } from '$lib/stores/accountStore';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getImageUrl } from '$lib/utils/account_utils';
 	import { query } from 'svelte-apollo';

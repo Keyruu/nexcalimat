@@ -7,14 +7,14 @@
 	export let account: Account;
 
 	function navigateToLogin() {
-		goto(`/store/users/${account.id}`);
+		goto(`/store/accounts/${account.id}`);
 	}
 
 	$: img = getImageUrl(account as Account);
 </script>
 
 <div
-	class="card-compact group card h-52 cursor-pointer bg-neutral shadow-md hover:bg-base-300 hover:shadow-xl"
+	class="group card card-compact h-52 cursor-pointer bg-neutral shadow-md hover:bg-base-300 hover:shadow-xl"
 	on:mouseup="{navigateToLogin}"
 >
 	<figure class="pt-5 pb-2">

@@ -1,4 +1,4 @@
-import type { Account } from '$lib/types/Account';
+import type { Account } from '$lib/graphql/generated/graphql';
 import { writable } from 'svelte/store';
 
 export const loggedInAccount = writable<Account | null>(null);
