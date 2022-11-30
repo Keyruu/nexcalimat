@@ -22,11 +22,9 @@ jobs:
           cd backend/server/
           mvn -B clean package -Pnative --file pom.xml
       - name: Codecov
-        run: |
-          cd backend/server/
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ./backend/server/
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
