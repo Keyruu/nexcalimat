@@ -1,0 +1,8 @@
+query {
+  product(id: PRODUCT_ID) {
+    name
+    price
+    bundleSize
+    type
+  }
+}

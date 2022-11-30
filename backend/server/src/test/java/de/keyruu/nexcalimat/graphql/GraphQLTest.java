@@ -2,6 +2,7 @@ package de.keyruu.nexcalimat.graphql;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,7 +58,7 @@ public class GraphQLTest {
 
   @BeforeEach
   @Transactional
-  public void testData() {
+  void testData() {
     _accountRepository.persist(dubinsky, even);
     _productRepository.persist(peitsche, yoyo);
     _purchaseRepository.persist(purchase1, purchase2, purchase3);
@@ -65,7 +66,7 @@ public class GraphQLTest {
 
   @AfterEach
   @Transactional
-  public void delete() {
+  void delete() {
     _purchaseRepository.deleteAll();
     _accountRepository.deleteAll();
     _productRepository.deleteAll();
@@ -84,7 +85,6 @@ public class GraphQLTest {
   }
 
   void testPinGraphQlEndpoint(String pinToken, String requestBody, String expectedResponseBody) {
-
     given()
         .when()
         .header("Authorization", "PIN" + pinToken)
@@ -103,6 +103,7 @@ public class GraphQLTest {
       return "{\"query\": \""
           + graphql + "\"}";
     } catch (IOException e) {
+      fail("Bad syntax", e);
       return "";
     }
   }

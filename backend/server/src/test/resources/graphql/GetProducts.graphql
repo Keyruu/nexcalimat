@@ -1,0 +1,8 @@
+query {
+  products {
+    name
+    price
+    bundleSize
+    type
+  }
+}

@@ -2,21 +2,13 @@ package de.keyruu.nexcalimat.graphql;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.keyruu.nexcalimat.model.Account;
-import de.keyruu.nexcalimat.repository.AccountRepository;
-import de.keyruu.nexcalimat.service.AccountService;
-import de.keyruu.nexcalimat.utils.TestUtils;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.oidc.server.OidcWiremockTestResource;
@@ -24,7 +16,6 @@ import io.quarkus.test.oidc.server.OidcWiremockTestResource;
 @QuarkusTest
 @QuarkusTestResource(OidcWiremockTestResource.class)
 public class AccountResourceTests extends GraphQLTest {
-
   @Test
   public void testSignUp() {
     given()
@@ -63,6 +54,13 @@ public class AccountResourceTests extends GraphQLTest {
 
   @Test
   public void testGetAccounts() {
-
+    given()
+        .when()
+        .body(getGraphQLBody("graphql/GetAccounts.graphql"))
+        .post("/graphql")
+        .then()
+        .statusCode(200)
+        .body(is(
+            "{\"data\":{\"accounts\":[{\"name\":\"Dieter Dubinsky\",\"email\":\"dubinsky@keyruu.de\",\"balance\":0,\"extId\":\"dubinsky\"},{\"name\":\"Even Longer\",\"email\":\"even@keyruu.de\",\"balance\":0,\"extId\":\"even\"}]}}"));
   }
 }

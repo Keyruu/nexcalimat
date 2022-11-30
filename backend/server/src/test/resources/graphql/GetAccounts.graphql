@@ -1,0 +1,8 @@
+query {
+  accounts {
+    name
+    email
+    balance
+    extId
+  }
+}

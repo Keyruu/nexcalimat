@@ -1,17 +1,13 @@
 package de.keyruu.nexcalimat.graphql;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
 
-import java.util.Set;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.oidc.server.OidcWiremockTestResource;
 
 @QuarkusTest
 public class PurchaseResourceTests extends GraphQLTest {
@@ -19,7 +15,7 @@ public class PurchaseResourceTests extends GraphQLTest {
   public void testMakePurchase() {
     given()
         .when()
-        .header("Authorization", "PIN " + getPinToken(dubinsky.getId()))
+        .header(HttpHeaders.AUTHORIZATION, "PIN " + getPinToken(dubinsky.getId()))
         .body(getGraphQLBody("graphql/MakePurchase.graphql").replace("DB_PRODUCT_ID", peitsche.getId().toString()))
         .post("/graphql")
         .then()

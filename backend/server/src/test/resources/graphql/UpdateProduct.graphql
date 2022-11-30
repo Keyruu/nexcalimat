@@ -1,0 +1,8 @@
+mutation {
+  updateProduct(product: PRODUCT_INPUT) {
+    name
+    price
+    bundleSize
+    type
+  }
+}
