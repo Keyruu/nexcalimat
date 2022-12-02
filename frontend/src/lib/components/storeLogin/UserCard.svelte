@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import type { Account } from '$lib/graphql/generated/graphql';
 	import { getImageUrl } from '$lib/utils/accountUtils.js';
 	import { toEuro } from '$lib/utils/formatEuro';
@@ -7,7 +8,7 @@
 	export let account: Account;
 
 	function navigateToLogin() {
-		goto(`/store/accounts/${account.id}`);
+		goto(`${base}/store/accounts/${account.id}`);
 	}
 
 	$: img = getImageUrl(account as Account);

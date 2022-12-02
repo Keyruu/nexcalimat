@@ -1,4 +1,5 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
+import 'dotenv/config';
 import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -12,7 +13,17 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter({
+			precompress: false,
+			strict: true,
+			fallback: 'index.html',
+			prerender: {
+				entries: []
+			}
+		}),
+		paths: {
+			base: `${process.env.VITE_BASEPATH}`
+		}
 	}
 };
 
