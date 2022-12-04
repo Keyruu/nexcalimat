@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Set;
 
 import javax.transaction.Transactional;
-import javax.ws.rs.core.HttpHeaders;
 
 import org.junit.jupiter.api.Test;
 
