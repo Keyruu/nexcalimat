@@ -1,5 +1,7 @@
 package de.keyruu.nexcalimat.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -42,6 +44,16 @@ public class AccountService
 
   @ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
   String _emailClaim;
+
+  public List<Account> listAll()
+  {
+    return _accountRepo.list("deletedAt IS NULL");
+  }
+
+  public Account findById(Long id)
+  {
+    return _accountRepo.findById(id);
+  }
 
   @Transactional
   public Account signUp(String pin, JsonWebToken idToken)
@@ -175,17 +187,9 @@ public class AccountService
   }
 
   @Transactional
-  public Boolean eraseAccountData(Long id)
+  public Boolean eraseAccount(Long id)
   {
-    _purchaseRepo.getEntityManager()
-      .createNamedQuery("erasePurchase")
-      .setParameter("accountId", id)
-      .executeUpdate();
-
-    return _accountRepo.getEntityManager()
-      .createNamedQuery("eraseAccount")
-      .setParameter("id", id)
-      .executeUpdate() == 1;
+    return _accountRepo.deleteById(id);
   }
 
   public static void validatePin(String pin)
@@ -207,5 +211,22 @@ public class AccountService
     {
       return false;
     }
+  }
+
+  @Transactional
+  public Boolean deleteById(Long id)
+  {
+    Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+
+    account.setDeletedAt(LocalDateTime.now());
+    _accountRepo.persist(account);
+
+    return Boolean.TRUE;
+  }
+
+  public List<Account> getDeletedAccounts()
+  {
+
+    return _accountRepo.list("deletedAt IS NOT NULL");
   }
 }

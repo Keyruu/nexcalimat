@@ -123,8 +123,8 @@ public class AccountResourceTests extends GraphQLTest
       .then()
       .statusCode(200)
       .body("data.accounts.size()", is(2))
-      .body("data.accounts[0].name", is("Dieter Dubinsky"))
-      .body("data.accounts[1].name", is("Even Longer"));
+      .body("data.accounts[1].name", is("Dieter Dubinsky"))
+      .body("data.accounts[0].name", is("Even Longer"));
   }
 
   @Test

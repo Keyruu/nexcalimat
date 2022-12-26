@@ -38,14 +38,14 @@ public class AccountResource
   @Description("Get all Accounts")
   public List<Account> accounts()
   {
-    return _accountRepository.listAll();
+    return _accountService.listAll();
   }
 
   @Query
   @Description("Get Account by ID")
   public Account account(Long id)
   {
-    return _accountRepository.findById(id);
+    return _accountService.findById(id);
   }
 
   @Query
@@ -60,9 +60,7 @@ public class AccountResource
   @RolesAllowed(Roles.ADMIN)
   public List<Account> deletedAccounts()
   {
-    return _accountRepository.getEntityManager()
-      .createNamedQuery("deletedAccounts", Account.class)
-      .getResultList();
+    return _accountService.getDeletedAccounts();
   }
 
   @Mutation
@@ -70,7 +68,7 @@ public class AccountResource
   @RolesAllowed(Roles.ADMIN)
   public Boolean eraseAccount(Long id)
   {
-    return _accountService.eraseAccountData(id);
+    return _accountService.eraseAccount(id);
   }
 
   @Mutation
@@ -111,7 +109,7 @@ public class AccountResource
   @Transactional
   public Boolean deleteAccount(Long id)
   {
-    return Boolean.valueOf(_accountRepository.deleteById(id));
+    return _accountService.deleteById(id);
   }
 
   @Mutation

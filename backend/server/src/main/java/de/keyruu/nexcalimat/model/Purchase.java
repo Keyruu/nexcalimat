@@ -9,21 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @Entity
-@SQLDelete(sql = "UPDATE purchase SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "deleted_at is null")
-@NamedNativeQueries({
-    @NamedNativeQuery(name = "erasePurchase", query = "DELETE FROM purchase WHERE account_id = :accountId")
-})
-public class Purchase {
+public class Purchase
+{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -46,51 +37,63 @@ public class Purchase {
   @Column(name = "paid_price", nullable = false)
   private Integer paidPrice;
 
-  public Long getId() {
+  public Long getId()
+  {
     return this.id;
   }
 
-  public void setId(Long id) {
+  public void setId(Long id)
+  {
     this.id = id;
   }
 
-  public LocalDateTime getCreatedAt() {
+  public LocalDateTime getCreatedAt()
+  {
     return this.createdAt;
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt)
+  {
     this.createdAt = createdAt;
   }
 
-  public LocalDateTime getDeletedAt() {
+  public LocalDateTime getDeletedAt()
+  {
     return this.deletedAt;
   }
 
-  public void setDeletedAt(LocalDateTime deletedAt) {
+  public void setDeletedAt(LocalDateTime deletedAt)
+  {
     this.deletedAt = deletedAt;
   }
 
-  public Account getAccount() {
+  public Account getAccount()
+  {
     return this.account;
   }
 
-  public void setAccount(Account account) {
+  public void setAccount(Account account)
+  {
     this.account = account;
   }
 
-  public Product getProduct() {
+  public Product getProduct()
+  {
     return this.product;
   }
 
-  public void setProduct(Product product) {
+  public void setProduct(Product product)
+  {
     this.product = product;
   }
 
-  public Integer getPaidPrice() {
+  public Integer getPaidPrice()
+  {
     return this.paidPrice;
   }
 
-  public void setPaidPrice(Integer paidPrice) {
+  public void setPaidPrice(Integer paidPrice)
+  {
     this.paidPrice = paidPrice;
   }
 }

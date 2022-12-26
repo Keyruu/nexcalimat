@@ -78,8 +78,8 @@ public class GraphQLTest
     _accountRepository.persist(dubinsky, even, hai);
     _productRepository.persist(peitsche, yoyo);
     _purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
-    _accountRepository.delete(hai);
-    _purchaseRepository.delete(purchase4);
+    _accountService.deleteById(hai.getId());
+    _purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
     _purchaseRepository.persist(expiredPurchase);
     _purchaseRepository.getEntityManager()
       .createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")

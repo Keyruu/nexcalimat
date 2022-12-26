@@ -21,7 +21,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 
 @GraphQLApi
-public class PurchaseResource {
+public class PurchaseResource
+{
   @Inject
   PurchaseRepository _purchaseRepository;
 
@@ -43,17 +44,22 @@ public class PurchaseResource {
   @Query
   @Description("Get all Purchases")
   @RolesAllowed(Roles.ADMIN)
-  public List<Purchase> purchases() {
-    return _purchaseRepository.listAll();
+  public List<Purchase> purchases()
+  {
+    return _purchaseService.listAll();
   }
 
   @Query
   @Description("Get personal Purchases")
   @RolesAllowed({ Roles.CUSTOMER, Roles.USER, Roles.ADMIN })
-  public List<Purchase> myPurchases() {
-    if (_securityIdentity.hasRole(Roles.CUSTOMER)) {
+  public List<Purchase> myPurchases()
+  {
+    if (_securityIdentity.hasRole(Roles.CUSTOMER))
+    {
       return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request));
-    } else {
+    }
+    else
+    {
       return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt));
     }
   }
@@ -61,14 +67,16 @@ public class PurchaseResource {
   @Query
   @Description("Get Purchase by ID")
   @RolesAllowed({ Roles.ADMIN })
-  public Purchase purchase(Long id) {
-    return _purchaseRepository.findById(id);
+  public Purchase purchase(Long id)
+  {
+    return _purchaseService.findById(id);
   }
 
   @Mutation
   @Description("Make Purchase")
   @RolesAllowed(Roles.CUSTOMER)
-  public Purchase makePurchase(Long productId) {
+  public Purchase makePurchase(Long productId)
+  {
     return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request));
   }
 
@@ -76,7 +84,8 @@ public class PurchaseResource {
   @Description("Refund Purchase")
   @RolesAllowed(Roles.CUSTOMER)
   @Transactional
-  public Boolean refundPurchase(Long id) {
+  public Boolean refundPurchase(Long id)
+  {
     return _purchaseService.refund(id, _jwtUtils.getPinJwtAccountId(_request));
   }
 }

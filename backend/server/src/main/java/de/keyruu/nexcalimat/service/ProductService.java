@@ -1,5 +1,8 @@
 package de.keyruu.nexcalimat.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,6 +16,16 @@ public class ProductService
 {
   @Inject
   ProductRepository _productRepository;
+
+  public List<Product> listAll()
+  {
+    return _productRepository.list("deletedAt IS NULL");
+  }
+
+  public Product findById(Long id)
+  {
+    return _productRepository.findById(id);
+  }
 
   @Transactional
   public Product updateProductPicture(Product product)
@@ -50,5 +63,16 @@ public class ProductService
     _productRepository.persist(dbProduct);
 
     return dbProduct;
+  }
+
+  @Transactional
+  public Boolean deleteById(Long id)
+  {
+    Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+
+    product.setDeletedAt(LocalDateTime.now());
+    _productRepository.persist(product);
+
+    return Boolean.TRUE;
   }
 }

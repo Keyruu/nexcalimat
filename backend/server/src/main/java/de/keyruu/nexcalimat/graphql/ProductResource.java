@@ -30,7 +30,7 @@ public class ProductResource
   @RolesAllowed({ Roles.CUSTOMER, Roles.USER, Roles.ADMIN })
   public List<Product> products()
   {
-    return _productRepository.listAll();
+    return _productService.listAll();
   }
 
   @Query
@@ -38,7 +38,7 @@ public class ProductResource
   @RolesAllowed({ Roles.CUSTOMER, Roles.USER, Roles.ADMIN })
   public Product product(Long id)
   {
-    return _productRepository.findById(id);
+    return _productService.findById(id);
   }
 
   @Mutation
@@ -73,6 +73,6 @@ public class ProductResource
   @Transactional
   public Boolean deleteProduct(Long id)
   {
-    return Boolean.valueOf(_productRepository.deleteById(id));
+    return _productService.deleteById(id);
   }
 }
