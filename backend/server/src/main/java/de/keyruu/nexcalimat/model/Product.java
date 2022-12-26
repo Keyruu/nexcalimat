@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
+import javax.validation.constraints.Size;
 
 import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,8 @@ import org.hibernate.annotations.Where;
 @Entity
 @SQLDelete(sql = "UPDATE product SET deleted_at = now() WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted_at is null")
-public class Product {
+public class Product
+{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -36,6 +38,8 @@ public class Product {
   @Column(nullable = false)
   private String name;
 
+  @Size(max = 3000)
+  @Column(length = 3000)
   private String picture;
 
   @Column(nullable = false)
@@ -51,80 +55,99 @@ public class Product {
   @Ignore
   private Set<Purchase> purchases = new HashSet<>();
 
-  public Long getId() {
+  public Long getId()
+  {
     return this.id;
   }
 
-  public void setId(Long id) {
+  public void setId(Long id)
+  {
     this.id = id;
   }
 
-  public LocalDateTime getCreatedAt() {
+  public LocalDateTime getCreatedAt()
+  {
     return this.createdAt;
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt)
+  {
     this.createdAt = createdAt;
   }
 
-  public LocalDateTime getDeletedAt() {
+  public LocalDateTime getDeletedAt()
+  {
     return this.deletedAt;
   }
 
-  public void setDeletedAt(LocalDateTime deletedAt) {
+  public void setDeletedAt(LocalDateTime deletedAt)
+  {
     this.deletedAt = deletedAt;
   }
 
-  public String getName() {
+  public String getName()
+  {
     return this.name;
   }
 
-  public void setName(String name) {
+  public void setName(String name)
+  {
     this.name = name;
   }
 
-  public String getPicture() {
+  public String getPicture()
+  {
     return this.picture;
   }
 
-  public void setPicture(String picture) {
+  public void setPicture(String picture)
+  {
     this.picture = picture;
   }
 
-  public Integer getPrice() {
+  public Integer getPrice()
+  {
     return this.price;
   }
 
-  public void setPrice(Integer price) {
+  public void setPrice(Integer price)
+  {
     this.price = price;
   }
 
-  public Integer getBundleSize() {
+  public Integer getBundleSize()
+  {
     return this.bundleSize;
   }
 
-  public void setBundleSize(Integer bundleSize) {
+  public void setBundleSize(Integer bundleSize)
+  {
     this.bundleSize = bundleSize;
   }
 
-  public ProductType getType() {
+  public ProductType getType()
+  {
     return this.type;
   }
 
-  public void setType(ProductType type) {
+  public void setType(ProductType type)
+  {
     this.type = type;
   }
 
-  public Set<Purchase> getPurchases() {
+  public Set<Purchase> getPurchases()
+  {
     return purchases;
   }
 
-  public void setPurchases(Set<Purchase> purchases) {
+  public void setPurchases(Set<Purchase> purchases)
+  {
     this.purchases = purchases;
   }
 
   @PreRemove
-  void beforeDelete() {
+  void beforeDelete()
+  {
     this.purchases.forEach(p -> p.setProduct(null));
   }
 }

@@ -30,7 +30,8 @@ import de.keyruu.nexcalimat.service.PurchaseService;
 import de.keyruu.nexcalimat.utils.TestUtils;
 import io.smallrye.jwt.build.Jwt;
 
-public class GraphQLTest {
+public class GraphQLTest
+{
   Account dubinsky = TestUtils.dubinsky();
   Account hai = TestUtils.hai();
   Account even = TestUtils.even();
@@ -60,9 +61,20 @@ public class GraphQLTest {
   @Inject
   PurchaseRepository _purchaseRepository;
 
+  String getEarlsToken()
+  {
+    return getOidcToken("earl", Set.of("some-random-admin-group-name"), "", "Earl of Cockwood");
+  }
+
+  String getDubinskysToken()
+  {
+    return getOidcToken("dubinsky", Set.of("some-random-user-group-name"), "dieter@dubinsky.de", "Dieter Dubinsky");
+  }
+
   @BeforeEach
   @Transactional
-  public void testData() {
+  public void testData()
+  {
     _accountRepository.persist(dubinsky, even, hai);
     _productRepository.persist(peitsche, yoyo);
     _purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
@@ -70,70 +82,79 @@ public class GraphQLTest {
     _purchaseRepository.delete(purchase4);
     _purchaseRepository.persist(expiredPurchase);
     _purchaseRepository.getEntityManager()
-        .createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
-        .setParameter("created", LocalDateTime.now().minusMinutes(10))
-        .setParameter("id", expiredPurchase.getId())
-        .executeUpdate();
+      .createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
+      .setParameter("created", LocalDateTime.now().minusMinutes(10))
+      .setParameter("id", expiredPurchase.getId())
+      .executeUpdate();
   }
 
   @AfterEach
   @Transactional
-  void delete() {
+  void delete()
+  {
     _purchaseRepository.deleteAll();
     _accountRepository.deleteAll();
     _productRepository.deleteAll();
   }
 
-  void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher) {
+  void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher)
+  {
     given()
-        .when()
-        .auth().oauth2(idToken)
-        .body(getGraphQLBody("graphql/SignUp.graphql"))
-        .post("/graphql")
-        .then()
-        .statusCode(200)
-        .body(is(
-            "{\"data\":{\"signUp\":{\"email\":\"test@test.de\",\"extId\":\"test\",\"name\":\"Test Klaus\",\"balance\":0,\"id\":1}}}"));
+      .when()
+      .auth().oauth2(idToken)
+      .body(getGraphQLBody("graphql/SignUp.graphql"))
+      .post("/graphql")
+      .then()
+      .statusCode(200)
+      .body(is(
+        "{\"data\":{\"signUp\":{\"email\":\"test@test.de\",\"extId\":\"test\",\"name\":\"Test Klaus\",\"balance\":0,\"id\":1}}}"));
   }
 
-  void testPinGraphQlEndpoint(String pinToken, String requestBody, String expectedResponseBody) {
+  void testPinGraphQlEndpoint(String pinToken, String requestBody, String expectedResponseBody)
+  {
     given()
-        .when()
-        .header("Authorization", "PIN" + pinToken)
-        .body(requestBody)
-        .post("/graphql")
-        .then()
-        .statusCode(200)
-        .body(is(expectedResponseBody));
+      .when()
+      .header("Authorization", "PIN" + pinToken)
+      .body(requestBody)
+      .post("/graphql")
+      .then()
+      .statusCode(200)
+      .body(is(expectedResponseBody));
   }
 
-  String getGraphQLBody(String path) {
-    try {
+  String getGraphQLBody(String path)
+  {
+    try
+    {
       String graphql = new String(Files.readAllBytes(Paths.get("src/test/resources/" + path)));
       graphql = graphql.replaceAll("\"", "\\\\\"");
       graphql = graphql.replaceAll("\n", "");
       return "{\"query\": \""
-          + graphql + "\"}";
-    } catch (IOException e) {
+        + graphql + "\"}";
+    }
+    catch (IOException e)
+    {
       fail("Bad syntax", e);
       return "";
     }
   }
 
-  String getOidcToken(String userName, Set<String> groups, String email, String name) {
+  String getOidcToken(String userName, Set<String> groups, String email, String name)
+  {
     return Jwt.preferredUserName(userName)
-        .groups(groups)
-        .issuer("https://server.example.com")
-        .audience("https://service.example.com")
-        .claim("sub", userName)
-        .claim("email", email)
-        .claim("name", name)
-        .sign();
+      .groups(groups)
+      .issuer("https://server.example.com")
+      .audience("https://service.example.com")
+      .claim("sub", userName)
+      .claim("email", email)
+      .claim("name", name)
+      .sign();
   }
 
-  String getPinToken(Long userId) {
+  String getPinToken(Long userId)
+  {
     return Jwt.upn(userId.toString())
-        .groups(Roles.CUSTOMER)
-        .sign("privateKey.pem");
+      .groups(Roles.CUSTOMER)
+      .sign("privateKey.pem");
   }
 }

@@ -9,19 +9,43 @@ import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 
 @ApplicationScoped
-public class ProductService {
+public class ProductService
+{
   @Inject
   ProductRepository _productRepository;
 
   @Transactional
-  public Product updateProduct(Product product) {
+  public Product updateProductPicture(Product product)
+  {
     Product dbProduct = _productRepository.findByIdOptional(product.getId()).orElseThrow(ProductNotFoundException::new);
 
-    dbProduct.setBundleSize(product.getBundleSize());
-    dbProduct.setName(product.getName());
     dbProduct.setPicture(product.getPicture());
-    dbProduct.setPrice(product.getPrice());
-    dbProduct.setType(product.getType());
+    _productRepository.persist(dbProduct);
+
+    return dbProduct;
+  }
+
+  @Transactional
+  public Product updateProduct(Product product)
+  {
+    Product dbProduct = _productRepository.findByIdOptional(product.getId()).orElseThrow(ProductNotFoundException::new);
+
+    if (product.getBundleSize() != null)
+    {
+      dbProduct.setBundleSize(product.getBundleSize());
+    }
+    if (product.getName() != null)
+    {
+      dbProduct.setName(product.getName());
+    }
+    if (product.getPrice() != null)
+    {
+      dbProduct.setPrice(product.getPrice());
+    }
+    if (product.getType() != null)
+    {
+      dbProduct.setType(product.getType());
+    }
 
     _productRepository.persist(dbProduct);
 

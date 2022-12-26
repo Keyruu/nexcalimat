@@ -1,0 +1,6 @@
+mutation {
+  updateProductPicture(product: PRODUCT_INPUT) {
+    name
+    picture
+  }
+}

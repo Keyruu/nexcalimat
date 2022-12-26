@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,6 +55,8 @@ public class Account {
   @Column(nullable = false)
   private Long balance;
 
+  @Size(max = 3000)
+  @Column(length = 3000)
   private String picture;
 
   @Column(name = "pin_hash")
