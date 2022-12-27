@@ -1,5 +1,5 @@
 mutation {
-  updateProduct(product: PRODUCT_INPUT) {
+  updateProduct(product: {id: DB_ID, name: "Die noch größere Peitsche des Mönchs", picture: null, price: 6000, bundleSize: 6, type: COLD_DRINK}) {
     id
     name
     price

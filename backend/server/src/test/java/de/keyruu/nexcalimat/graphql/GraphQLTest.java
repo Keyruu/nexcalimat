@@ -129,8 +129,11 @@ public class GraphQLTest
       String graphql = new String(Files.readAllBytes(Paths.get("src/test/resources/" + path)));
       graphql = graphql.replaceAll("\"", "\\\\\"");
       graphql = graphql.replaceAll("\n", "");
-      return "{\"query\": \""
-        + graphql + "\"}";
+      return String.format("""
+        {
+          "query": "%s"
+        }
+        """, graphql);
     }
     catch (IOException e)
     {
