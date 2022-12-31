@@ -21,10 +21,12 @@ jobs:
       - name: Install dependencies
         uses: borales/actions-yarn@v4
         with:
+          context: frontend/
           cmd: install
-      - name: Build with npm
+      - name: Build with yarn
         uses: borales/actions-yarn@v4
         with:
+          context: frontend/
           cmd: build
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
