@@ -21,13 +21,11 @@ jobs:
       - name: Install dependencies
         uses: borales/actions-yarn@v4
         with:
-          context: frontend/
-          cmd: install
+          cmd: --cwd frontend install
       - name: Build with yarn
         uses: borales/actions-yarn@v4
         with:
-          context: frontend/
-          cmd: build
+          cmd: --cwd frontend build
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
