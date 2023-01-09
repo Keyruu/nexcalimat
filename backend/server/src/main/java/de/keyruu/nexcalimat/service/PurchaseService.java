@@ -22,83 +22,83 @@ import io.quarkus.security.ForbiddenException;
 @ApplicationScoped
 public class PurchaseService
 {
-  @Inject
-  PurchaseRepository _purchaseRepository;
+	@Inject
+	PurchaseRepository _purchaseRepository;
 
-  @Inject
-  ProductRepository _productRepository;
+	@Inject
+	ProductRepository _productRepository;
 
-  @Inject
-  AccountRepository _accountRepository;
+	@Inject
+	AccountRepository _accountRepository;
 
-  public List<Purchase> listAll()
-  {
-    return _purchaseRepository.listAll();
-  }
+	public List<Purchase> listAll()
+	{
+		return _purchaseRepository.listAll();
+	}
 
-  public Purchase findById(Long id)
-  {
-    return _purchaseRepository.findById(id);
-  }
+	public Purchase findById(Long id)
+	{
+		return _purchaseRepository.findById(id);
+	}
 
-  @Transactional
-  public Purchase makePurchase(Long productId, Long accountId)
-  {
-    Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
-    Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+	@Transactional
+	public Purchase makePurchase(Long productId, Long accountId)
+	{
+		Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
+		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-    Purchase purchase = new Purchase();
+		Purchase purchase = new Purchase();
 
-    purchase.setAccount(account);
-    purchase.setProduct(product);
-    purchase.setPaidPrice(product.getPrice());
+		purchase.setAccount(account);
+		purchase.setProduct(product);
+		purchase.setPaidPrice(product.getPrice());
 
-    _purchaseRepository.persist(purchase);
+		_purchaseRepository.persist(purchase);
 
-    account.setBalance(account.getBalance() - product.getPrice());
+		account.setBalance(account.getBalance() - product.getPrice());
 
-    _accountRepository.persist(account);
+		_accountRepository.persist(account);
 
-    return purchase;
-  }
+		return purchase;
+	}
 
-  public Boolean refund(Long purchaseId, Long accountId)
-  {
-    Purchase purchase = _purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);
-    Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+	public Boolean refund(Long purchaseId, Long accountId)
+	{
+		Purchase purchase = _purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);
+		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-    if (purchase.getAccount().equals(account) == false)
-    {
-      throw new ForbiddenException();
-    }
+		if (purchase.getAccount().equals(account) == false)
+		{
+			throw new ForbiddenException();
+		}
 
-    if (LocalDateTime.now().isAfter(purchase.getCreatedAt().plusMinutes(5)))
-    {
-      throw new RefundPeriodExceededException();
-    }
+		if (LocalDateTime.now().isAfter(purchase.getCreatedAt().plusMinutes(5)))
+		{
+			throw new RefundPeriodExceededException();
+		}
 
-    purchase.setDeletedAt(LocalDateTime.now());
+		purchase.setDeletedAt(LocalDateTime.now());
 
-    _purchaseRepository.persist(purchase);
+		_purchaseRepository.persist(purchase);
 
-    account.setBalance(account.getBalance() + purchase.getPaidPrice());
+		account.setBalance(account.getBalance() + purchase.getPaidPrice());
 
-    _accountRepository.persist(account);
+		_accountRepository.persist(account);
 
-    return Boolean.TRUE;
-  }
+		return Boolean.TRUE;
+	}
 
-  public List<Purchase> getPurchasesForUser(String extId)
-  {
-    Account account = _accountRepository.find("extId", extId).firstResultOptional()
-      .orElseThrow(AccountNotFoundException::new);
+	public List<Purchase> getPurchasesForUser(String extId)
+	{
+		Account account = _accountRepository.find("extId", extId).firstResultOptional()
+			.orElseThrow(AccountNotFoundException::new);
 
-    return _purchaseRepository.find("account", account).list();
-  }
+		return _purchaseRepository.find("account", account).list();
+	}
 
-  public List<Purchase> getPurchasesForCustomer(Long pinJwtAccountId)
-  {
-    Account account = _accountRepository.findByIdOptional(pinJwtAccountId).orElseThrow(AccountNotFoundException::new);
-    return _purchaseRepository.find("account", account).list();
-  }
+	public List<Purchase> getPurchasesForCustomer(Long pinJwtAccountId)
+	{
+		Account account = _accountRepository.findByIdOptional(pinJwtAccountId).orElseThrow(AccountNotFoundException::new);
+		return _purchaseRepository.find("account", account).list();
+	}
 }

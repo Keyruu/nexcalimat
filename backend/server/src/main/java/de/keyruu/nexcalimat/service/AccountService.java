@@ -1,5 +1,6 @@
 package de.keyruu.nexcalimat.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import de.keyruu.nexcalimat.filestore.FileFormData;
+import de.keyruu.nexcalimat.filestore.FilestoreClient;
 import de.keyruu.nexcalimat.graphql.exception.AccountExistsException;
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
@@ -27,206 +30,187 @@ import io.smallrye.jwt.build.Jwt;
 @ApplicationScoped
 public class AccountService
 {
-  @Inject
-  AccountRepository _accountRepo;
+	@Inject
+	AccountRepository _accountRepo;
 
-  @Inject
-  PurchaseRepository _purchaseRepo;
+	@Inject
+	PurchaseRepository _purchaseRepo;
 
-  @Inject
-  JwtUtils _jwtUtils;
+	@Inject
+	JwtUtils _jwtUtils;
 
-  @ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
-  String _userIdClaim;
+	@Inject
+	FilestoreClient _filestoreClient;
 
-  @ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
-  String _nameClaim;
+	@Inject
+	PictureService _imageService;
 
-  @ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
-  String _emailClaim;
+	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
+	String _userIdClaim;
 
-  public List<Account> listAll()
-  {
-    return _accountRepo.list("deletedAt IS NULL");
-  }
+	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
+	String _nameClaim;
 
-  public Account findById(Long id)
-  {
-    return _accountRepo.findById(id);
-  }
+	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
+	String _emailClaim;
 
-  @Transactional
-  public Account signUp(String pin, JsonWebToken idToken)
-  {
-    validatePin(pin);
+	public List<Account> listAll()
+	{
+		return _accountRepo.list("deletedAt IS NULL");
+	}
 
-    Account account = new Account();
+	public Account findById(Long id)
+	{
+		return _accountRepo.findById(id);
+	}
 
-    String extId = _jwtUtils.getExtIdFromToken(idToken);
+	@Transactional
+	public Account signUp(String pin, JsonWebToken idToken)
+	{
+		validatePin(pin);
 
-    if (_accountRepo.find("extId", extId).firstResultOptional().isPresent())
-    {
-      throw new AccountExistsException();
-    }
+		Account account = new Account();
 
-    account.setExtId(extId);
-    account.setEmail((String)idToken.claim(_emailClaim).get());
-    account.setName((String)idToken.claim(_nameClaim).get());
-    account.setBalance(0L);
-    account.setPinHash(BcryptUtil.bcryptHash(pin));
+		String extId = _jwtUtils.getExtIdFromToken(idToken);
 
-    _accountRepo.persist(account);
+		if (_accountRepo.find("extId", extId).firstResultOptional().isPresent())
+		{
+			throw new AccountExistsException();
+		}
 
-    return account;
-  }
+		account.setExtId(extId);
+		account.setEmail((String)idToken.claim(_emailClaim).get());
+		account.setName((String)idToken.claim(_nameClaim).get());
+		account.setBalance(0L);
+		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
-  public String pinLogin(PinLogin login)
-  {
-    Account account = _accountRepo.findById(login.getId());
-    if (account == null)
-    {
-      throw new AccountNotFoundException();
-    }
+		_accountRepo.persist(account);
 
-    if (BcryptUtil.matches(login.getPin(), account.getPinHash()) == false)
-    {
-      throw new WrongPinException();
-    }
+		return account;
+	}
 
-    return Jwt.upn(account.getId().toString()).groups(Roles.CUSTOMER).sign();
-  }
+	public String pinLogin(PinLogin login)
+	{
+		Account account = _accountRepo.findById(login.getId());
+		if (account == null)
+		{
+			throw new AccountNotFoundException();
+		}
 
-  @Transactional
-  public Boolean setPin(String pin, String extId)
-  {
-    validatePin(pin);
+		if (BcryptUtil.matches(login.getPin(), account.getPinHash()) == false)
+		{
+			throw new WrongPinException();
+		}
 
-    Optional<Account> accountOptional = _accountRepo.find("extId", extId).firstResultOptional();
+		return Jwt.upn(account.getId().toString()).groups(Roles.CUSTOMER).sign();
+	}
 
-    if (accountOptional.isEmpty())
-    {
-      throw new AccountNotFoundException();
-    }
+	@Transactional
+	public Boolean setPin(String pin, String extId)
+	{
+		validatePin(pin);
 
-    Account account = accountOptional.get();
+		Optional<Account> accountOptional = _accountRepo.find("extId", extId).firstResultOptional();
 
-    account.setPinHash(BcryptUtil.bcryptHash(pin));
+		if (accountOptional.isEmpty())
+		{
+			throw new AccountNotFoundException();
+		}
 
-    _accountRepo.persist(account);
+		Account account = accountOptional.get();
 
-    return Boolean.TRUE;
-  }
+		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
-  @Transactional
-  public Account updateAccountPicture(Account account)
-  {
-    Optional<Account> dbAccountOptional = _accountRepo.findByIdOptional(account.getId());
+		_accountRepo.persist(account);
 
-    if (dbAccountOptional.isEmpty())
-    {
-      throw new AccountNotFoundException();
-    }
+		return Boolean.TRUE;
+	}
 
-    Account dbAccount = dbAccountOptional.get();
-    dbAccount.setPicture(account.getPicture());
+	@Transactional
+	public Account updateAccountPicture(Long id, FileFormData formData) throws IOException
+	{
+		Account dbAccount = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
 
-    _accountRepo.persist(dbAccount);
+		return _imageService.updatePicture(dbAccount, formData, _accountRepo);
+	}
 
-    return dbAccount;
-  }
+	@Transactional
+	public Account updateMyAccountPicture(String extId, FileFormData formData) throws IOException
+	{
+		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
+			.orElseThrow(AccountNotFoundException::new);
 
-  @Transactional
-  public Account updateMyAccountPicture(String picture, String extId)
-  {
-    Optional<Account> accountOptional = _accountRepo.find("extId", extId).firstResultOptional();
+		return _imageService.updatePicture(dbAccount, formData, _accountRepo);
+	}
 
-    if (accountOptional.isEmpty())
-    {
-      throw new AccountNotFoundException();
-    }
+	@Transactional
+	public Account updateAccount(Account account)
+	{
+		Account dbAccount = _accountRepo.findByIdOptional(account.getId()).orElseThrow(AccountNotFoundException::new);
 
-    Account dbAccount = accountOptional.get();
-    dbAccount.setPicture(picture);
+		if (account.getBalance() == null)
+		{
+			dbAccount.setBalance(account.getBalance());
+		}
+		if (account.getName() == null)
+		{
+			dbAccount.setName(account.getName());
+		}
+		if (account.getExtId() == null)
+		{
+			dbAccount.setExtId(account.getExtId());
+		}
+		if (account.getEmail() == null)
+		{
+			dbAccount.setEmail(account.getEmail());
+		}
 
-    _accountRepo.persist(dbAccount);
+		_accountRepo.persist(dbAccount);
 
-    return dbAccount;
-  }
+		return account;
+	}
 
-  @Transactional
-  public Account updateAccount(Account account)
-  {
-    Optional<Account> dbAccountOptional = _accountRepo.findByIdOptional(account.getId());
+	@Transactional
+	public Boolean eraseAccount(Long id)
+	{
+		return _accountRepo.deleteById(id);
+	}
 
-    if (dbAccountOptional.isEmpty())
-    {
-      throw new AccountNotFoundException();
-    }
+	public static void validatePin(String pin)
+	{
+		if (isNumeric(pin) == false || pin.length() != 4)
+		{
+			throw new PinValidationException();
+		}
+	}
 
-    Account dbAccount = dbAccountOptional.get();
-    if (account.getBalance() == null)
-    {
-      dbAccount.setBalance(account.getBalance());
-    }
-    if (account.getName() == null)
-    {
-      dbAccount.setName(account.getName());
-    }
-    if (account.getExtId() == null)
-    {
-      dbAccount.setExtId(account.getExtId());
-    }
-    if (account.getEmail() == null)
-    {
-      dbAccount.setEmail(account.getEmail());
-    }
+	public static boolean isNumeric(String str)
+	{
+		try
+		{
+			Integer.parseInt(str);
+			return true;
+		}
+		catch (NumberFormatException e)
+		{
+			return false;
+		}
+	}
 
-    _accountRepo.persist(dbAccount);
+	@Transactional
+	public Boolean deleteById(Long id)
+	{
+		Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
 
-    return account;
-  }
+		account.setDeletedAt(LocalDateTime.now());
+		_accountRepo.persist(account);
 
-  @Transactional
-  public Boolean eraseAccount(Long id)
-  {
-    return _accountRepo.deleteById(id);
-  }
+		return Boolean.TRUE;
+	}
 
-  public static void validatePin(String pin)
-  {
-    if (isNumeric(pin) == false || pin.length() != 4)
-    {
-      throw new PinValidationException();
-    }
-  }
+	public List<Account> getDeletedAccounts()
+	{
 
-  public static boolean isNumeric(String str)
-  {
-    try
-    {
-      Integer.parseInt(str);
-      return true;
-    }
-    catch (NumberFormatException e)
-    {
-      return false;
-    }
-  }
-
-  @Transactional
-  public Boolean deleteById(Long id)
-  {
-    Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
-
-    account.setDeletedAt(LocalDateTime.now());
-    _accountRepo.persist(account);
-
-    return Boolean.TRUE;
-  }
-
-  public List<Account> getDeletedAccounts()
-  {
-
-    return _accountRepo.list("deletedAt IS NOT NULL");
-  }
+		return _accountRepo.list("deletedAt IS NOT NULL");
+	}
 }

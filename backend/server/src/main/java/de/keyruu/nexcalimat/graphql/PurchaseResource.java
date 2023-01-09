@@ -23,69 +23,69 @@ import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 @GraphQLApi
 public class PurchaseResource
 {
-  @Inject
-  PurchaseRepository _purchaseRepository;
+	@Inject
+	PurchaseRepository _purchaseRepository;
 
-  @Inject
-  PurchaseService _purchaseService;
+	@Inject
+	PurchaseService _purchaseService;
 
-  @Inject
-  JwtUtils _jwtUtils;
+	@Inject
+	JwtUtils _jwtUtils;
 
-  @Inject
-  SecurityIdentity _securityIdentity;
+	@Inject
+	SecurityIdentity _securityIdentity;
 
-  @Inject
-  CurrentVertxRequest _request;
+	@Inject
+	CurrentVertxRequest _request;
 
-  @Inject
-  JsonWebToken _jwt;
+	@Inject
+	JsonWebToken _jwt;
 
-  @Query
-  @Description("Get all Purchases")
-  @RolesAllowed(Roles.ADMIN)
-  public List<Purchase> purchases()
-  {
-    return _purchaseService.listAll();
-  }
+	@Query
+	@Description("Get all Purchases")
+	@RolesAllowed(Roles.ADMIN)
+	public List<Purchase> purchases()
+	{
+		return _purchaseService.listAll();
+	}
 
-  @Query
-  @Description("Get personal Purchases")
-  @RolesAllowed({ Roles.CUSTOMER, Roles.USER, Roles.ADMIN })
-  public List<Purchase> myPurchases()
-  {
-    if (_securityIdentity.hasRole(Roles.CUSTOMER))
-    {
-      return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request));
-    }
-    else
-    {
-      return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt));
-    }
-  }
+	@Query
+	@Description("Get personal Purchases")
+	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
+	public List<Purchase> myPurchases()
+	{
+		if (_securityIdentity.hasRole(Roles.CUSTOMER))
+		{
+			return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request));
+		}
+		else
+		{
+			return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt));
+		}
+	}
 
-  @Query
-  @Description("Get Purchase by ID")
-  @RolesAllowed({ Roles.ADMIN })
-  public Purchase purchase(Long id)
-  {
-    return _purchaseService.findById(id);
-  }
+	@Query
+	@Description("Get Purchase by ID")
+	@RolesAllowed(Roles.ADMIN)
+	public Purchase purchase(Long id)
+	{
+		return _purchaseService.findById(id);
+	}
 
-  @Mutation
-  @Description("Make Purchase")
-  @RolesAllowed(Roles.CUSTOMER)
-  public Purchase makePurchase(Long productId)
-  {
-    return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request));
-  }
+	@Mutation
+	@Description("Make Purchase")
+	@RolesAllowed(Roles.CUSTOMER)
+	public Purchase makePurchase(Long productId)
+	{
+		return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request));
+	}
 
-  @Mutation
-  @Description("Refund Purchase")
-  @RolesAllowed(Roles.CUSTOMER)
-  @Transactional
-  public Boolean refundPurchase(Long id)
-  {
-    return _purchaseService.refund(id, _jwtUtils.getPinJwtAccountId(_request));
-  }
+	@Mutation
+	@Description("Refund Purchase")
+	@RolesAllowed(Roles.CUSTOMER)
+	@Transactional
+	public Boolean refundPurchase(Long id)
+	{
+		return _purchaseService.refund(id, _jwtUtils.getPinJwtAccountId(_request));
+	}
 }

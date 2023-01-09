@@ -22,101 +22,85 @@ import de.keyruu.nexcalimat.service.AccountService;
 @GraphQLApi
 public class AccountResource
 {
-  @Inject
-  AccountRepository _accountRepository;
+	@Inject
+	AccountRepository _accountRepository;
 
-  @Inject
-  AccountService _accountService;
+	@Inject
+	AccountService _accountService;
 
-  @Inject
-  JwtUtils _jwtUtils;
+	@Inject
+	JwtUtils _jwtUtils;
 
-  @Inject
-  JsonWebToken _jwt;
+	@Inject
+	JsonWebToken _jwt;
 
-  @Query
-  @Description("Get all Accounts")
-  public List<Account> accounts()
-  {
-    return _accountService.listAll();
-  }
+	@Query
+	@Description("Get all Accounts")
+	public List<Account> accounts()
+	{
+		return _accountService.listAll();
+	}
 
-  @Query
-  @Description("Get Account by ID")
-  public Account account(Long id)
-  {
-    return _accountService.findById(id);
-  }
+	@Query
+	@Description("Get Account by ID")
+	public Account account(Long id)
+	{
+		return _accountService.findById(id);
+	}
 
-  @Query
-  @Description("Login with PIN")
-  public String pinLogin(PinLogin login)
-  {
-    return _accountService.pinLogin(login);
-  }
+	@Query
+	@Description("Login with PIN")
+	public String pinLogin(PinLogin login)
+	{
+		return _accountService.pinLogin(login);
+	}
 
-  @Query
-  @Description("Get deleted Accounts")
-  @RolesAllowed(Roles.ADMIN)
-  public List<Account> deletedAccounts()
-  {
-    return _accountService.getDeletedAccounts();
-  }
+	@Query
+	@Description("Get deleted Accounts")
+	@RolesAllowed(Roles.ADMIN)
+	public List<Account> deletedAccounts()
+	{
+		return _accountService.getDeletedAccounts();
+	}
 
-  @Mutation
-  @Description("Erase an Account permanently")
-  @RolesAllowed(Roles.ADMIN)
-  public Boolean eraseAccount(Long id)
-  {
-    return _accountService.eraseAccount(id);
-  }
+	@Mutation
+	@Description("Erase an Account permanently")
+	@RolesAllowed(Roles.ADMIN)
+	public Boolean eraseAccount(Long id)
+	{
+		return _accountService.eraseAccount(id);
+	}
 
-  @Mutation
-  @Description("Sign up with OIDC provider token and PIN")
-  @RolesAllowed(Roles.USER)
-  public Account signUp(String pin)
-  {
-    return _accountService.signUp(pin, _jwt);
-  }
+	@Mutation
+	@Description("Sign up with OIDC provider token and PIN")
+	@RolesAllowed(Roles.USER)
+	public Account signUp(String pin)
+	{
+		return _accountService.signUp(pin, _jwt);
+	}
 
-  @Mutation
-  @Description("Update Account")
-  @RolesAllowed(Roles.ADMIN)
-  public Account updateAccount(Account account)
-  {
-    return _accountService.updateAccount(account);
-  }
+	@Mutation
+	@Description("Update Account")
+	@RolesAllowed(Roles.ADMIN)
+	public Account updateAccount(Account account)
+	{
+		return _accountService.updateAccount(account);
+	}
 
-  @Mutation
-  @Description("Update my Account Picture")
-  @RolesAllowed({ Roles.USER, Roles.ADMIN })
-  public Account updateMyAccountPicture(String picture)
-  {
-    return _accountService.updateMyAccountPicture(picture, _jwtUtils.getExtIdFromToken(_jwt));
-  }
+	@Mutation
+	@Description("Delete Account")
+	@RolesAllowed(Roles.ADMIN)
+	@Transactional
+	public Boolean deleteAccount(Long id)
+	{
+		return _accountService.deleteById(id);
+	}
 
-  @Mutation
-  @Description("Update Account Picture")
-  @RolesAllowed(Roles.ADMIN)
-  public Account updateAccountPicture(Account account)
-  {
-    return _accountService.updateAccountPicture(account);
-  }
-
-  @Mutation
-  @Description("Delete Account")
-  @RolesAllowed(Roles.ADMIN)
-  @Transactional
-  public Boolean deleteAccount(Long id)
-  {
-    return _accountService.deleteById(id);
-  }
-
-  @Mutation
-  @Description("Set new PIN")
-  @RolesAllowed(Roles.USER)
-  public Boolean setPin(String pin)
-  {
-    return _accountService.setPin(pin, _jwtUtils.getExtIdFromToken(_jwt));
-  }
+	@Mutation
+	@Description("Set new PIN")
+	@RolesAllowed(Roles.USER)
+	public Boolean setPin(String pin)
+	{
+		return _accountService.setPin(pin, _jwtUtils.getExtIdFromToken(_jwt));
+	}
 }

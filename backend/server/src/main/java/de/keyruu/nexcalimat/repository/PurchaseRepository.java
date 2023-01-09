@@ -6,6 +6,7 @@ import de.keyruu.nexcalimat.model.Purchase;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 @ApplicationScoped
-public class PurchaseRepository implements PanacheRepository<Purchase> {
-    //
+public class PurchaseRepository implements PanacheRepository<Purchase>
+{
+	//
 }

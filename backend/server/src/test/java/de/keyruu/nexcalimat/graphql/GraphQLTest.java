@@ -32,132 +32,132 @@ import io.smallrye.jwt.build.Jwt;
 
 public class GraphQLTest
 {
-  Account dubinsky = TestUtils.dubinsky();
-  Account hai = TestUtils.hai();
-  Account even = TestUtils.even();
-  Product peitsche = TestUtils.peitsche();
-  Product yoyo = TestUtils.yoyo();
-  Purchase purchase1 = TestUtils.purchase(dubinsky, peitsche, 7000);
-  Purchase purchase2 = TestUtils.purchase(even, peitsche, 5000);
-  Purchase purchase3 = TestUtils.purchase(even, yoyo, 80);
-  Purchase purchase4 = TestUtils.purchase(dubinsky, peitsche, 9000);
-  Purchase expiredPurchase = TestUtils.purchase(dubinsky, yoyo, 90);
+	Account dubinsky = TestUtils.dubinsky();
+	Account hai = TestUtils.hai();
+	Account even = TestUtils.even();
+	Product peitsche = TestUtils.peitsche();
+	Product yoyo = TestUtils.yoyo();
+	Purchase purchase1 = TestUtils.purchase(dubinsky, peitsche, 7000);
+	Purchase purchase2 = TestUtils.purchase(even, peitsche, 5000);
+	Purchase purchase3 = TestUtils.purchase(even, yoyo, 80);
+	Purchase purchase4 = TestUtils.purchase(dubinsky, peitsche, 9000);
+	Purchase expiredPurchase = TestUtils.purchase(dubinsky, yoyo, 90);
 
-  @Inject
-  AccountService _accountService;
+	@Inject
+	AccountService _accountService;
 
-  @Inject
-  AccountRepository _accountRepository;
+	@Inject
+	AccountRepository _accountRepository;
 
-  @Inject
-  ProductService _productService;
+	@Inject
+	ProductService _productService;
 
-  @Inject
-  ProductRepository _productRepository;
+	@Inject
+	ProductRepository _productRepository;
 
-  @Inject
-  PurchaseService _purchaseService;
+	@Inject
+	PurchaseService _purchaseService;
 
-  @Inject
-  PurchaseRepository _purchaseRepository;
+	@Inject
+	PurchaseRepository _purchaseRepository;
 
-  String getEarlsToken()
-  {
-    return getOidcToken("earl", Set.of("some-random-admin-group-name"), "", "Earl of Cockwood");
-  }
+	String getEarlsToken()
+	{
+		return getOidcToken("earl", Set.of("some-random-admin-group-name"), "", "Earl of Cockwood");
+	}
 
-  String getDubinskysToken()
-  {
-    return getOidcToken("dubinsky", Set.of("some-random-user-group-name"), "dieter@dubinsky.de", "Dieter Dubinsky");
-  }
+	String getDubinskysToken()
+	{
+		return getOidcToken("dubinsky", Set.of("some-random-user-group-name"), "dieter@dubinsky.de", "Dieter Dubinsky");
+	}
 
-  @BeforeEach
-  @Transactional
-  public void testData()
-  {
-    _accountRepository.persist(dubinsky, even, hai);
-    _productRepository.persist(peitsche, yoyo);
-    _purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
-    _accountService.deleteById(hai.getId());
-    _purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
-    _purchaseRepository.persist(expiredPurchase);
-    _purchaseRepository.getEntityManager()
-      .createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
-      .setParameter("created", LocalDateTime.now().minusMinutes(10))
-      .setParameter("id", expiredPurchase.getId())
-      .executeUpdate();
-  }
+	@BeforeEach
+	@Transactional
+	public void testData()
+	{
+		_accountRepository.persist(dubinsky, even, hai);
+		_productRepository.persist(peitsche, yoyo);
+		_purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
+		_accountService.deleteById(hai.getId());
+		_purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
+		_purchaseRepository.persist(expiredPurchase);
+		_purchaseRepository.getEntityManager()
+			.createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
+			.setParameter("created", LocalDateTime.now().minusMinutes(10))
+			.setParameter("id", expiredPurchase.getId())
+			.executeUpdate();
+	}
 
-  @AfterEach
-  @Transactional
-  void delete()
-  {
-    _purchaseRepository.deleteAll();
-    _accountRepository.deleteAll();
-    _productRepository.deleteAll();
-  }
+	@AfterEach
+	@Transactional
+	void delete()
+	{
+		_purchaseRepository.deleteAll();
+		_accountRepository.deleteAll();
+		_productRepository.deleteAll();
+	}
 
-  void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher)
-  {
-    given()
-      .when()
-      .auth().oauth2(idToken)
-      .body(getGraphQLBody("graphql/SignUp.graphql"))
-      .post("/graphql")
-      .then()
-      .statusCode(200)
-      .body(is(
-        "{\"data\":{\"signUp\":{\"email\":\"test@test.de\",\"extId\":\"test\",\"name\":\"Test Klaus\",\"balance\":0,\"id\":1}}}"));
-  }
+	void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher)
+	{
+		given()
+			.when()
+			.auth().oauth2(idToken)
+			.body(getGraphQLBody("graphql/SignUp.graphql"))
+			.post("/graphql")
+			.then()
+			.statusCode(200)
+			.body(is(
+				"{\"data\":{\"signUp\":{\"email\":\"test@test.de\",\"extId\":\"test\",\"name\":\"Test Klaus\",\"balance\":0,\"id\":1}}}"));
+	}
 
-  void testPinGraphQlEndpoint(String pinToken, String requestBody, String expectedResponseBody)
-  {
-    given()
-      .when()
-      .header("Authorization", "PIN" + pinToken)
-      .body(requestBody)
-      .post("/graphql")
-      .then()
-      .statusCode(200)
-      .body(is(expectedResponseBody));
-  }
+	void testPinGraphQlEndpoint(String pinToken, String requestBody, String expectedResponseBody)
+	{
+		given()
+			.when()
+			.header("Authorization", "PIN" + pinToken)
+			.body(requestBody)
+			.post("/graphql")
+			.then()
+			.statusCode(200)
+			.body(is(expectedResponseBody));
+	}
 
-  String getGraphQLBody(String path)
-  {
-    try
-    {
-      String graphql = new String(Files.readAllBytes(Paths.get("src/test/resources/" + path)));
-      graphql = graphql.replaceAll("\"", "\\\\\"");
-      graphql = graphql.replaceAll("\n", "");
-      return String.format("""
-        {
-          "query": "%s"
-        }
-        """, graphql);
-    }
-    catch (IOException e)
-    {
-      fail("Bad syntax", e);
-      return "";
-    }
-  }
+	String getGraphQLBody(String path)
+	{
+		try
+		{
+			String graphql = new String(Files.readAllBytes(Paths.get("src/test/resources/" + path)));
+			graphql = graphql.replaceAll("\"", "\\\\\"");
+			graphql = graphql.replaceAll("\n", "");
+			return String.format("""
+				{
+				  "query": "%s"
+				}
+				""", graphql);
+		}
+		catch (IOException e)
+		{
+			fail("Bad syntax", e);
+			return "";
+		}
+	}
 
-  String getOidcToken(String userName, Set<String> groups, String email, String name)
-  {
-    return Jwt.preferredUserName(userName)
-      .groups(groups)
-      .issuer("https://server.example.com")
-      .audience("https://service.example.com")
-      .claim("sub", userName)
-      .claim("email", email)
-      .claim("name", name)
-      .sign();
-  }
+	String getOidcToken(String userName, Set<String> groups, String email, String name)
+	{
+		return Jwt.preferredUserName(userName)
+			.groups(groups)
+			.issuer("https://server.example.com")
+			.audience("https://service.example.com")
+			.claim("sub", userName)
+			.claim("email", email)
+			.claim("name", name)
+			.sign();
+	}
 
-  String getPinToken(Long userId)
-  {
-    return Jwt.upn(userId.toString())
-      .groups(Roles.CUSTOMER)
-      .sign("privateKey.pem");
-  }
+	String getPinToken(Long userId)
+	{
+		return Jwt.upn(userId.toString())
+			.groups(Roles.CUSTOMER)
+			.sign("privateKey.pem");
+	}
 }
