@@ -20,7 +20,7 @@ public class ProductService
 	ProductRepository _productRepository;
 
 	@Inject
-	PictureService _imageService;
+	PictureService _pictureService;
 
 	public List<Product> listAll()
 	{
@@ -37,7 +37,15 @@ public class ProductService
 	{
 		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
-		return _imageService.updatePicture(dbProduct, formData, _productRepository);
+		return _pictureService.updatePicture(dbProduct, formData, _productRepository);
+	}
+
+	@Transactional
+	public void deleteProductPicture(Long id)
+	{
+		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+
+		_pictureService.deletePicture(dbProduct, _productRepository);
 	}
 
 	@Transactional

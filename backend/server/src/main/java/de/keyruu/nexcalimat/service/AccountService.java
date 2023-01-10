@@ -3,7 +3,6 @@ package de.keyruu.nexcalimat.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -43,7 +42,7 @@ public class AccountService
 	FilestoreClient _filestoreClient;
 
 	@Inject
-	PictureService _imageService;
+	PictureService _pictureService;
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
 	String _userIdClaim;
@@ -91,11 +90,7 @@ public class AccountService
 
 	public String pinLogin(PinLogin login)
 	{
-		Account account = _accountRepo.findById(login.getId());
-		if (account == null)
-		{
-			throw new AccountNotFoundException();
-		}
+		Account account = _accountRepo.findByIdOptional(login.getId()).orElseThrow(AccountNotFoundException::new);
 
 		if (BcryptUtil.matches(login.getPin(), account.getPinHash()) == false)
 		{
@@ -110,14 +105,8 @@ public class AccountService
 	{
 		validatePin(pin);
 
-		Optional<Account> accountOptional = _accountRepo.find("extId", extId).firstResultOptional();
-
-		if (accountOptional.isEmpty())
-		{
-			throw new AccountNotFoundException();
-		}
-
-		Account account = accountOptional.get();
+		Account account = _accountRepo.find("extId", extId).firstResultOptional()
+			.orElseThrow(AccountNotFoundException::new);
 
 		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
@@ -129,9 +118,10 @@ public class AccountService
 	@Transactional
 	public Account updateAccountPicture(Long id, FileFormData formData) throws IOException
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+		Account dbAccount = _accountRepo.findByIdOptional(id)
+			.orElseThrow(AccountNotFoundException::new);
 
-		return _imageService.updatePicture(dbAccount, formData, _accountRepo);
+		return _pictureService.updatePicture(dbAccount, formData, _accountRepo);
 	}
 
 	@Transactional
@@ -140,13 +130,32 @@ public class AccountService
 		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _imageService.updatePicture(dbAccount, formData, _accountRepo);
+		return _pictureService.updatePicture(dbAccount, formData, _accountRepo);
+	}
+
+	@Transactional
+	public void deleteAccountPicture(Long id)
+	{
+		Account dbAccount = _accountRepo.findByIdOptional(id)
+			.orElseThrow(AccountNotFoundException::new);
+
+		_pictureService.deletePicture(dbAccount, _accountRepo);
+	}
+
+	@Transactional
+	public void deleteMyAccountPicture(String extId)
+	{
+		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
+			.orElseThrow(AccountNotFoundException::new);
+
+		_pictureService.deletePicture(dbAccount, _accountRepo);
 	}
 
 	@Transactional
 	public Account updateAccount(Account account)
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(account.getId()).orElseThrow(AccountNotFoundException::new);
+		Account dbAccount = _accountRepo.findByIdOptional(account.getId())
+			.orElseThrow(AccountNotFoundException::new);
 
 		if (account.getBalance() == null)
 		{
@@ -210,7 +219,6 @@ public class AccountService
 
 	public List<Account> getDeletedAccounts()
 	{
-
 		return _accountRepo.list("deletedAt IS NOT NULL");
 	}
 }

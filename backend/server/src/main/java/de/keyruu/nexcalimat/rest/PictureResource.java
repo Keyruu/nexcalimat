@@ -6,6 +6,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -45,10 +46,20 @@ public class PictureResource
   @Path("/account/{id}")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(Roles.ADMIN)
-  public Response updateAccountPicture(@PathParam("id") Long id, @MultipartForm @Valid FileFormData formData) throws IOException
+  public Response updateAccountPicture(@PathParam("id") Long id,
+    @MultipartForm @Valid FileFormData formData) throws IOException
   {
     _accountService.updateAccountPicture(id, formData);
     return Response.status(Status.CREATED).build();
+  }
+
+  @DELETE
+  @Path("/account/{id}")
+  @RolesAllowed(Roles.ADMIN)
+  public Response deleteAccountPicture(@PathParam("id") Long id)
+  {
+    _accountService.deleteAccountPicture(id);
+    return Response.status(Status.NO_CONTENT).build();
   }
 
   @POST
@@ -61,13 +72,32 @@ public class PictureResource
     return Response.status(Status.CREATED).build();
   }
 
+  @DELETE
+  @Path("/myAccount")
+  @RolesAllowed(Roles.USER)
+  public Response deleteMyAccountPicture()
+  {
+    _accountService.deleteMyAccountPicture(_jwtUtils.getExtIdFromToken(_jwt));
+    return Response.status(Status.NO_CONTENT).build();
+  }
+
   @POST
   @Path("/product/{id}")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(Roles.ADMIN)
-  public Response updateProductPicture(@PathParam("id") Long id, @MultipartForm @Valid FileFormData formData) throws IOException
+  public Response updateProductPicture(@PathParam("id") Long id,
+    @MultipartForm @Valid FileFormData formData) throws IOException
   {
     _productService.updateProductPicture(id, formData);
     return Response.status(Status.CREATED).build();
+  }
+
+  @DELETE
+  @Path("/product/{id}")
+  @RolesAllowed(Roles.ADMIN)
+  public Response deleteProductPicture(@PathParam("id") Long id)
+  {
+    _productService.deleteProductPicture(id);
+    return Response.status(Status.NO_CONTENT).build();
   }
 }
