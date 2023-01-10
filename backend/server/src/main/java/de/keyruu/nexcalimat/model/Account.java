@@ -57,11 +57,13 @@ public class Account implements HasPicture
 	@Ignore
 	private Set<Purchase> purchases = new HashSet<>();
 
+	@Override
 	public Long getId()
 	{
 		return this.id;
 	}
 
+	@Override
 	public void setId(Long id)
 	{
 		this.id = id;

@@ -4,19 +4,20 @@ import java.io.File;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jboss.resteasy.reactive.PartType;
-import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 public class FileFormData
 {
 	@NotNull
-	@RestForm("file")
-	public File data;
+	@FormParam("file")
+	@PartType(MediaType.APPLICATION_OCTET_STREAM)
+	public File file;
 
 	@NotEmpty
-	@RestForm
+	@FormParam("filename")
 	@PartType(MediaType.TEXT_PLAIN)
 	public String filename;
 }

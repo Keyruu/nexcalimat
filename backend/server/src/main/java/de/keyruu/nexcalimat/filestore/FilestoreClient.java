@@ -2,6 +2,7 @@ package de.keyruu.nexcalimat.filestore;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -65,16 +66,16 @@ public class FilestoreClient
     }
   }
 
-  public String uploadFile(FileFormData formData, String prefix) throws IOException
+  public String uploadFile(FileFormData formData, String prefix, Long id) throws IOException
   {
     if (_bucketExists == false)
     {
       ensureBucketExists();
     }
 
-    String objectKey = buildObjectKey(formData);
-    PutObjectRequest putRequest = buildPutRequest(buildFullObjectKey(prefix, objectKey), Files.probeContentType(formData.data.toPath()));
-    _s3.putObject(putRequest, RequestBody.fromFile(formData.data));
+    String objectKey = buildObjectKey(formData, id);
+    PutObjectRequest putRequest = buildPutRequest(buildFullObjectKey(prefix, objectKey), Files.probeContentType(Path.of(formData.filename)));
+    _s3.putObject(putRequest, RequestBody.fromFile(formData.file));
     return objectKey;
   }
 
@@ -119,9 +120,9 @@ public class FilestoreClient
       .build();
   }
 
-  private String buildObjectKey(FileFormData formData)
+  private String buildObjectKey(FileFormData formData, Long id)
   {
-    return UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(formData.data.getName());
+    return UUID.randomUUID().toString() + "_" + id + "." + FilenameUtils.getExtension(formData.filename);
   }
 
   private void ensureBucketExists()

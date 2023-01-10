@@ -19,7 +19,7 @@ class PictureService
 
   <T extends HasPicture> T updatePicture(T entity, FileFormData formData, PanacheRepository<T> repo) throws IOException
   {
-    String objectKey = _filestoreClient.uploadFile(formData, PictureType.ACCOUNT);
+    String objectKey = _filestoreClient.uploadFile(formData, PictureType.ACCOUNT, entity.getId());
 
     String oldPicture = entity.getPicture();
     if (oldPicture != null && oldPicture.isEmpty() == false && oldPicture.trim().isEmpty() == false)

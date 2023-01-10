@@ -8,11 +8,13 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.filestore.FilestoreClient;
@@ -43,7 +45,7 @@ public class PictureResource
   @Path("/account/{id}")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(Roles.ADMIN)
-  public Response updateAccountPicture(Long id, @Valid FileFormData formData) throws IOException
+  public Response updateAccountPicture(@PathParam("id") Long id, @MultipartForm @Valid FileFormData formData) throws IOException
   {
     _accountService.updateAccountPicture(id, formData);
     return Response.status(Status.CREATED).build();
@@ -53,7 +55,7 @@ public class PictureResource
   @Path("/myAccount")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(Roles.USER)
-  public Response updateMyAccountPicture(@Valid FileFormData formData) throws IOException
+  public Response updateMyAccountPicture(@MultipartForm @Valid FileFormData formData) throws IOException
   {
     _accountService.updateMyAccountPicture(_jwtUtils.getExtIdFromToken(_jwt), formData);
     return Response.status(Status.CREATED).build();
@@ -63,7 +65,7 @@ public class PictureResource
   @Path("/product/{id}")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @RolesAllowed(Roles.ADMIN)
-  public Response updateProductPicture(Long id, @Valid FileFormData formData) throws IOException
+  public Response updateProductPicture(@PathParam("id") Long id, @MultipartForm @Valid FileFormData formData) throws IOException
   {
     _productService.updateProductPicture(id, formData);
     return Response.status(Status.CREATED).build();
