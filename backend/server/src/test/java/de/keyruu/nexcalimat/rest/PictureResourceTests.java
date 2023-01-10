@@ -47,8 +47,8 @@ public class PictureResourceTests extends NexcalimatTest
     given()
       .when()
       .auth().oauth2(getDubinskysToken())
-      .multiPart("filename", "rathercopy.png")
-      .multiPart("file", new File("src/test/resources/rathercopy2.png"))
+      .multiPart("filename", "rather.png")
+      .multiPart("file", new File("src/test/resources/rather.png"))
       .post("/api/v1/picture/account/" + even.getId())
       .then()
       .statusCode(403);
