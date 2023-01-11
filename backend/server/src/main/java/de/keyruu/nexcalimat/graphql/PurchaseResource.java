@@ -1,6 +1,7 @@
 package de.keyruu.nexcalimat.graphql;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -12,6 +13,9 @@ import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
+import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Purchase;
 import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
@@ -44,23 +48,24 @@ public class PurchaseResource
 	@Query
 	@Description("Get all Purchases")
 	@RolesAllowed(Roles.ADMIN)
-	public List<Purchase> purchases()
+	public List<Purchase> purchases(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _purchaseService.listAll();
+		return _purchaseService.listAll(Mapper.map(page, sort));
 	}
 
 	@Query
 	@Description("Get personal Purchases")
 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
-	public List<Purchase> myPurchases()
+	public List<Purchase> myPurchases(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
+		Mapper mapper = Mapper.map(page, sort);
 		if (_securityIdentity.hasRole(Roles.CUSTOMER))
 		{
-			return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request));
+			return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request), mapper);
 		}
 		else
 		{
-			return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt));
+			return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt), mapper);
 		}
 	}
 

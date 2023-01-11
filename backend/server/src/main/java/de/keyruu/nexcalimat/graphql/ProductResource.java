@@ -1,6 +1,7 @@
 package de.keyruu.nexcalimat.graphql;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -11,6 +12,9 @@ import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
+import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.security.Roles;
@@ -28,9 +32,9 @@ public class ProductResource
 	@Query
 	@Description("Get all Products")
 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
-	public List<Product> products()
+	public List<Product> products(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _productService.listAll();
+		return _productService.listAll(Mapper.map(page, sort));
 	}
 
 	@Query

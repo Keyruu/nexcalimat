@@ -17,6 +17,7 @@ import de.keyruu.nexcalimat.graphql.exception.AccountExistsException;
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
 import de.keyruu.nexcalimat.graphql.exception.WrongPinException;
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
@@ -53,9 +54,9 @@ public class AccountService
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
 	String _emailClaim;
 
-	public List<Account> listAll()
+	public List<Account> listAll(Mapper mapper)
 	{
-		return _accountRepo.list("deletedAt IS NULL");
+		return _accountRepo.find("deletedAt IS NULL", mapper.getSort()).page(mapper.getPage()).list();
 	}
 
 	public Account findById(Long id)
@@ -217,8 +218,8 @@ public class AccountService
 		return Boolean.TRUE;
 	}
 
-	public List<Account> getDeletedAccounts()
+	public List<Account> getDeletedAccounts(Mapper mapper)
 	{
-		return _accountRepo.list("deletedAt IS NOT NULL");
+		return _accountRepo.find("deletedAt IS NOT NULL", mapper.getSort()).page(mapper.getPage()).list();
 	}
 }

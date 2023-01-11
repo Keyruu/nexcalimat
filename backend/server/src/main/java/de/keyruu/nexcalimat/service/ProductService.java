@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 
@@ -22,9 +23,9 @@ public class ProductService
 	@Inject
 	PictureService _pictureService;
 
-	public List<Product> listAll()
+	public List<Product> listAll(Mapper mapper)
 	{
-		return _productRepository.list("deletedAt IS NULL");
+		return _productRepository.find("deletedAt IS NULL", mapper.getSort()).page(mapper.getPage()).list();
 	}
 
 	public Product findById(Long id)

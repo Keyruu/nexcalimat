@@ -11,6 +11,7 @@ import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PurchaseNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.RefundPeriodExceededException;
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.Purchase;
@@ -31,9 +32,9 @@ public class PurchaseService
 	@Inject
 	AccountRepository _accountRepository;
 
-	public List<Purchase> listAll()
+	public List<Purchase> listAll(Mapper mapper)
 	{
-		return _purchaseRepository.listAll();
+		return _purchaseRepository.findAll(mapper.getSort()).page(mapper.getPage()).list();
 	}
 
 	public Purchase findById(Long id)
@@ -88,17 +89,24 @@ public class PurchaseService
 		return Boolean.TRUE;
 	}
 
-	public List<Purchase> getPurchasesForUser(String extId)
+	public List<Purchase> getPurchasesForUser(String extId, Mapper mapper)
 	{
 		Account account = _accountRepository.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _purchaseRepository.find("account", account).list();
+		return getPurchasesForAccount(account, mapper);
 	}
 
-	public List<Purchase> getPurchasesForCustomer(Long pinJwtAccountId)
+	public List<Purchase> getPurchasesForCustomer(Long pinJwtAccountId, Mapper mapper)
 	{
-		Account account = _accountRepository.findByIdOptional(pinJwtAccountId).orElseThrow(AccountNotFoundException::new);
-		return _purchaseRepository.find("account", account).list();
+		Account account = _accountRepository.findByIdOptional(pinJwtAccountId)
+			.orElseThrow(AccountNotFoundException::new);
+
+		return getPurchasesForAccount(account, mapper);
+	}
+
+	private List<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
+	{
+		return _purchaseRepository.find("account", mapper.getSort(), account).page(mapper.getPage()).list();
 	}
 }
