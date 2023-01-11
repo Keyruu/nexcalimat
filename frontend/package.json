@@ -46,8 +46,8 @@
     "type": "module",
     "dependencies": {
         "@apollo/client": "^3.7.1",
-        "@auth/core": "^0.2.4",
-        "@auth/sveltekit": "^0.1.11",
+        "@auth/core": "^0.2.5",
+        "@auth/sveltekit": "^0.1.12",
         "graphql": "^16.6.0",
         "svelte-apollo": "^0.5.0",
         "svelte-i18n": "^3.6.0"

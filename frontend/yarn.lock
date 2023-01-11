@@ -59,22 +59,10 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@auth/core@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@auth/core/-/core-0.2.3.tgz#f6e11476240fa5d5ad14090e8564d2f0d1f4a4cb"
-  integrity sha512-GJJkCh1jmI1kJlGmVOGMHRimQbHQCCwgmZLIx0Fpod1e0g4gtk6hGL5LmKjb7rN3j3HQbxQOEg5j6jJLZ7dDJw==
-  dependencies:
-    "@panva/hkdf" "1.0.2"
-    cookie "0.5.0"
-    jose "4.11.1"
-    oauth4webapi "2.0.5"
-    preact "10.11.3"
-    preact-render-to-string "5.2.3"
-
-"@auth/core@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@auth/core/-/core-0.2.4.tgz#b86c47d9aa75a949de3441907c5cb4a5d5ec21ee"
-  integrity sha512-KTQE+z2mxWWaQjTuJzMiIk+2NgXNfapu8+NITSyLlMPmox6UhMETjg6i5B0T8WcfnwwIaQMCdqEJ0Jxvqz+giw==
+"@auth/core@0.2.5", "@auth/core@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@auth/core/-/core-0.2.5.tgz#41fecef93a9e44370e9a00c74751dca39910d1ec"
+  integrity sha512-e9jQOW6kSnxa0gfeR5neqLIDAUvZtyGTh3YpO2eN5F/5gBybE582M5e34rXlJKj+/tAgf+oYBJAY5CUxGTY9tw==
   dependencies:
     "@panva/hkdf" "^1.0.2"
     cookie "0.5.0"
@@ -83,12 +71,12 @@
     preact "10.11.3"
     preact-render-to-string "5.2.3"
 
-"@auth/sveltekit@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@auth/sveltekit/-/sveltekit-0.1.11.tgz#363b3ddcedcfbe5f35a7cd19a8c796a35958f9d8"
-  integrity sha512-veSAWERabK2bKOymkvD1tK0+YA7GbOnroESukz15ABoIfQ+UdEbxcfgUIXeg1ZS0QignAgJ5XwBjn8ph9OfWwg==
+"@auth/sveltekit@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@auth/sveltekit/-/sveltekit-0.1.12.tgz#9f7d459a5bc0fcd50afe78d64b579d1f0c27e6cd"
+  integrity sha512-nQyOXOaVRl+70XSIsgQCpU0BFkOb52DqsRmfNUOIm4/EtGTERLLsKVCRaPXXCYp6t22I2pu4E2gD79r74gPyZA==
   dependencies:
-    "@auth/core" "0.2.3"
+    "@auth/core" "0.2.5"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.18.6":
   version "7.18.6"
@@ -1276,7 +1264,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@panva/hkdf@1.0.2", "@panva/hkdf@^1.0.2":
+"@panva/hkdf@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@panva/hkdf/-/hkdf-1.0.2.tgz#bab0f09d09de9fd83628220d496627681bc440d6"
   integrity sha512-MSAs9t3Go7GUkMhpKC44T58DJ5KGk2vBo+h1cqQeqlMfdGkxaVB78ZWpv9gYi/g2fa4sopag9gJsNvS8XGgWJA==
@@ -3185,7 +3173,7 @@ isomorphic-ws@5.0.0:
   resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-5.0.0.tgz#e5529148912ecb9b451b46ed44d53dae1ce04bbf"
   integrity sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==
 
-jose@4.11.1, jose@^4.11.1:
+jose@^4.11.1:
   version "4.11.1"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.11.1.tgz#8f7443549befe5bddcf4bae664a9cbc1a62da4fa"
   integrity sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==
@@ -3608,11 +3596,6 @@ nullthrows@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/nullthrows/-/nullthrows-1.1.1.tgz#7818258843856ae971eae4208ad7d7eb19a431b1"
   integrity sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==
-
-oauth4webapi@2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/oauth4webapi/-/oauth4webapi-2.0.5.tgz#03e4ac9c29ec45423f07e47cd238cf179e0af6f8"
-  integrity sha512-KmoR3KxCwmr9KvL/c/6UVzQnc4CUjo+j8NSgD3bWYlZXpUmyOVw97nDVb0BKZhCcUtGsbll16v8vsnR5JbTZ9A==
 
 oauth4webapi@^2.0.6:
   version "2.0.6"
