@@ -1,9 +1,10 @@
 <script>
-	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 </script>
 
-<h1>SvelteKit Auth Example</h1>
+<h1 class="text-xl mb-2">SvelteKit Auth Example</h1>
+
 <p>
 	{#if $page.data.session}
 		{#if $page.data.session.user?.image}
@@ -16,6 +17,6 @@
 		<button on:click="{() => signOut()}" class="button">Sign out</button>
 	{:else}
 		<span class="notSignedInText">You are not signed in</span>
-		<button on:click="{() => signIn('azure-ad')}">Sign In with GitHub</button>
+		<button on:click="{() => signIn('azure-ad')}">Sign In with Azure AD</button>
 	{/if}
 </p>
