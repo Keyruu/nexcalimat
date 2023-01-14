@@ -1,7 +1,7 @@
 {
 	"homepage": {
-		"store-login": "Store Login",
-		"admin-login": "Admin login"
+		"store-login": "Store",
+		"admin-login": "Admin"
 	},
 	"header": {
 		"signup": "Signup"

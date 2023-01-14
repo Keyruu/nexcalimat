@@ -31,13 +31,13 @@
 	export function triggerSuccess() {
 		console.debug('trigger success');
 		success = true;
-		setTimeout(() => reset(), 800);
+		setTimeout(() => reset(), 400);
 	}
 
 	export function triggerMiss() {
 		console.debug('trigger miss');
 		error = true;
-		setTimeout(() => reset(), 2000);
+		setTimeout(() => reset(), 500);
 	}
 
 	$: buttonsDisabled = success || error;
@@ -45,7 +45,7 @@
 		if (value.length === 4) {
 			setTimeout(() => {
 				submit();
-			}, 200);
+			}, 100);
 		}
 	}
 </script>
@@ -63,22 +63,27 @@
 	</div>
 	<div class="mx-auto grid w-fit grid-cols-3 gap-y-3 gap-x-5">
 		{#each Array(9) as _, i}
+		<div class="flex justify-center items-center">
 			<button
 				disabled="{buttonsDisabled}"
 				class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
 				on:click="{() => select(i + 1)}">{i + 1}</button
 			>
+			</div>
 		{/each}
+		<div class="flex justify-center items-center">
 		<button
 			class="btn-outline btn-error btn h-20 w-20 rounded-full text-xl"
 			disabled="{!value || buttonsDisabled}"
 			on:click="{deleteLast}">←</button
 		>
+		</div>
+		<div class="flex justify-center items-center">
 		<button
 			disabled="{buttonsDisabled}"
 			class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
 			on:click="{() => select(0)}">0</button
-		>
+		></div>
 	</div>
 </div>
 
@@ -86,7 +91,7 @@
 	.pincode {
 		&__fields {
 			&--miss {
-				animation: miss 0.8s ease-out 1;
+				animation: miss 0.7s ease-out 1;
 			}
 
 			span {

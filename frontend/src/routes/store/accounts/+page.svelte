@@ -10,7 +10,7 @@
 	const accounts = query<AccountsQuery, AccountsQueryVariables>(GET_ACCOUNTS);
 </script>
 
-<div class="py-4">
+<div class="py-4 accounts-grid">
 	{#if !$accounts.loading}
 		{#if $accounts.data?.accounts && $accounts.data?.accounts.length}
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
@@ -25,3 +25,7 @@
 		<Alert type="{AlertType.Error}">{$_('errors.no-accounts')}</Alert>
 	{/if}
 </div>
+
+<style lang="scss">
+	.accounts-grid { grid-area: 2 / 2 / 5 / 5; }
+</style>

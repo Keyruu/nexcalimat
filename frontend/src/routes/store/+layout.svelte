@@ -32,17 +32,26 @@
 		return step && index <= step.id ? 'step-primary' : '';
 	}
 
+	function isActiveStep(index: number, currentRoute: string | null) {
+		const step = steps.find((s) => s.route === currentRoute);
+		return step && index === step.id;
+	}
+
 	onDestroy(() => {
 		loggedInAccount.set(null);
 	});
 </script>
 
-<div class="p-4">
-	<div class="sticky top-0 z-10 grid bg-base-100 py-1">
-		<ul class="steps">
+<div class="p-4 parent-grid h-full w-full">
+	<div class="steps-grid py-1 flex items-center justify-center">
+		<ul class="steps w-full">
 			{#each steps as step (step.id)}
 				<li class="{`step ${getStepClasses(step.id, $page.route.id)}`}">
-					{step.text}
+					{#if isActiveStep(step.id, $page.route.id)}
+					<u>{step.text}</u>
+					{:else}
+						{step.text}
+					{/if}
 				</li>
 			{/each}
 		</ul>
@@ -50,3 +59,14 @@
 
 	<slot />
 </div>
+
+<style lang="scss">
+	.parent-grid {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-template-rows: repeat(5, 1fr);
+		grid-column-gap: 0px;
+		grid-row-gap: 0px;
+	}
+.steps-grid { grid-area: 1 / 2 / 2 / 5; }
+</style>

@@ -45,18 +45,20 @@
 	}
 </script>
 
-<div class="py-4">
+<div class="keypad-grid flex justify-center items-center">
 	{#if !$account.loading}
 		{#if $account.data?.account}
 			<div class="text-center">
-				<div class="avatar">
-					<div class="w-24 rounded-full">
-						<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
+				<div class="bg-neutral p-20 rounded-2xl shadow-xl">
+					<div class="avatar">
+						<div class="w-24 rounded-full">
+							<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
+						</div>
 					</div>
-				</div>
-				<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
+					<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
 
-				<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
+					<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
+				</div>
 			</div>
 
 			{#if $loggedInAccount}
@@ -69,3 +71,7 @@
 		<Alert type="{AlertType.Error}">{$_('errors.no-account')}</Alert>
 	{/if}
 </div>
+
+<style lang="scss">
+.keypad-grid { grid-area: 2 / 2 / 5 / 5; }
+</style>

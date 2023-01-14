@@ -6,7 +6,8 @@
 <header class="navbar bg-neutral text-neutral-content">
 	<div class="flex-1">
 		<a class="btn-ghost btn" href="{base}/">
-			<img class="w-36" src="{base}/img/excalimat_logo.png" alt="excalimat" />
+			<img class="w-6" src="{base}/img/exentra_logo.png" alt="excalimat" /> 
+			<h1 class="lowercase font-bold text-2xl text-center text-white align-middle">&nbsp;nexcalimat</h1>
 		</a>
 	</div>
 	<div class="flex-none">
