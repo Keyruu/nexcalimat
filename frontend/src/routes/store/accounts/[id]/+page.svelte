@@ -18,7 +18,6 @@
 	import { getImageUrl } from '$lib/utils/accountUtils';
 	import { getClient, query } from 'svelte-apollo';
 	import { _ } from 'svelte-i18n';
-	import { fade } from 'svelte/transition';
 
 	let pin: string;
 
@@ -79,10 +78,6 @@
 					/>
 				</div>
 			</div>
-
-			{#if $accountToken}
-				<p class="mt-6" transition:fade>Successfully logged in {$accountToken}</p>
-			{/if}
 		{:else}
 			<Alert type="{AlertType.Error}">{$_('errors.account-not-found')}</Alert>
 		{/if}

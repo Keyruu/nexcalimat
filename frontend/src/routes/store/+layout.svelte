@@ -27,14 +27,9 @@
 		}
 	];
 
-	function getStepClasses(index: number, currentRoute: string | null) {
+	function hasStepPrimary(index: number, currentRoute: string | null): boolean {
 		const step = steps.find((s) => s.route === currentRoute);
-		return step && index <= step.id ? 'step-primary' : '';
-	}
-
-	function isActiveStep(index: number, currentRoute: string | null) {
-		const step = steps.find((s) => s.route === currentRoute);
-		return step && index === step.id;
+		return !!step && index <= step.id;
 	}
 
 	onDestroy(() => {
@@ -46,12 +41,8 @@
 	<div class="steps-grid py-1 flex items-center justify-center">
 		<ul class="steps w-full">
 			{#each steps as step (step.id)}
-				<li class="{`step ${getStepClasses(step.id, $page.route.id)}`}">
-					{#if isActiveStep(step.id, $page.route.id)}
-						<u>{step.text}</u>
-					{:else}
-						{step.text}
-					{/if}
+				<li class:step-primary="{hasStepPrimary(step.id, $page.route.id)}" class="step">
+					<span class:underline="{step.route === $page.route.id}">{step.text}</span>
 				</li>
 			{/each}
 		</ul>
