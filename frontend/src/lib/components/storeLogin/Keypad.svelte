@@ -50,40 +50,40 @@
 	}
 </script>
 
-<div class="{`${$$props.class} pincode ${success ? 'pincode--success' : ''} ${error ? 'pincode--miss' : ''}`}">
+<div class:pincode--success="{success}" class:pincode--miss="{error}" class="{`${$$props.class} pincode`}">
 	<div
-		class="{`pincode__fields mx-auto mt-5 mb-10 flex max-w-[250px] items-center justify-between px-5 ${
-			error ? 'pincode__fields--miss' : ''
-		}`}"
+		class:pincode__fields--miss="{error}"
+		class="pincode__fields mx-auto mt-5 mb-6 flex max-w-[250px] items-center justify-between px-5"
 	>
-		<span class="{value.length >= 1 ? 'active' : ''}"></span>
-		<span class="{value.length >= 2 ? 'active' : ''}"></span>
-		<span class="{value.length >= 3 ? 'active' : ''}"></span>
-		<span class="{value.length >= 4 ? 'active' : ''}"></span>
+		<span class:active="{value.length >= 1}"></span>
+		<span class:active="{value.length >= 2}"></span>
+		<span class:active="{value.length >= 3}"></span>
+		<span class:active="{value.length >= 4}"></span>
 	</div>
-	<div class="mx-auto grid w-fit grid-cols-3 gap-y-3 gap-x-5">
+	<div class="mx-auto grid w-fit grid-cols-3 gap-y-2 gap-x-4">
 		{#each Array(9) as _, i}
+			<div class="flex justify-center items-center">
+				<button
+					disabled="{buttonsDisabled}"
+					class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
+					on:click="{() => select(i + 1)}">{i + 1}</button
+				>
+			</div>
+		{/each}
+		<div class="flex justify-center items-center">
+			<button
+				class="btn-outline btn-error btn h-20 w-20 rounded-full text-xl"
+				disabled="{!value || buttonsDisabled}"
+				on:click="{deleteLast}">←</button
+			>
+		</div>
 		<div class="flex justify-center items-center">
 			<button
 				disabled="{buttonsDisabled}"
 				class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
-				on:click="{() => select(i + 1)}">{i + 1}</button
+				on:click="{() => select(0)}">0</button
 			>
-			</div>
-		{/each}
-		<div class="flex justify-center items-center">
-		<button
-			class="btn-outline btn-error btn h-20 w-20 rounded-full text-xl"
-			disabled="{!value || buttonsDisabled}"
-			on:click="{deleteLast}">←</button
-		>
 		</div>
-		<div class="flex justify-center items-center">
-		<button
-			disabled="{buttonsDisabled}"
-			class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
-			on:click="{() => select(0)}">0</button
-		></div>
 	</div>
 </div>
 

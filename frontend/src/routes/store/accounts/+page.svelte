@@ -27,5 +27,7 @@
 </div>
 
 <style lang="scss">
-	.accounts-grid { grid-area: 2 / 2 / 5 / 5; }
+	.accounts-grid {
+		grid-area: 2 / 2 / 5 / 5;
+	}
 </style>

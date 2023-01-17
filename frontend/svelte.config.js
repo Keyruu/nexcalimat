@@ -4,27 +4,24 @@ import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: [
-		preprocess({
-			postcss: true
-		})
-	],
+    // Consult https://github.com/sveltejs/svelte-preprocess
+    // for more information about preprocessors
+    preprocess: [
+        preprocess({
+            postcss: true
+        })
+    ],
 
-	kit: {
-		adapter: adapter({
-			precompress: false,
-			strict: true,
-			fallback: 'index.html',
-			prerender: {
-				entries: []
-			}
-		}),
-		paths: {
-			base: `${process.env.VITE_BASEPATH}`
-		}
-	}
+    kit: {
+        adapter: adapter({
+            precompress: false,
+            strict: true,
+            fallback: 'index.html',
+            prerender: {
+                entries: []
+            }
+        })
+    }
 };
 
 export default config;

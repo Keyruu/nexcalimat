@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { PUBLIC_BACKEND_URL } from '$env/static/public';
 	import Footer from '$lib/components/main/Footer.svelte';
 	import Header from '$lib/components/main/Header.svelte';
 	import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 	import { HttpLink } from '@apollo/client/link/http';
 	import { setClient } from 'svelte-apollo';
 	import '../app.scss';
-	import { PUBLIC_BACKEND_URL } from '$env/static/public'
 
 	function createApolloClient() {
 		const link = new HttpLink({
@@ -39,7 +39,7 @@
 
 <style lang="scss">
 	.background {
-		background-image: url("/img/blurry-gradient-haikei.svg");
+		background-image: url('/img/blurry-gradient-haikei.svg');
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: cover;

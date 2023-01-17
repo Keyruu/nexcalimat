@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { loggedInAccount } from '$lib/stores/accountStore';
+	import { accountToken } from '$lib/stores/accountStore';
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
@@ -38,7 +38,7 @@
 	}
 
 	onDestroy(() => {
-		loggedInAccount.set(null);
+		accountToken.set(undefined);
 	});
 </script>
 
@@ -48,7 +48,7 @@
 			{#each steps as step (step.id)}
 				<li class="{`step ${getStepClasses(step.id, $page.route.id)}`}">
 					{#if isActiveStep(step.id, $page.route.id)}
-					<u>{step.text}</u>
+						<u>{step.text}</u>
 					{:else}
 						{step.text}
 					{/if}
@@ -68,5 +68,7 @@
 		grid-column-gap: 0px;
 		grid-row-gap: 0px;
 	}
-.steps-grid { grid-area: 1 / 2 / 2 / 5; }
+	.steps-grid {
+		grid-area: 1 / 2 / 2 / 5;
+	}
 </style>

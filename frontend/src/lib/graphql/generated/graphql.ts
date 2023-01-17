@@ -15,7 +15,7 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type Account = {
+export type Account = HasPicture & {
   __typename?: 'Account';
   balance?: Maybe<Scalars['BigInteger']>;
   /** ISO-8601 */
@@ -42,6 +42,21 @@ export type AccountInput = {
   picture?: InputMaybe<Scalars['String']>;
 };
 
+export type ColumnPojoInput = {
+  direction?: InputMaybe<DirectionPojo>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum DirectionPojo {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
+}
+
+export type HasPicture = {
+  id?: Maybe<Scalars['BigInteger']>;
+  picture?: Maybe<Scalars['String']>;
+};
+
 /** Mutation root */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -49,6 +64,8 @@ export type Mutation = {
   createProduct?: Maybe<Product>;
   /** Delete Account */
   deleteAccount?: Maybe<Scalars['Boolean']>;
+  /** Delete Product */
+  deleteProduct?: Maybe<Scalars['Boolean']>;
   /** Erase an Account permanently */
   eraseAccount?: Maybe<Scalars['Boolean']>;
   /** Make Purchase */
@@ -74,6 +91,12 @@ export type MutationCreateProductArgs = {
 
 /** Mutation root */
 export type MutationDeleteAccountArgs = {
+  id?: InputMaybe<Scalars['BigInteger']>;
+};
+
+
+/** Mutation root */
+export type MutationDeleteProductArgs = {
   id?: InputMaybe<Scalars['BigInteger']>;
 };
 
@@ -119,12 +142,17 @@ export type MutationUpdateProductArgs = {
   product?: InputMaybe<ProductInput>;
 };
 
+export type PagePojoInput = {
+  index?: InputMaybe<Scalars['Int']>;
+  size?: InputMaybe<Scalars['Int']>;
+};
+
 export type PinLoginInput = {
   id?: InputMaybe<Scalars['BigInteger']>;
   pin?: InputMaybe<Scalars['String']>;
 };
 
-export type Product = {
+export type Product = HasPicture & {
   __typename?: 'Product';
   bundleSize?: Maybe<Scalars['Int']>;
   /** ISO-8601 */
@@ -199,6 +227,27 @@ export type QueryAccountArgs = {
 
 
 /** Query root */
+export type QueryAccountsArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
+export type QueryDeletedAccountsArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
+export type QueryMyPurchasesArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
 export type QueryPinLoginArgs = {
   login?: InputMaybe<PinLoginInput>;
 };
@@ -211,8 +260,26 @@ export type QueryProductArgs = {
 
 
 /** Query root */
+export type QueryProductsArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
 export type QueryPurchaseArgs = {
   id?: InputMaybe<Scalars['BigInteger']>;
+};
+
+
+/** Query root */
+export type QueryPurchasesArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+export type SortPojoInput = {
+  columns?: InputMaybe<Array<InputMaybe<ColumnPojoInput>>>;
 };
 
 export type AccountByIdQueryVariables = Exact<{
@@ -226,3 +293,10 @@ export type AccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AccountsQuery = { __typename?: 'Query', accounts?: Array<{ __typename?: 'Account', id?: any, name?: string, email?: string, balance?: any, picture?: string, extId?: string }> };
+
+export type PinLoginQueryVariables = Exact<{
+  login?: InputMaybe<PinLoginInput>;
+}>;
+
+
+export type PinLoginQuery = { __typename?: 'Query', pinLogin?: string };

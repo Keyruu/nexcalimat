@@ -1,15 +1,24 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
 	import { ACCOUNT_BY_ID } from '$lib/graphql/ACCOUNT_BY_ID';
-	import type { AccountByIdQuery, AccountByIdQueryVariables, PinLoginInput } from '$lib/graphql/generated/graphql';
-	import { loggedInAccount } from '$lib/stores/accountStore';
+	import type {
+		AccountByIdQuery,
+		AccountByIdQueryVariables,
+		PinLoginInput,
+		PinLoginQuery,
+		PinLoginQueryVariables
+	} from '$lib/graphql/generated/graphql';
+	import { PIN_LOGIN } from '$lib/graphql/PIN_LOGIN';
+	import { accountToken } from '$lib/stores/accountStore';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getImageUrl } from '$lib/utils/accountUtils';
-	import { query } from 'svelte-apollo';
-	import { fade } from 'svelte/transition';
+	import { getClient, query } from 'svelte-apollo';
 	import { _ } from 'svelte-i18n';
+	import { fade } from 'svelte/transition';
 
 	let pin: string;
 
@@ -21,27 +30,31 @@
 			id: Number($page.params.id)
 		}
 	});
+	const client = getClient();
 
-	async function handleSubmit() {
-		const body: PinLoginInput = { id: Number($page.params.id), pin };
-		console.log('submit was pressed', body);
-		const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/pin/login`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(body)
-		});
+	function handleSubmit() {
+		const login: PinLoginInput = { id: Number($page.params.id), pin };
+		const pinLogin = client.query<PinLoginQuery, PinLoginQueryVariables>({ query: PIN_LOGIN, variables: { login } });
+		console.log('submit was pressed', login);
 
-		if (res.status === 200) {
-			const json = await res.json();
-			const account = json.data;
-			loggedInAccount.set(account);
-			triggerSuccess();
-		} else {
-			loggedInAccount.set(null);
-			triggerMiss();
-		}
+		pinLogin
+			.then(({ data }) => {
+				const token = data.pinLogin;
+				accountToken.set(token);
+				triggerSuccess();
+				goToFunctionPage();
+			})
+			.catch((e) => {
+				const errorCodes = e.graphQLErrors.map((gqlError: any) => gqlError.extensions.code);
+				console.error('error codes', errorCodes);
+
+				accountToken.set(undefined);
+				triggerMiss();
+			});
+	}
+
+	function goToFunctionPage() {
+		goto(`${base}/store/accounts/${$page.params.id}/products`);
 	}
 </script>
 
@@ -57,12 +70,18 @@
 					</div>
 					<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
 
-					<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
+					<Keypad
+						class="mt-4"
+						bind:value="{pin}"
+						on:submit="{handleSubmit}"
+						bind:triggerSuccess="{triggerSuccess}"
+						bind:triggerMiss="{triggerMiss}"
+					/>
 				</div>
 			</div>
 
-			{#if $loggedInAccount}
-				<p class="mt-6" transition:fade>Successfully logged in {JSON.stringify($loggedInAccount)}</p>
+			{#if $accountToken}
+				<p class="mt-6" transition:fade>Successfully logged in {$accountToken}</p>
 			{/if}
 		{:else}
 			<Alert type="{AlertType.Error}">{$_('errors.account-not-found')}</Alert>
@@ -73,5 +92,7 @@
 </div>
 
 <style lang="scss">
-.keypad-grid { grid-area: 2 / 2 / 5 / 5; }
+	.keypad-grid {
+		grid-area: 2 / 2 / 5 / 5;
+	}
 </style>
