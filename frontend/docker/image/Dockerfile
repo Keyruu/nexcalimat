@@ -1,7 +1,6 @@
-FROM nginx:stable-alpine
+FROM node:18-alpine
 
-COPY docker/image/nginx.conf /etc/nginx/conf.d/default.conf
+COPY . .
 
-COPY /build /etc/nginx/html
-
-EXPOSE 80
+EXPOSE 3000
+CMD ["node", "-r","dotenv/config", "./build"]
