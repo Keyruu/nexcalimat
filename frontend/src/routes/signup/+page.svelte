@@ -3,7 +3,7 @@
 	import { signIn, signOut } from '@auth/sveltekit/client';
 </script>
 
-<h1 class="text-xl mb-2">SvelteKit Auth Example</h1>
+<h1 class="mb-2 text-xl">SvelteKit Auth Example</h1>
 
 <p>
 	{#if $page.data.session}

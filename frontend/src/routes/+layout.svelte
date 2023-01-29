@@ -29,8 +29,8 @@
 
 <div class="flex h-screen flex-col justify-center overflow-hidden">
 	<Header />
-	<div class="flex flex-1 flex-col overflow-y-auto background">
-		<main class="justify-center items-center flex flex-col grow max-h-full">
+	<div class="background flex flex-1 flex-col overflow-y-auto">
+		<main class="flex max-h-full grow flex-col items-center justify-center">
 			<slot />
 		</main>
 		<Footer />

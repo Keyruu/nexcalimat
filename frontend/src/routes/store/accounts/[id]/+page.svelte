@@ -57,11 +57,11 @@
 	}
 </script>
 
-<div class="keypad-grid flex justify-center items-center">
+<div class="keypad-grid flex items-center justify-center">
 	{#if !$account.loading}
 		{#if $account.data?.account}
 			<div class="text-center">
-				<div class="bg-neutral p-20 rounded-2xl shadow-xl">
+				<div class="rounded-2xl bg-neutral p-20 shadow-xl">
 					<div class="avatar">
 						<div class="w-24 rounded-full">
 							<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />

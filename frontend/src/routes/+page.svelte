@@ -5,9 +5,9 @@
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center text-center">
-	<div class="card p-20 bg-neutral shadow-xl flex items-center justify-center text-center glow-shadow">
+	<div class="glow-shadow card flex items-center justify-center bg-neutral p-20 text-center shadow-xl">
 		<h1 class="mb-12 text-5xl font-medium leading-tight">
-			From knowledge to <strong class="bg-gradient-to-br to-blue-800 from-sky-400 bg-clip-text text-transparent"
+			From knowledge to <strong class="bg-gradient-to-br from-sky-400 to-blue-800 bg-clip-text text-transparent"
 				>Kühlschrank</strong
 			>
 		</h1>

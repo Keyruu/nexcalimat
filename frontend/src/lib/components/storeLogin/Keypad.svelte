@@ -62,7 +62,7 @@
 	</div>
 	<div class="mx-auto grid w-fit grid-cols-3 gap-y-2 gap-x-4">
 		{#each Array(9) as _, i}
-			<div class="flex justify-center items-center">
+			<div class="flex items-center justify-center">
 				<button
 					disabled="{buttonsDisabled}"
 					class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
@@ -70,14 +70,14 @@
 				>
 			</div>
 		{/each}
-		<div class="flex justify-center items-center">
+		<div class="flex items-center justify-center">
 			<button
 				class="btn-outline btn-error btn h-20 w-20 rounded-full text-xl"
 				disabled="{!value || buttonsDisabled}"
 				on:click="{deleteLast}">←</button
 			>
 		</div>
-		<div class="flex justify-center items-center">
+		<div class="flex items-center justify-center">
 			<button
 				disabled="{buttonsDisabled}"
 				class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"

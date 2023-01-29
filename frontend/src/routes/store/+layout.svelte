@@ -37,8 +37,8 @@
 	});
 </script>
 
-<div class="p-4 parent-grid h-full w-full">
-	<div class="steps-grid py-1 flex items-center justify-center">
+<div class="parent-grid h-full w-full p-4">
+	<div class="steps-grid flex items-center justify-center py-1">
 		<ul class="steps w-full">
 			{#each steps as step (step.id)}
 				<li class:step-primary="{hasStepPrimary(step.id, $page.route.id)}" class="step">
