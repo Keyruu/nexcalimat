@@ -12,9 +12,9 @@
 
 <div class="accounts-grid py-4">
 	{#if !$accounts.loading}
-		{#if $accounts.data?.accounts && $accounts.data?.accounts.length}
+		{#if $accounts.data?.accounts && $accounts.data?.accounts.data?.length}
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-				{#each $accounts.data.accounts as account (account?.id)}
+				{#each $accounts.data.accounts.data as account (account?.id)}
 					<UserCard account="{account}" />
 				{/each}
 			</div>

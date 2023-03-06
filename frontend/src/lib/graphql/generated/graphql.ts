@@ -147,6 +147,27 @@ export type PagePojoInput = {
   size?: InputMaybe<Scalars['Int']>;
 };
 
+export type PaginationResponse_Account = {
+  __typename?: 'PaginationResponse_Account';
+  data?: Maybe<Array<Maybe<Account>>>;
+  page: Scalars['Int'];
+  total: Scalars['BigInteger'];
+};
+
+export type PaginationResponse_Product = {
+  __typename?: 'PaginationResponse_Product';
+  data?: Maybe<Array<Maybe<Product>>>;
+  page: Scalars['Int'];
+  total: Scalars['BigInteger'];
+};
+
+export type PaginationResponse_Purchase = {
+  __typename?: 'PaginationResponse_Purchase';
+  data?: Maybe<Array<Maybe<Purchase>>>;
+  page: Scalars['Int'];
+  total: Scalars['BigInteger'];
+};
+
 export type PinLoginInput = {
   id?: InputMaybe<Scalars['BigInteger']>;
   pin?: InputMaybe<Scalars['String']>;
@@ -202,21 +223,21 @@ export type Query = {
   /** Get Account by ID */
   account?: Maybe<Account>;
   /** Get all Accounts */
-  accounts?: Maybe<Array<Maybe<Account>>>;
+  accounts?: Maybe<PaginationResponse_Account>;
   /** Get deleted Accounts */
-  deletedAccounts?: Maybe<Array<Maybe<Account>>>;
+  deletedAccounts?: Maybe<PaginationResponse_Account>;
   /** Get personal Purchases */
-  myPurchases?: Maybe<Array<Maybe<Purchase>>>;
+  myPurchases?: Maybe<PaginationResponse_Purchase>;
   /** Login with PIN */
   pinLogin?: Maybe<Scalars['String']>;
   /** Get Product by ID */
   product?: Maybe<Product>;
   /** Get all Products */
-  products?: Maybe<Array<Maybe<Product>>>;
+  products?: Maybe<PaginationResponse_Product>;
   /** Get Purchase by ID */
   purchase?: Maybe<Purchase>;
   /** Get all Purchases */
-  purchases?: Maybe<Array<Maybe<Purchase>>>;
+  purchases?: Maybe<PaginationResponse_Purchase>;
 };
 
 
@@ -292,7 +313,7 @@ export type AccountByIdQuery = { __typename?: 'Query', account?: { __typename?: 
 export type AccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AccountsQuery = { __typename?: 'Query', accounts?: Array<{ __typename?: 'Account', id?: any, name?: string, email?: string, balance?: any, picture?: string, extId?: string }> };
+export type AccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: any, data?: Array<{ __typename?: 'Account', id?: any, name?: string, email?: string, balance?: any, picture?: string, extId?: string }> } };
 
 export type PinLoginQueryVariables = Exact<{
   login?: InputMaybe<PinLoginInput>;
