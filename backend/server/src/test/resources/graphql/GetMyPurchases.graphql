@@ -1,11 +1,15 @@
 query {
   myPurchases {
-    account {
-      name
+    data {
+      account {
+        name
+      }
+      paidPrice
+      product {
+        name
+      }
     }
-    paidPrice
-    product {
-      name
-    }
+    page
+    total
   }
 }

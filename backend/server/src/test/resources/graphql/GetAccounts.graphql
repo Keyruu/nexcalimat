@@ -1,8 +1,12 @@
 query {
   accounts {
-    name
-    email
-    balance
-    extId
+    data {
+      name
+      email
+      balance
+      extId
+    }
+    page
+    total
   }
 }

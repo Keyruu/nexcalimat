@@ -41,11 +41,13 @@ public class ProductResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.products.size()", is(2))
-			.body("data.products[0].name", is("Die Peitsche des Mönchs"))
-			.body("data.products[0].price", is(6000))
-			.body("data.products[1].name", is("Das Yoyo von Long"))
-			.body("data.products[1].price", is(80));
+			.body("data.products.data.size()", is(2))
+			.body("data.products.page", is(0))
+			.body("data.products.total", is(2))
+			.body("data.products.data[0].name", is("Die Peitsche des Mönchs"))
+			.body("data.products.data[0].price", is(6000))
+			.body("data.products.data[1].name", is("Das Yoyo von Long"))
+			.body("data.products.data[1].price", is(80));
 	}
 
 	@Test

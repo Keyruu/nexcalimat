@@ -12,6 +12,7 @@ import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PurchaseNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.RefundPeriodExceededException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.Purchase;
@@ -32,9 +33,11 @@ public class PurchaseService
 	@Inject
 	AccountRepository _accountRepository;
 
-	public List<Purchase> listAll(Mapper mapper)
+	public PaginationResponse<Purchase> listAll(Mapper mapper)
 	{
-		return _purchaseRepository.findAll(mapper.getSort()).page(mapper.getPage()).list();
+		List<Purchase> purchases = _purchaseRepository.findAll(mapper.getSort()).page(mapper.getPage()).list();
+		long count = _purchaseRepository.count();
+		return new PaginationResponse<>(purchases, count, mapper);
 	}
 
 	public Purchase findById(Long id)
@@ -89,7 +92,7 @@ public class PurchaseService
 		return Boolean.TRUE;
 	}
 
-	public List<Purchase> getPurchasesForUser(String extId, Mapper mapper)
+	public PaginationResponse<Purchase> getPurchasesForUser(String extId, Mapper mapper)
 	{
 		Account account = _accountRepository.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
@@ -97,7 +100,7 @@ public class PurchaseService
 		return getPurchasesForAccount(account, mapper);
 	}
 
-	public List<Purchase> getPurchasesForCustomer(Long pinJwtAccountId, Mapper mapper)
+	public PaginationResponse<Purchase> getPurchasesForCustomer(Long pinJwtAccountId, Mapper mapper)
 	{
 		Account account = _accountRepository.findByIdOptional(pinJwtAccountId)
 			.orElseThrow(AccountNotFoundException::new);
@@ -105,8 +108,11 @@ public class PurchaseService
 		return getPurchasesForAccount(account, mapper);
 	}
 
-	private List<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
+	private PaginationResponse<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
 	{
-		return _purchaseRepository.find("account", mapper.getSort(), account).page(mapper.getPage()).list();
+		String query = "account";
+		List<Purchase> purchases = _purchaseRepository.find(query, mapper.getSort(), account).page(mapper.getPage()).list();
+		long count = _purchaseRepository.count(query, account);
+		return new PaginationResponse<>(purchases, count, mapper);
 	}
 }

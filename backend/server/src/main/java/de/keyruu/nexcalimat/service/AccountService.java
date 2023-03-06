@@ -18,6 +18,7 @@ import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
 import de.keyruu.nexcalimat.graphql.exception.WrongPinException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
@@ -54,9 +55,12 @@ public class AccountService
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
 	String _emailClaim;
 
-	public List<Account> listAll(Mapper mapper)
+	public PaginationResponse<Account> listAll(Mapper mapper)
 	{
-		return _accountRepo.find("deletedAt IS NULL", mapper.getSort()).page(mapper.getPage()).list();
+		String query = "deletedAt IS NULL";
+		List<Account> activeAccounts = _accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
+		long count = _accountRepo.count(query);
+		return new PaginationResponse<>(activeAccounts, count, mapper);
 	}
 
 	public Account findById(Long id)
@@ -218,8 +222,11 @@ public class AccountService
 		return Boolean.TRUE;
 	}
 
-	public List<Account> getDeletedAccounts(Mapper mapper)
+	public PaginationResponse<Account> getDeletedAccounts(Mapper mapper)
 	{
-		return _accountRepo.find("deletedAt IS NOT NULL", mapper.getSort()).page(mapper.getPage()).list();
+		String query = "deletedAt IS NOT NULL";
+		List<Account> deletedAccounts = _accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
+		long count = _accountRepo.count(query);
+		return new PaginationResponse<>(deletedAccounts, count, mapper);
 	}
 }

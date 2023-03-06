@@ -1,9 +1,13 @@
 query {
   products {
-    id
-    name
-    price
-    bundleSize
-    type
+    data {
+      id
+      name
+      price
+      bundleSize
+      type
+    }
+    page
+    total
   }
 }

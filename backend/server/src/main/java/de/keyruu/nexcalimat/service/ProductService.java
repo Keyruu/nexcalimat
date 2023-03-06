@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 
@@ -23,9 +24,12 @@ public class ProductService
 	@Inject
 	PictureService _pictureService;
 
-	public List<Product> listAll(Mapper mapper)
+	public PaginationResponse<Product> listAll(Mapper mapper)
 	{
-		return _productRepository.find("deletedAt IS NULL", mapper.getSort()).page(mapper.getPage()).list();
+		String query = "deletedAt IS NULL";
+		List<Product> products = _productRepository.find(query, mapper.getSort()).page(mapper.getPage()).list();
+		long count = _productRepository.count(query);
+		return new PaginationResponse<>(products, count, mapper);
 	}
 
 	public Product findById(Long id)

@@ -1,9 +1,13 @@
 query {
   deletedAccounts {
-    name
-    email
-    balance
-    extId
-    deletedAt
+    data {
+      name
+      email
+      balance
+      extId
+      deletedAt
+    }
+    page
+    total
   }
 }

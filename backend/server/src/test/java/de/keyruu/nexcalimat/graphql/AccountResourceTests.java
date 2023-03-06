@@ -122,9 +122,11 @@ public class AccountResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.accounts.size()", is(2))
-			.body("data.accounts[1].name", is("Dieter Dubinsky"))
-			.body("data.accounts[0].name", is("Even Longer"));
+			.body("data.accounts.data.size()", is(2))
+			.body("data.accounts.page", is(0))
+			.body("data.accounts.total", is(2))
+			.body("data.accounts.data[1].name", is("Dieter Dubinsky"))
+			.body("data.accounts.data[0].name", is("Even Longer"));
 	}
 
 	@Test
@@ -165,9 +167,11 @@ public class AccountResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.deletedAccounts.size()", is(1))
-			.body("data.deletedAccounts[0].deletedAt", is(notNullValue()))
-			.body("data.deletedAccounts[0].name", is("Der dicke Hai"));
+			.body("data.deletedAccounts.data.size()", is(1))
+			.body("data.deletedAccounts.page", is(0))
+			.body("data.deletedAccounts.total", is(1))
+			.body("data.deletedAccounts.data[0].deletedAt", is(notNullValue()))
+			.body("data.deletedAccounts.data[0].name", is("Der dicke Hai"));
 	}
 
 	@Test

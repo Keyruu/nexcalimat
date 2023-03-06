@@ -1,6 +1,5 @@
 package de.keyruu.nexcalimat.graphql;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
@@ -15,6 +14,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
+import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Account;
@@ -40,7 +40,7 @@ public class AccountResource
 
 	@Query
 	@Description("Get all Accounts")
-	public List<Account> accounts(Optional<PagePojo> page, Optional<SortPojo> sort)
+	public PaginationResponse<Account> accounts(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
 		return _accountService.listAll(Mapper.map(page, sort));
 	}
@@ -62,7 +62,7 @@ public class AccountResource
 	@Query
 	@Description("Get deleted Accounts")
 	@RolesAllowed(Roles.ADMIN)
-	public List<Account> deletedAccounts(Optional<PagePojo> page, Optional<SortPojo> sort)
+	public PaginationResponse<Account> deletedAccounts(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
 		return _accountService.getDeletedAccounts(Mapper.map(page, sort));
 	}
