@@ -3,7 +3,7 @@ name: Build and Push Backend
 on:
   push:
     paths:
-        - backend/**
+      - backend/**
     branches:
       - main
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
           cache: maven
       - name: Build and Test with Maven
         run: |
-          cd backend/server/
+          cd backend/
           mvn -B clean package -Pnative --file pom.xml
       - name: Codecov
         uses: codecov/codecov-action@v3
@@ -42,7 +42,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: backend/server/
-          file: backend/server/src/main/docker/Dockerfile.native-micro
+          context: backend/
+          file: backend/src/main/docker/Dockerfile.native-micro
           push: true
           tags: ghcr.io/keyruu/nexcalimat/server:latest
