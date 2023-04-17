@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import de.keyruu.nexcalimat.filestore.FileFormData;
+import de.keyruu.nexcalimat.filestore.PictureType;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class ProductService
@@ -42,7 +42,7 @@ public class ProductService
 	{
 		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
-		return _pictureService.updatePicture(dbProduct, formData, _productRepository);
+		return _pictureService.updatePicture(dbProduct, formData, _productRepository, PictureType.PRODUCT);
 	}
 
 	@Transactional
@@ -50,7 +50,7 @@ public class ProductService
 	{
 		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
-		_pictureService.deletePicture(dbProduct, _productRepository);
+		_pictureService.deletePicture(dbProduct, _productRepository, PictureType.PRODUCT);
 	}
 
 	@Transactional

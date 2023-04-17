@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.filestore.FilestoreClient;
+import de.keyruu.nexcalimat.filestore.PictureType;
 import de.keyruu.nexcalimat.graphql.exception.AccountExistsException;
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
@@ -27,6 +24,9 @@ import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.smallrye.jwt.build.Jwt;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class AccountService
@@ -126,7 +126,7 @@ public class AccountService
 		Account dbAccount = _accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _pictureService.updatePicture(dbAccount, formData, _accountRepo);
+		return _pictureService.updatePicture(dbAccount, formData, _accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
@@ -135,7 +135,7 @@ public class AccountService
 		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _pictureService.updatePicture(dbAccount, formData, _accountRepo);
+		return _pictureService.updatePicture(dbAccount, formData, _accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
@@ -144,7 +144,7 @@ public class AccountService
 		Account dbAccount = _accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
-		_pictureService.deletePicture(dbAccount, _accountRepo);
+		_pictureService.deletePicture(dbAccount, _accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
@@ -153,7 +153,7 @@ public class AccountService
 		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		_pictureService.deletePicture(dbAccount, _accountRepo);
+		_pictureService.deletePicture(dbAccount, _accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
