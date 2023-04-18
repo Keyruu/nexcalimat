@@ -2,21 +2,12 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
+	import { AccountByIdStore, type AccountById$input, PinLoginStore } from '$houdini';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
-	import { ACCOUNT_BY_ID } from '$lib/graphql/ACCOUNT_BY_ID';
-	import type {
-		AccountByIdQuery,
-		AccountByIdQueryVariables,
-		PinLoginInput,
-		PinLoginQuery,
-		PinLoginQueryVariables
-	} from '$lib/graphql/generated/graphql';
-	import { PIN_LOGIN } from '$lib/graphql/PIN_LOGIN';
 	import { accountToken } from '$lib/stores/accountStore';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getImageUrl } from '$lib/utils/accountUtils';
-	import { getClient, query } from 'svelte-apollo';
 	import { _ } from 'svelte-i18n';
 
 	let pin: string;
@@ -24,22 +15,30 @@
 	let triggerSuccess: () => void;
 	let triggerMiss: () => void;
 
-	const account = query<AccountByIdQuery, AccountByIdQueryVariables>(ACCOUNT_BY_ID, {
+	const account = new AccountByIdStore();
+	account.fetch({
 		variables: {
 			id: Number($page.params.id)
 		}
 	});
-	const client = getClient();
 
 	function handleSubmit() {
-		const login: PinLoginInput = { id: Number($page.params.id), pin };
-		const pinLogin = client.query<PinLoginQuery, PinLoginQueryVariables>({ query: PIN_LOGIN, variables: { login } });
-		console.log('submit was pressed', login);
+		const pinLogin = new PinLoginStore();
+
+		console.log('submit was pressed', pin);
 
 		pinLogin
+			.fetch({
+				variables: {
+					login: {
+						id: Number($page.params.id),
+						pin
+					}
+				}
+			})
 			.then(({ data }) => {
-				const token = data.pinLogin;
-				accountToken.set(token);
+				const token = data?.pinLogin;
+				accountToken.set(token!);
 				triggerSuccess();
 				goToFunctionPage();
 			})
@@ -58,7 +57,7 @@
 </script>
 
 <div class="keypad-grid flex items-center justify-center">
-	{#if !$account.loading}
+	{#if !$account.fetching}
 		{#if $account.data?.account}
 			<div class="text-center">
 				<div class="rounded-2xl bg-neutral p-20 shadow-xl">
@@ -81,7 +80,7 @@
 		{:else}
 			<Alert type="{AlertType.Error}">{$_('errors.account-not-found')}</Alert>
 		{/if}
-	{:else if $account.error}
+	{:else if $account.errors}
 		<Alert type="{AlertType.Error}">{$_('errors.no-account')}</Alert>
 	{/if}
 </div>

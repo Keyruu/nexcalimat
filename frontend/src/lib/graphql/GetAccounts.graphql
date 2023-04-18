@@ -1,0 +1,14 @@
+query GetAccounts {
+	accounts {
+		data {
+			id
+			name
+			email
+			balance
+			picture
+			extId
+		}
+		page
+		total
+	}
+}

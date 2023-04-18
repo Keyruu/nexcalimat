@@ -1,0 +1,3 @@
+query PinLogin($login: PinLoginInput) {
+	pinLogin(login: $login)
+}
