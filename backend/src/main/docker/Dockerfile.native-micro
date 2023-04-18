@@ -18,6 +18,11 @@
 #
 ###
 FROM quay.io/quarkus/quarkus-micro-image:1.0
+
+LABEL org.opencontainers.image.source=https://github.com/keyruu/nexcalimat
+LABEL org.opencontainers.image.description="Server for nexcalimat"
+LABEL org.opencontainers.image.licenses=GPL-3.0-only
+
 WORKDIR /work/
 RUN chown 1001 /work \
     && chmod "g+rwX" /work \
@@ -27,8 +32,5 @@ COPY --chown=1001:root target/*-runner /work/application
 EXPOSE 8080
 USER 1001
 
-LABEL org.opencontainers.image.source=https://github.com/Keyruu/nexcalimat
-LABEL org.opencontainers.image.description="Server for nexcalimat"
-LABEL org.opencontainers.image.licenses=GPL-3.0-only
 
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
