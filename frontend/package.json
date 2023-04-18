@@ -1,6 +1,7 @@
 {
     "name": "nexcalimat-ui",
     "version": "0.0.1",
+    "description": "Nexcalimat UI",
     "private": true,
     "scripts": {
         "dev": "vite dev",
