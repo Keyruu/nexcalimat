@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.microprofile.graphql.Ignore;
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.validation.constraints.Size;
-
-import org.eclipse.microprofile.graphql.Ignore;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Product implements HasPicture
@@ -46,9 +46,13 @@ public class Product implements HasPicture
 	@Column(nullable = false)
 	private ProductType type;
 
-	@OneToMany(mappedBy = "product")
 	@Ignore
+	@OneToMany(mappedBy = "product")
 	private Set<Purchase> purchases = new HashSet<>();
+
+	@Ignore
+	@OneToMany(mappedBy = "product")
+	private Set<Favorite> favorites = new HashSet<>();
 
 	@Override
 	public Long getId()
@@ -142,6 +146,16 @@ public class Product implements HasPicture
 	public void setPurchases(Set<Purchase> purchases)
 	{
 		this.purchases = purchases;
+	}
+
+	public Set<Favorite> getFavorites()
+	{
+		return favorites;
+	}
+
+	public void setFavorites(Set<Favorite> favorites)
+	{
+		this.favorites = favorites;
 	}
 
 	@PreRemove

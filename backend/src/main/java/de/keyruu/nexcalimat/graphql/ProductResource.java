@@ -2,9 +2,6 @@ package de.keyruu.nexcalimat.graphql;
 
 import java.util.Optional;
 
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import jakarta.annotation.security.RolesAllowed;
 import org.eclipse.microprofile.graphql.Description;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -16,8 +13,15 @@ import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
+import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.ProductService;
+import de.keyruu.nexcalimat.service.pojo.ProductWithFavorite;
+import io.quarkus.panache.common.Sort;
+import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @GraphQLApi
 public class ProductResource
@@ -28,12 +32,26 @@ public class ProductResource
 	@Inject
 	ProductService _productService;
 
+	@Inject
+	CurrentVertxRequest _request;
+
+	@Inject
+	JwtUtils _jwtUtils;
+
 	@Query
 	@Description("Get all Products")
 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
 	public PaginationResponse<Product> products(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
 		return _productService.listAll(Mapper.map(page, sort));
+	}
+
+	@Query
+	@Description("Get all Products with Favorites")
+	@RolesAllowed({ Roles.CUSTOMER })
+	public PaginationResponse<ProductWithFavorite> productsWithFavorites(Optional<PagePojo> page, Optional<SortPojo> sort)
+	{
+		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("fIdCount"), "p."), 1L);
 	}
 
 	@Query

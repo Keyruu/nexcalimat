@@ -11,6 +11,7 @@ import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
+import de.keyruu.nexcalimat.service.pojo.ProductWithFavorite;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -28,6 +29,17 @@ public class ProductService
 	{
 		String query = "deletedAt IS NULL";
 		List<Product> products = _productRepository.find(query, mapper.getSort()).page(mapper.getPage()).list();
+		long count = _productRepository.count(query);
+		return new PaginationResponse<>(products, count, mapper);
+	}
+
+	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId)
+	{
+		String query = "deletedAt IS NULL";
+		List<ProductWithFavorite> products = _productRepository
+			.find("select p, count(f.id) as fIdCount from Product p left join p.favorites f group by p", mapper.getSort())
+			.project(ProductWithFavorite.class)
+			.list();
 		long count = _productRepository.count(query);
 		return new PaginationResponse<>(products, count, mapper);
 	}
