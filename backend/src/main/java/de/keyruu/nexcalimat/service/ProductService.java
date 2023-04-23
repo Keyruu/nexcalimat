@@ -10,8 +10,9 @@ import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
+import de.keyruu.nexcalimat.model.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
-import de.keyruu.nexcalimat.service.pojo.ProductWithFavorite;
+import de.keyruu.nexcalimat.repository.ProductWithFavoriteRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -22,6 +23,9 @@ public class ProductService
 {
 	@Inject
 	ProductRepository _productRepository;
+
+	@Inject
+	ProductWithFavoriteRepository _productWithFavoriteRepository;
 
 	@Inject
 	PictureService _pictureService;
@@ -37,11 +41,9 @@ public class ProductService
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId)
 	{
 		String query = "deletedAt IS NULL";
-		List<ProductWithFavorite> products = _productRepository
-			.find("select p, count(f.id) as fIdCount from Product p left join p.favorites f where f is null or f.account.id = :accountId group by p",
-				mapper.getSort(),
-				Parameters.with("accountId", accountId))
-			.project(ProductWithFavorite.class)
+		List<ProductWithFavorite> products = _productWithFavoriteRepository
+			.find("accountId = :accountId OR accountId IS NULL", mapper.getSort(), Parameters.with("accountId", accountId))
+			.page(mapper.getPage())
 			.list();
 		long count = _productRepository.count(query);
 		return new PaginationResponse<>(products, count, mapper);

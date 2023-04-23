@@ -20,7 +20,7 @@ public class Mapper
   {
     Mapper mapper = new Mapper();
     mapper.setPage(mapPage(pagePojoOptional));
-    mapper.setSort(mapSort(sortPojoOptional, initialSort, prefix));
+    mapper.setSort(mapSort(sortPojoOptional, initialSort));
     return mapper;
   }
 
@@ -35,7 +35,7 @@ public class Mapper
     return page;
   }
 
-  private static Sort mapSort(Optional<SortPojo> sortPojoOptional, Sort initialSort, String prefix)
+  private static Sort mapSort(Optional<SortPojo> sortPojoOptional, Sort initialSort)
   {
     Sort sort = initialSort;
     if (sortPojoOptional.isPresent())
@@ -52,7 +52,7 @@ public class Mapper
         {
           direction = Direction.Descending;
         }
-        sort = sort.and(prefix + column.getName(), direction);
+        sort = sort.and(column.getName(), direction);
       }
     }
     return sort;

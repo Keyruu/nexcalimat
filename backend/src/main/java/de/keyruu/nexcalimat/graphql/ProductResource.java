@@ -12,11 +12,11 @@ import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Product;
+import de.keyruu.nexcalimat.model.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.ProductService;
-import de.keyruu.nexcalimat.service.pojo.ProductWithFavorite;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import jakarta.annotation.security.RolesAllowed;
@@ -51,7 +51,7 @@ public class ProductResource
 	@RolesAllowed({ Roles.CUSTOMER })
 	public PaginationResponse<ProductWithFavorite> productsWithFavorites(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("fIdCount"), "p."), _jwtUtils.getPinJwtAccountId(_request));
+		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("isFavorite"), ""), _jwtUtils.getPinJwtAccountId(_request));
 	}
 
 	@Query
