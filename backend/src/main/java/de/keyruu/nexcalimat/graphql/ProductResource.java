@@ -51,7 +51,7 @@ public class ProductResource
 	@RolesAllowed({ Roles.CUSTOMER })
 	public PaginationResponse<ProductWithFavorite> productsWithFavorites(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("fIdCount"), "p."), 1L);
+		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("fIdCount"), "p."), _jwtUtils.getPinJwtAccountId(_request));
 	}
 
 	@Query
