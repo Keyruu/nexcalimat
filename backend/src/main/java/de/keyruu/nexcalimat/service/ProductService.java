@@ -12,6 +12,7 @@ import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.service.pojo.ProductWithFavorite;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -37,7 +38,9 @@ public class ProductService
 	{
 		String query = "deletedAt IS NULL";
 		List<ProductWithFavorite> products = _productRepository
-			.find("select p, count(f.id) as fIdCount from Product p left join p.favorites f group by p", mapper.getSort())
+			.find("select p, count(f.id) as fIdCount from Product p left join p.favorites f where f is null or f.account.id = :accountId group by p",
+				mapper.getSort(),
+				Parameters.with("accountId", accountId))
 			.project(ProductWithFavorite.class)
 			.list();
 		long count = _productRepository.count(query);
@@ -68,7 +71,8 @@ public class ProductService
 	@Transactional
 	public Product updateProduct(Product product)
 	{
-		Product dbProduct = _productRepository.findByIdOptional(product.getId()).orElseThrow(ProductNotFoundException::new);
+		Product dbProduct = _productRepository.findByIdOptional(product.getId())
+			.orElseThrow(ProductNotFoundException::new);
 
 		if (product.getBundleSize() != null)
 		{

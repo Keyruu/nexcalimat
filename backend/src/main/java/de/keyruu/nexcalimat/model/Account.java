@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.microprofile.graphql.Ignore;
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,9 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-
-import org.eclipse.microprofile.graphql.Ignore;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Account implements HasPicture
@@ -56,6 +56,10 @@ public class Account implements HasPicture
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
 	@Ignore
 	private Set<Purchase> purchases = new HashSet<>();
+
+	@Ignore
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Favorite> favorites = new HashSet<>();
 
 	@Override
 	public Long getId()
@@ -159,5 +163,15 @@ public class Account implements HasPicture
 	public void setPurchases(Set<Purchase> purchases)
 	{
 		this.purchases = purchases;
+	}
+
+	public Set<Favorite> getFavorites()
+	{
+		return favorites;
+	}
+
+	public void setFavorites(Set<Favorite> favorites)
+	{
+		this.favorites = favorites;
 	}
 }
