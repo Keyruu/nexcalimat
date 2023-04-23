@@ -13,6 +13,14 @@ declare global {
 			}
 		}
 
+		interface Session {
+			header: string
+		}
+
+		interface Metadata {
+			header: string
+		}
+
 		// interface Error {}
 		// interface Platform {}
 	}

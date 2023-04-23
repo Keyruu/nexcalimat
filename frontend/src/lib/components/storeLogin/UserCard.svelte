@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
-	import type { Account } from '$lib/graphql/generated/graphql';
+	import type { Account } from '$lib/generated/graphql';
 	import { getImageUrl } from '$lib/utils/accountUtils.js';
 	import { toEuro } from '$lib/utils/formatEuro';
 
@@ -15,10 +15,10 @@
 </script>
 
 <div
-	class="group card card-compact h-52 cursor-pointer bg-neutral shadow-md hover:bg-base-300 hover:shadow-xl"
+	class="card-compact group card h-52 cursor-pointer bg-neutral shadow-md hover:bg-neutral-focus hover:shadow-xl"
 	on:mouseup="{navigateToLogin}"
 >
-	<figure class="pt-5 pb-2">
+	<figure class="pb-2 pt-5">
 		<div class="avatar">
 			<div class="w-24 rounded-full ring-2 ring-white">
 				<img class="group-hover:brightness-90" src="{img}" alt="account" />

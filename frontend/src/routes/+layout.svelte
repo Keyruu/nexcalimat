@@ -1,8 +1,13 @@
 <script lang="ts">
-	import { PUBLIC_BACKEND_URL } from '$env/static/public';
 	import Footer from '$lib/components/main/Footer.svelte';
 	import Header from '$lib/components/main/Header.svelte';
+	import { setContextClient } from '@urql/svelte';
 	import '../app.scss';
+
+	import { client } from '../urqlClient';
+
+	localStorage.setItem('authHeader', '');
+	setContextClient(client);
 </script>
 
 <svelte:head>

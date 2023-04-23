@@ -2,12 +2,20 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
-	import { AccountByIdStore, type AccountById$input, PinLoginStore } from '$houdini';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
+	import {
+		AccountByIdDocument,
+		PinLoginDocument,
+		type AccountByIdQuery,
+		type AccountByIdQueryVariables,
+		type PinLoginQuery,
+		type PinLoginQueryVariables
+	} from '$lib/generated/graphql';
 	import { accountToken } from '$lib/stores/accountStore';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getImageUrl } from '$lib/utils/accountUtils';
+	import { getContextClient, queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 
 	let pin: string;
@@ -15,40 +23,40 @@
 	let triggerSuccess: () => void;
 	let triggerMiss: () => void;
 
-	const account = new AccountByIdStore();
-	account.fetch({
+	const urqlClient = getContextClient();
+
+	const account = queryStore<AccountByIdQuery, AccountByIdQueryVariables>({
+		client: urqlClient,
+		query: AccountByIdDocument,
 		variables: {
 			id: Number($page.params.id)
 		}
 	});
 
-	function handleSubmit() {
-		const pinLogin = new PinLoginStore();
+	async function handleSubmit() {
+		const pinStore = queryStore<PinLoginQuery, PinLoginQueryVariables>({
+			client: urqlClient,
+			query: PinLoginDocument,
+			variables: {
+				login: {
+					id: Number($page.params.id),
+					pin
+				}
+			}
+		});
 
 		console.log('submit was pressed', pin);
 
-		pinLogin
-			.fetch({
-				variables: {
-					login: {
-						id: Number($page.params.id),
-						pin
-					}
-				}
-			})
-			.then(({ data }) => {
-				const token = data?.pinLogin;
+		pinStore.subscribe((result) => {
+			if (result.data) {
+				const token = result.data.pinLogin;
+				console.log(token);
+				localStorage.setItem('authHeader', `PIN ${token}`);
 				accountToken.set(token!);
 				triggerSuccess();
 				goToFunctionPage();
-			})
-			.catch((e) => {
-				const errorCodes = e.graphQLErrors.map((gqlError: any) => gqlError.extensions.code);
-				console.error('error codes', errorCodes);
-
-				accountToken.set(undefined);
-				triggerMiss();
-			});
+			}
+		});
 	}
 
 	function goToFunctionPage() {
@@ -66,7 +74,7 @@
 							<img alt="account" src="{`${getImageUrl($account.data.account)}`}" />
 						</div>
 					</div>
-					<h1 class="mt-5 mb-8 text-3xl font-medium">{$account.data.account.name}</h1>
+					<h1 class="mb-8 mt-5 text-3xl font-medium">{$account.data.account.name}</h1>
 
 					<Keypad
 						class="mt-4"
@@ -80,7 +88,7 @@
 		{:else}
 			<Alert type="{AlertType.Error}">{$_('errors.account-not-found')}</Alert>
 		{/if}
-	{:else if $account.errors}
+	{:else if $account.error}
 		<Alert type="{AlertType.Error}">{$_('errors.no-account')}</Alert>
 	{/if}
 </div>

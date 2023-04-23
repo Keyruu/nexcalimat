@@ -10,9 +10,18 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
-        "format": "prettier --plugin-search-dir . --write ."
+        "format": "prettier --plugin-search-dir . --write .",
+        "gen": "graphql-codegen --config codegen.yml"
     },
     "devDependencies": {
+        "@babel/core": "^7.0.0-0",
+        "@graphql-codegen/cli": "^3.3.0",
+        "@graphql-codegen/introspection": "^3.0.1",
+        "@graphql-codegen/named-operations-object": "^2.3.1",
+        "@graphql-codegen/typescript": "^3.0.3",
+        "@graphql-codegen/typescript-document-nodes": "^3.0.3",
+        "@graphql-codegen/typescript-operations": "^3.0.3",
+        "@graphql-codegen/typescript-urql": "^3.7.3",
         "@iconify/svelte": "^3.1.2",
         "@sveltejs/adapter-auto": "^2.0.0",
         "@sveltejs/adapter-node": "^1.2.3",
@@ -26,8 +35,7 @@
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-svelte3": "^4.0.0",
-        "houdini": "^1.1.7",
-        "houdini-svelte": "^1.1.7",
+        "graphql-tag": "^2.0.0",
         "postcss": "^8.4.21",
         "prettier": "^2.8.7",
         "prettier-plugin-svelte": "^2.10.0",
@@ -44,14 +52,11 @@
     },
     "type": "module",
     "dependencies": {
-        "@auth/core": "^0.6.0",
+        "@auth/core": "^0.5.1",
         "@auth/sveltekit": "^0.3.1",
-        "@babel/core": "^7.0.0-0",
-        "@kitql/all-in": "^0.9.2",
+        "@urql/svelte": "^4.0.0",
         "dotenv": "^16.0.3",
         "graphql": "^16.6.0",
-        "houdini": "^1.1.7",
-        "svelte-i18n": "^3.6.0",
-        "swiper": "^9.2.3"
+        "svelte-i18n": "^3.6.0"
     }
 }

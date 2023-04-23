@@ -1,0 +1,11 @@
+overwrite: true
+schema: "http://localhost:8080/nexcalimat/graphql/"
+documents: "src/**/*.graphql"
+config:
+  withHooks: false
+generates:
+  src/lib/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"

@@ -7,12 +7,12 @@
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
+        "ignoreDeprecations": "5.0",
         "sourceMap": true,
         "strict": true,
         "rootDirs": [
             ".",
-            "./.svelte-kit/types",
-            "./$houdini/types"
+            "./.svelte-kit/types"
         ]
     }
 }

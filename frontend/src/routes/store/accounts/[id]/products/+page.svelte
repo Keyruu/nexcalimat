@@ -1,62 +1,29 @@
 <script lang="ts">
-	import { Swiper } from 'swiper';
-
-	// Import Swiper styles
-	import 'swiper/css';
-
-	import 'swiper/css/pagination';
-
-	// import required modules
-	import { Pagination } from 'swiper';
 	import Product from '$lib/components/products/Product.svelte';
+	import { GetProductsDocument, type GetProductsQuery } from '$lib/generated/graphql';
+	import { getContextClient, queryStore } from '@urql/svelte';
+
+	const products = queryStore<GetProductsQuery>({
+		client: getContextClient(),
+		query: GetProductsDocument
+	});
 </script>
 
 <div class="products-grid">
-	<h1>Hot Drinks</h1>
-	<!-- <Swiper
-		slidesPerView="auto"
-		spaceBetween="{10}"
-		centeredSlides="{false}"
-		pagination="{{
-			clickable: true
-		}}"
-		modules="{[Pagination]}"
-		class="mySwiper"
-	>
-		{#each { length: 9 } as _, i}
-			<Product seed="hott{i}" />
-		{/each}
-	</Swiper>
-	<h1>Cold Drinks</h1>
-	<Swiper
-		slidesPerView="{7}"
-		spaceBetween="{10}"
-		centeredSlides="{false}"
-		pagination="{{
-			clickable: true
-		}}"
-		modules="{[Pagination]}"
-		class="mySwiper"
-	>
-		{#each { length: 9 } as _, i}
-			<Product seed="cold{i}" />
-		{/each}
-	</Swiper>
-	<h1>Favorites</h1>
-	<Swiper
-		slidesPerView="{7}"
-		spaceBetween="{10}"
-		centeredSlides="{false}"
-		pagination="{{
-			clickable: true
-		}}"
-		modules="{[Pagination]}"
-		class="mySwiper"
-	>
-		{#each { length: 9 } as _, i}
-			<Product seed="fave{i}" />
-		{/each}
-	</Swiper> -->
+	{#if $products.fetching}
+		Loading products...
+	{:else if $products.error}
+		Something went wrong...
+		{$products.error.graphQLErrors[0].extensions['code']}
+	{:else if $products.data?.products?.data}
+		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+			{#each $products.data?.products?.data as product}
+				{#if product}
+					<Product product="{product}" />
+				{/if}
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
