@@ -1,6 +1,5 @@
 package de.keyruu.nexcalimat.model;
 
-import org.eclipse.microprofile.graphql.Ignore;
 import org.hibernate.annotations.Immutable;
 
 import jakarta.persistence.Column;
@@ -10,12 +9,11 @@ import jakarta.persistence.Table;
 @Entity
 @Immutable
 @Table(name = "product_with_favorite")
-public class ProductWithFavorite extends Product
+public class ProductWithFavorite extends SimpleProduct
 {
   @Column(name = "is_favorite")
   private Boolean isFavorite;
 
-  @Ignore
   @Column(name = "account_id")
   private Long accountId;
 

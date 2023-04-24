@@ -42,7 +42,9 @@ public class ProductService
 	{
 		String query = "deletedAt IS NULL";
 		List<ProductWithFavorite> products = _productWithFavoriteRepository
-			.find("accountId = :accountId OR accountId IS NULL", mapper.getSort(), Parameters.with("accountId", accountId))
+			.find("accountId = :accountId OR accountId IS NULL",
+				mapper.getSort(),
+				Parameters.with("accountId", accountId))
 			.page(mapper.getPage())
 			.list();
 		long count = _productRepository.count(query);
