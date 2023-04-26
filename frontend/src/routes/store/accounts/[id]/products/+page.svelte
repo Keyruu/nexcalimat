@@ -1,23 +1,23 @@
 <script lang="ts">
 	import Product from '$lib/components/products/Product.svelte';
-	import { GetProductsDocument, type GetProductsQuery } from '$lib/generated/graphql';
+	import { GetProductsWithFavoritesDocument, type GetProductsWithFavoritesQuery } from '$lib/generated/graphql';
 	import { getContextClient, queryStore } from '@urql/svelte';
 
-	const products = queryStore<GetProductsQuery>({
+	const products = queryStore<GetProductsWithFavoritesQuery>({
 		client: getContextClient(),
-		query: GetProductsDocument
+		query: GetProductsWithFavoritesDocument
 	});
 </script>
 
-<div class="products-grid">
+<div class="w-full">
 	{#if $products.fetching}
 		Loading products...
 	{:else if $products.error}
 		Something went wrong...
 		{$products.error.graphQLErrors[0].extensions['code']}
-	{:else if $products.data?.products?.data}
+	{:else if $products.data?.productsWithFavorites?.data}
 		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-			{#each $products.data?.products?.data as product}
+			{#each $products.data?.productsWithFavorites?.data as product}
 				{#if product}
 					<Product product="{product}" />
 				{/if}

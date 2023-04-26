@@ -6,19 +6,23 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 
+	localStorage.setItem('authHeader', '');
+
 	const accounts = queryStore<GetAccountsQuery>({
 		client: getContextClient(),
 		query: GetAccountsDocument
 	});
 </script>
 
-<div class="accounts-grid py-4">
+<div class="w-full py-4">
 	{#if !$accounts.fetching}
 		{#if $accounts.data?.accounts && $accounts.data?.accounts.data?.length}
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 				{#each $accounts.data.accounts.data as account (account?.id)}
 					{#if account}
-						<UserCard account="{account}" />
+						<div class="justify-center∫ flex items-center">
+							<UserCard account="{account}" />
+						</div>
 					{/if}
 				{/each}
 			</div>
@@ -31,7 +35,4 @@
 </div>
 
 <style lang="scss">
-	.accounts-grid {
-		grid-area: 2 / 2 / 5 / 5;
-	}
 </style>

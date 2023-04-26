@@ -163,6 +163,13 @@ export type PaginationResponse_Product = {
   total: Scalars['BigInteger'];
 };
 
+export type PaginationResponse_ProductWithFavorite = {
+  __typename?: 'PaginationResponse_ProductWithFavorite';
+  data?: Maybe<Array<Maybe<ProductWithFavorite>>>;
+  page: Scalars['Int'];
+  total: Scalars['BigInteger'];
+};
+
 export type PaginationResponse_Purchase = {
   __typename?: 'PaginationResponse_Purchase';
   data?: Maybe<Array<Maybe<Purchase>>>;
@@ -175,7 +182,7 @@ export type PinLoginInput = {
   pin?: InputMaybe<Scalars['String']>;
 };
 
-export type Product = HasPicture & {
+export type Product = {
   __typename?: 'Product';
   bundleSize?: Maybe<Scalars['Int']>;
   /** ISO-8601 */
@@ -207,6 +214,22 @@ export enum ProductType {
   HotDrink = 'HOT_DRINK'
 }
 
+export type ProductWithFavorite = {
+  __typename?: 'ProductWithFavorite';
+  accountId?: Maybe<Scalars['BigInteger']>;
+  bundleSize?: Maybe<Scalars['Int']>;
+  /** ISO-8601 */
+  createdAt?: Maybe<Scalars['DateTime']>;
+  /** ISO-8601 */
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id?: Maybe<Scalars['BigInteger']>;
+  isFavorite?: Maybe<Scalars['Boolean']>;
+  name?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  type?: Maybe<ProductType>;
+};
+
 export type Purchase = {
   __typename?: 'Purchase';
   account?: Maybe<Account>;
@@ -236,6 +259,8 @@ export type Query = {
   product?: Maybe<Product>;
   /** Get all Products */
   products?: Maybe<PaginationResponse_Product>;
+  /** Get all Products with Favorites */
+  productsWithFavorites?: Maybe<PaginationResponse_ProductWithFavorite>;
   /** Get Purchase by ID */
   purchase?: Maybe<Purchase>;
   /** Get all Purchases */
@@ -290,6 +315,13 @@ export type QueryProductsArgs = {
 
 
 /** Query root */
+export type QueryProductsWithFavoritesArgs = {
+  page?: InputMaybe<PagePojoInput>;
+  sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
 export type QueryPurchaseArgs = {
   id?: InputMaybe<Scalars['BigInteger']>;
 };
@@ -299,6 +331,20 @@ export type QueryPurchaseArgs = {
 export type QueryPurchasesArgs = {
   page?: InputMaybe<PagePojoInput>;
   sort?: InputMaybe<SortPojoInput>;
+};
+
+export type SimpleProduct = HasPicture & {
+  __typename?: 'SimpleProduct';
+  bundleSize?: Maybe<Scalars['Int']>;
+  /** ISO-8601 */
+  createdAt?: Maybe<Scalars['DateTime']>;
+  /** ISO-8601 */
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id?: Maybe<Scalars['BigInteger']>;
+  name?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  type?: Maybe<ProductType>;
 };
 
 export type SortPojoInput = {
@@ -321,6 +367,11 @@ export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: any | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
+
+export type GetProductsWithFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: any | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
 
 export type PinLoginQueryVariables = Exact<{
   login?: InputMaybe<PinLoginInput>;
@@ -371,54 +422,21 @@ export const GetProductsDocument = gql`
   }
 }
     `;
-export const PinLoginDocument = gql`
-    query PinLogin($login: PinLoginInput) {
-  pinLogin(login: $login)
-}
-    `;
-
-export const AccountById = gql`
-    query AccountById($id: BigInteger) {
-  account(id: $id) {
-    id
-    name
-    email
-    balance
-    picture
-    extId
-  }
-}
-    `;
-export const GetAccounts = gql`
-    query GetAccounts {
-  accounts {
-    data {
-      id
-      name
-      email
-      balance
-      picture
-      extId
-    }
-    page
-    total
-  }
-}
-    `;
-export const GetProducts = gql`
-    query GetProducts {
-  products {
+export const GetProductsWithFavoritesDocument = gql`
+    query GetProductsWithFavorites {
+  productsWithFavorites {
     data {
       id
       name
       price
       type
       picture
+      isFavorite
     }
   }
 }
     `;
-export const PinLogin = gql`
+export const PinLoginDocument = gql`
     query PinLogin($login: PinLoginInput) {
   pinLogin(login: $login)
 }

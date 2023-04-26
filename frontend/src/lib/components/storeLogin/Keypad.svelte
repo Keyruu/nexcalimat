@@ -53,34 +53,37 @@
 <div class:pincode--success="{success}" class:pincode--miss="{error}" class="{`${$$props.class} pincode`}">
 	<div
 		class:pincode__fields--miss="{error}"
-		class="pincode__fields mx-auto mt-5 mb-6 flex max-w-[250px] items-center justify-between px-5"
+		class="pincode__fields mx-auto mb-6 mt-5 flex max-w-[250px] items-center justify-between px-5"
 	>
 		<span class:active="{value.length >= 1}"></span>
 		<span class:active="{value.length >= 2}"></span>
 		<span class:active="{value.length >= 3}"></span>
 		<span class:active="{value.length >= 4}"></span>
 	</div>
-	<div class="mx-auto grid w-fit grid-cols-3 gap-y-2 gap-x-4">
+	<div class="mx-auto grid w-fit grid-cols-3 gap-x-4 gap-y-2">
 		{#each Array(9) as _, i}
 			<div class="flex items-center justify-center">
 				<button
+					type="button"
 					disabled="{buttonsDisabled}"
-					class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
+					class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
 					on:click="{() => select(i + 1)}">{i + 1}</button
 				>
 			</div>
 		{/each}
 		<div class="flex items-center justify-center">
 			<button
-				class="btn-outline btn-error btn h-20 w-20 rounded-full text-xl"
+				type="button"
+				class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
 				disabled="{!value || buttonsDisabled}"
 				on:click="{deleteLast}">←</button
 			>
 		</div>
 		<div class="flex items-center justify-center">
 			<button
+				type="button"
 				disabled="{buttonsDisabled}"
-				class="btn-outline btn-info btn h-20 w-20 rounded-full text-xl"
+				class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
 				on:click="{() => select(0)}">0</button
 			>
 		</div>
@@ -108,7 +111,7 @@
 		&--success {
 			.pincode__fields {
 				span {
-					box-shadow: inset 0 0 0 8px theme('colors.success');
+					box-shadow: inset 0 0 0 8px theme('colors.success.500');
 				}
 			}
 		}
@@ -116,7 +119,7 @@
 		&--miss {
 			.pincode__fields {
 				span {
-					box-shadow: inset 0 0 0 8px theme('colors.error');
+					box-shadow: inset 0 0 0 8px theme('colors.error.500');
 				}
 			}
 		}

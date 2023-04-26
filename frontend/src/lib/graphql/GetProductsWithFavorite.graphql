@@ -1,0 +1,12 @@
+query GetProductsWithFavorites {
+  productsWithFavorites {
+    data {
+      id
+      name
+      price
+      type
+      picture
+      isFavorite
+    }
+  }
+}

@@ -5,18 +5,20 @@
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center text-center">
-	<div class="glow-shadow card flex items-center justify-center bg-neutral p-20 text-center shadow-xl">
-		<h1 class="mb-12 text-5xl font-medium leading-tight">
+	<div
+		class="card card-hover variant-glass-surface flex flex-col items-center justify-center text-center shadow-xl hover:variant-ghost-surface sm:p-10 lg:p-20"
+	>
+		<h1 class="mb-12 text-5xl font-medium leading-tight sm:w-[36rem] lg:w-auto">
 			From knowledge to <strong class="bg-gradient-to-br from-sky-400 to-blue-800 bg-clip-text text-transparent"
 				>Kühlschrank</strong
 			>
 		</h1>
 		<div class="flex items-center gap-2">
-			<a href="{base}/store/accounts" class="btn-primary btn-wide btn my-2 gap-2 normal-case">
+			<a href="{base}/store/accounts" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case">
 				<Icon icon="mdi:store" style="font-size: 24px" />
 				{$_('homepage.store-login')}</a
 			>
-			<a href="{base}/admin/login" class="btn-primary btn-wide btn my-2 gap-2 normal-case">
+			<a href="{base}/admin/login" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case">
 				<Icon icon="mdi:account-wrench" style="font-size: 24px" />
 				{$_('homepage.admin-login')}</a
 			>

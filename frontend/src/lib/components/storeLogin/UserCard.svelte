@@ -4,6 +4,7 @@
 	import type { Account } from '$lib/generated/graphql';
 	import { getImageUrl } from '$lib/utils/accountUtils.js';
 	import { toEuro } from '$lib/utils/formatEuro';
+	import { Avatar } from '@skeletonlabs/skeleton';
 
 	export let account: Account;
 
@@ -15,19 +16,22 @@
 </script>
 
 <div
-	class="card-compact group card h-52 cursor-pointer bg-neutral shadow-md hover:bg-neutral-focus hover:shadow-xl"
+	class="card card-hover variant-glass-surface w-48 cursor-pointer shadow-md hover:variant-ghost-surface hover:shadow-xl"
 	on:mouseup="{navigateToLogin}"
 >
-	<figure class="pb-2 pt-5">
-		<div class="avatar">
-			<div class="w-24 rounded-full ring-2 ring-white">
-				<img class="group-hover:brightness-90" src="{img}" alt="account" />
-			</div>
-		</div>
+	<figure class="flex justify-center pb-2 pt-5">
+		<Avatar
+			initials="{account.name
+				?.split(' ')
+				.map((n) => n[0])
+				.join('')}"
+			background="variant-filled-surface"
+			class="h-20 w-20"
+		/>
 	</figure>
 
-	<div class="card-body inline-block text-center">
-		<h2 class="card-title block truncate text-base group-hover:text-accent">{account.name}</h2>
+	<section class="mb-8 mt-4 flex flex-col items-center justify-center text-center">
+		<h3 class="group-hover:text-accent block truncate text-base font-bold">{account.name}</h3>
 		<p class="block truncate" use:toEuro="{account.balance}"></p>
-	</div>
+	</section>
 </div>

@@ -1,12 +1,17 @@
 <script lang="ts">
-	import Footer from '$lib/components/main/Footer.svelte';
-	import Header from '$lib/components/main/Header.svelte';
 	import { setContextClient } from '@urql/svelte';
+	// Your selected Skeleton theme:
+	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+
+	// This contains the bulk of Skeletons required styles:
+	import '@skeletonlabs/skeleton/styles/all.css';
+
 	import '../app.scss';
 
+	import Footer from '$lib/components/main/Footer.svelte';
+	import Header from '$lib/components/main/Header.svelte';
 	import { client } from '../urqlClient';
 
-	localStorage.setItem('authHeader', '');
 	setContextClient(client);
 </script>
 
@@ -17,7 +22,7 @@
 <div class="flex h-screen flex-col justify-center overflow-hidden">
 	<Header />
 	<div class="background flex flex-1 flex-col overflow-y-auto">
-		<main class="flex max-h-full grow flex-col items-center justify-center">
+		<main class="flex grow flex-col">
 			<slot />
 		</main>
 		<Footer />
@@ -26,9 +31,18 @@
 
 <style lang="scss">
 	.background {
-		background-image: url('/img/blurry-gradient-haikei.svg');
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: cover;
+		// background-image: url('/img/blurry-gradient-haikei.svg');
+		// background-repeat: no-repeat;
+		// background-position: center;
+		// background-size: cover;
+		background-color: hsla(0, 0%, 10%, 1);
+		background-image: radial-gradient(at 66% 86%, hsla(240, 100%, 20%, 0.74) 0px, transparent 50%),
+			radial-gradient(at 77% 13%, hsla(173, 0%, 8%, 0.41) 0px, transparent 50%),
+			radial-gradient(at 57% 66%, hsla(221, 0%, 11%, 1) 0px, transparent 50%),
+			radial-gradient(at 0% 100%, hsla(225, 98%, 35%, 1) 0px, transparent 50%),
+			radial-gradient(at 38% 9%, hsla(237, 96%, 29%, 1) 0px, transparent 50%),
+			radial-gradient(at 6% 9%, hsla(0, 0%, 10%, 1) 0px, transparent 50%),
+			radial-gradient(at 92% 40%, hsla(239, 100%, 40%, 1) 0px, transparent 50%),
+			radial-gradient(at 30% 46%, hsla(12, 0%, 0%, 1) 0px, transparent 50%);
 	}
 </style>
