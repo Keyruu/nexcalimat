@@ -20,7 +20,7 @@
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 				{#each $accounts.data.accounts.data as account (account?.id)}
 					{#if account}
-						<div class="justify-center∫ flex items-center">
+						<div class="flex items-center justify-center">
 							<UserCard account="{account}" />
 						</div>
 					{/if}
