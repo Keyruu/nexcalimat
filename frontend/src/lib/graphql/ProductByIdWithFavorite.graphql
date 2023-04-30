@@ -1,0 +1,10 @@
+query ProductByIdWithFavorite($id: BigInteger) {
+	productWithFavorite(id: $id) {
+		id
+		name
+		price
+		type
+		picture
+		isFavorite
+	}
+}

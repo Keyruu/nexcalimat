@@ -71,7 +71,7 @@ export type Mutation = {
   /** Erase an Account permanently */
   eraseAccount?: Maybe<Scalars['Boolean']>;
   /** Make Purchase */
-  makePurchase?: Maybe<Purchase>;
+  makePurchase?: Maybe<Array<Maybe<Purchase>>>;
   /** Set new PIN */
   pin?: Maybe<Scalars['Boolean']>;
   /** Refund Purchase */
@@ -113,6 +113,7 @@ export type MutationEraseAccountArgs = {
 
 /** Mutation root */
 export type MutationMakePurchaseArgs = {
+  amount?: InputMaybe<Scalars['Int']>;
   productId?: InputMaybe<Scalars['BigInteger']>;
 };
 
@@ -265,6 +266,8 @@ export type Query = {
   pinLogin?: Maybe<Scalars['String']>;
   /** Get Product by ID */
   product?: Maybe<Product>;
+  /** Get Product by ID */
+  productWithFavorite?: Maybe<ProductWithFavorite>;
   /** Get all Products */
   products?: Maybe<PaginationResponse_Product>;
   /** Get all Products with Favorites */
@@ -311,6 +314,12 @@ export type QueryPinLoginArgs = {
 
 /** Query root */
 export type QueryProductArgs = {
+  id?: InputMaybe<Scalars['BigInteger']>;
+};
+
+
+/** Query root */
+export type QueryProductWithFavoriteArgs = {
   id?: InputMaybe<Scalars['BigInteger']>;
 };
 
@@ -366,20 +375,18 @@ export type AccountByIdQueryVariables = Exact<{
 
 export type AccountByIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null };
 
-export type GetAccountsQueryVariables = Exact<{ [key: string]: never; }>;
+export type AccountsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
+export type AccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
 
-export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
-
-export type GetProductsWithFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+export type MakePurchaseMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInteger']>;
+  amount?: InputMaybe<Scalars['Int']>;
+}>;
 
 
-export type GetProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
+export type MakePurchaseMutation = { __typename?: 'Mutation', makePurchase?: Array<{ __typename?: 'Purchase', id?: number | null, paidPrice?: number | null } | null> | null };
 
 export type PinLoginQueryVariables = Exact<{
   login?: InputMaybe<PinLoginInput>;
@@ -388,12 +395,29 @@ export type PinLoginQueryVariables = Exact<{
 
 export type PinLoginQuery = { __typename?: 'Query', pinLogin?: string | null };
 
-export type ProductByIdQueryVariables = Exact<{
+export type ProductByIdWithFavoriteQueryVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']>;
 }>;
 
 
-export type ProductByIdQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null };
+export type ProductByIdWithFavoriteQuery = { __typename?: 'Query', productWithFavorite?: { __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null };
+
+export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
+
+export type ProductsWithFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
+
+export type ToggleFavoriteMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInteger']>;
+}>;
+
+
+export type ToggleFavoriteMutation = { __typename?: 'Mutation', toggleFavorite?: boolean | null };
 
 
 export const AccountByIdDocument = gql`
@@ -408,8 +432,8 @@ export const AccountByIdDocument = gql`
   }
 }
     `;
-export const GetAccountsDocument = gql`
-    query GetAccounts {
+export const AccountsDocument = gql`
+    query Accounts {
   accounts {
     data {
       id
@@ -424,8 +448,33 @@ export const GetAccountsDocument = gql`
   }
 }
     `;
-export const GetProductsDocument = gql`
-    query GetProducts {
+export const MakePurchaseDocument = gql`
+    mutation MakePurchase($id: BigInteger, $amount: Int) {
+  makePurchase(productId: $id, amount: $amount) {
+    id
+    paidPrice
+  }
+}
+    `;
+export const PinLoginDocument = gql`
+    query PinLogin($login: PinLoginInput) {
+  pinLogin(login: $login)
+}
+    `;
+export const ProductByIdWithFavoriteDocument = gql`
+    query ProductByIdWithFavorite($id: BigInteger) {
+  productWithFavorite(id: $id) {
+    id
+    name
+    price
+    type
+    picture
+    isFavorite
+  }
+}
+    `;
+export const ProductsDocument = gql`
+    query Products {
   products {
     data {
       id
@@ -437,8 +486,8 @@ export const GetProductsDocument = gql`
   }
 }
     `;
-export const GetProductsWithFavoritesDocument = gql`
-    query GetProductsWithFavorites {
+export const ProductsWithFavoritesDocument = gql`
+    query ProductsWithFavorites {
   productsWithFavorites {
     data {
       id
@@ -451,19 +500,8 @@ export const GetProductsWithFavoritesDocument = gql`
   }
 }
     `;
-export const PinLoginDocument = gql`
-    query PinLogin($login: PinLoginInput) {
-  pinLogin(login: $login)
-}
-    `;
-export const ProductByIdDocument = gql`
-    query ProductById($id: BigInteger) {
-  product(id: $id) {
-    id
-    name
-    price
-    type
-    picture
-  }
+export const ToggleFavoriteDocument = gql`
+    mutation ToggleFavorite($id: BigInteger) {
+  toggleFavorite(productId: $id)
 }
     `;

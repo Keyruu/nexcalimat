@@ -1,4 +1,4 @@
-query GetAccounts {
+query Accounts {
 	accounts {
 		data {
 			id

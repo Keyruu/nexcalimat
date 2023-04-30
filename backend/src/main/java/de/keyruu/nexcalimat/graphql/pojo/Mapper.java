@@ -13,10 +13,10 @@ public class Mapper
 
   public static Mapper map(Optional<PagePojo> pagePojoOptional, Optional<SortPojo> sortPojoOptional)
   {
-    return map(pagePojoOptional, sortPojoOptional, Sort.empty(), "");
+    return map(pagePojoOptional, sortPojoOptional, Sort.empty());
   }
 
-  public static Mapper map(Optional<PagePojo> pagePojoOptional, Optional<SortPojo> sortPojoOptional, Sort initialSort, String prefix)
+  public static Mapper map(Optional<PagePojo> pagePojoOptional, Optional<SortPojo> sortPojoOptional, Sort initialSort)
   {
     Mapper mapper = new Mapper();
     mapper.setPage(mapPage(pagePojoOptional));

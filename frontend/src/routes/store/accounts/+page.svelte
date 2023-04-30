@@ -2,16 +2,16 @@
 	import { base } from '$app/paths';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import UserCard from '$lib/components/storeLogin/UserCard.svelte';
-	import { GetAccountsDocument, type GetAccountsQuery } from '$lib/generated/graphql';
+	import { AccountsDocument, type AccountsQuery } from '$lib/generated/graphql';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 
 	localStorage.setItem('authHeader', '');
 
-	const accounts = queryStore<GetAccountsQuery>({
+	const accounts = queryStore<AccountsQuery>({
 		client: getContextClient(),
-		query: GetAccountsDocument
+		query: AccountsDocument
 	});
 </script>
 

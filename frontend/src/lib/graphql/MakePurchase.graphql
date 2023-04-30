@@ -1,0 +1,6 @@
+mutation MakePurchase($id: BigInteger, $amount: Int) {
+  makePurchase(productId: $id, amount: $amount) {
+    id
+    paidPrice
+  }
+}

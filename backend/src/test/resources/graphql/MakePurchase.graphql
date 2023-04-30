@@ -1,5 +1,5 @@
 mutation {
-  makePurchase(productId: DB_PRODUCT_ID) {
+  makePurchase(productId: DB_PRODUCT_ID, amount: 1) {
     paidPrice
     account {
       name

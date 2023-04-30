@@ -1,4 +1,4 @@
-query GetProductsWithFavorites {
+query ProductsWithFavorites {
   productsWithFavorites {
     data {
       id

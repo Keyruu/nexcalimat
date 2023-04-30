@@ -1,11 +1,8 @@
 package de.keyruu.nexcalimat.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
@@ -20,6 +17,9 @@ import de.keyruu.nexcalimat.repository.AccountRepository;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import io.quarkus.security.ForbiddenException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class PurchaseService
@@ -46,24 +46,30 @@ public class PurchaseService
 	}
 
 	@Transactional
-	public Purchase makePurchase(Long productId, Long accountId)
+	public List<Purchase> makePurchase(Long productId, Long accountId, Integer amount)
 	{
 		Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
 		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-		Purchase purchase = new Purchase();
+		List<Purchase> purchases = new ArrayList<>();
+		for (int i = 0; i < amount; i++)
+		{
+			Purchase purchase = new Purchase();
 
-		purchase.setAccount(account);
-		purchase.setProduct(product);
-		purchase.setPaidPrice(product.getPrice());
+			purchase.setAccount(account);
+			purchase.setProduct(product);
+			purchase.setPaidPrice(product.getPrice());
 
-		_purchaseRepository.persist(purchase);
+			_purchaseRepository.persist(purchase);
 
-		account.setBalance(account.getBalance() - product.getPrice());
+			account.setBalance(account.getBalance() - product.getPrice());
 
-		_accountRepository.persist(account);
+			_accountRepository.persist(account);
 
-		return purchase;
+			purchases.add(purchase);
+		}
+
+		return purchases;
 	}
 
 	public Boolean refund(Long purchaseId, Long accountId)

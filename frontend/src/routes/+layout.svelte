@@ -9,6 +9,7 @@
 	import '../app.scss';
 
 	import Header from '$lib/components/main/Header.svelte';
+	import { Toast } from '@skeletonlabs/skeleton';
 	import { client } from '../urqlClient';
 
 	setContextClient(client);
@@ -26,6 +27,7 @@
 		</main>
 		<!-- <Footer /> -->
 	</div>
+	<Toast />
 </div>
 
 <style lang="scss">

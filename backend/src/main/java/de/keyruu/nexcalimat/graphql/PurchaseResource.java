@@ -1,5 +1,6 @@
 package de.keyruu.nexcalimat.graphql;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.microprofile.graphql.Description;
@@ -79,9 +80,9 @@ public class PurchaseResource
 	@Mutation
 	@Description("Make Purchase")
 	@RolesAllowed(Roles.CUSTOMER)
-	public Purchase makePurchase(Long productId)
+	public List<Purchase> makePurchase(Long productId, Integer amount)
 	{
-		return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request));
+		return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request), amount);
 	}
 
 	@Mutation

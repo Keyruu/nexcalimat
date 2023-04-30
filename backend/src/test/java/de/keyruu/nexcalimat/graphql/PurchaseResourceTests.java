@@ -5,11 +5,10 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.Set;
 
-import jakarta.ws.rs.core.HttpHeaders;
-
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ws.rs.core.HttpHeaders;
 
 @QuarkusTest
 public class PurchaseResourceTests extends GraphQLTest
@@ -24,9 +23,9 @@ public class PurchaseResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.makePurchase.paidPrice", is(6000))
-			.body("data.makePurchase.account.name", is("Dieter Dubinsky"))
-			.body("data.makePurchase.product.name.", is("Die Peitsche des Mönchs"));
+			.body("data.makePurchase[0].paidPrice", is(6000))
+			.body("data.makePurchase[0].account.name", is("Dieter Dubinsky"))
+			.body("data.makePurchase[0].product.name.", is("Die Peitsche des Mönchs"));
 	}
 
 	@Test

@@ -55,7 +55,9 @@ public class ProductResource
 	@RolesAllowed({ Roles.CUSTOMER })
 	public PaginationResponse<ProductWithFavorite> productsWithFavorites(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _productService.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("isFavorite"), ""), _jwtUtils.getPinJwtAccountId(_request));
+		return _productService
+			.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("isFavorite")),
+				_jwtUtils.getPinJwtAccountId(_request));
 	}
 
 	@Query
@@ -64,6 +66,14 @@ public class ProductResource
 	public Product product(Long id)
 	{
 		return _productService.findById(id);
+	}
+
+	@Query
+	@Description("Get Product by ID")
+	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
+	public ProductWithFavorite productWithFavorite(Long id)
+	{
+		return _productService.findByIdWithFavorite(id, _jwtUtils.getPinJwtAccountId(_request));
 	}
 
 	@Mutation

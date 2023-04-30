@@ -1,0 +1,3 @@
+mutation ToggleFavorite($id: BigInteger) {
+  toggleFavorite(productId: $id)
+}

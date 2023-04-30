@@ -2,12 +2,12 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Product from '$lib/components/products/Product.svelte';
-	import { GetProductsWithFavoritesDocument, type GetProductsWithFavoritesQuery } from '$lib/generated/graphql';
+	import { ProductsWithFavoritesDocument, type ProductsWithFavoritesQuery } from '$lib/generated/graphql';
 	import { getContextClient, queryStore } from '@urql/svelte';
 
-	const products = queryStore<GetProductsWithFavoritesQuery>({
+	const products = queryStore<ProductsWithFavoritesQuery>({
 		client: getContextClient(),
-		query: GetProductsWithFavoritesDocument
+		query: ProductsWithFavoritesDocument
 	});
 </script>
 

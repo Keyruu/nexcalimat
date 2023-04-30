@@ -40,15 +40,22 @@ public class ProductService
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId)
 	{
-		String query = "deletedAt IS NULL";
+		String query = "deletedAt IS NULL AND (accountId = :accountId OR accountId IS NULL)";
+		Parameters params = Parameters.with("accountId", accountId);
 		List<ProductWithFavorite> products = _productWithFavoriteRepository
-			.find("accountId = :accountId OR accountId IS NULL",
-				mapper.getSort(),
-				Parameters.with("accountId", accountId))
+			.find(query,
+				mapper.getSort(), params)
 			.page(mapper.getPage())
 			.list();
-		long count = _productRepository.count(query);
+		long count = _productWithFavoriteRepository.count(query, params);
 		return new PaginationResponse<>(products, count, mapper);
+	}
+
+	public ProductWithFavorite findByIdWithFavorite(Long id, Long accountId)
+	{
+		return _productWithFavoriteRepository
+			.find("id = ?1 AND (accountId = ?2 OR accountId IS NULL)", id, accountId)
+			.firstResult();
 	}
 
 	public Product findById(Long id)
