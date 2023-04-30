@@ -16,6 +16,7 @@ import de.keyruu.nexcalimat.model.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
+import de.keyruu.nexcalimat.service.FavoriteService;
 import de.keyruu.nexcalimat.service.ProductService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
@@ -31,6 +32,9 @@ public class ProductResource
 
 	@Inject
 	ProductService _productService;
+
+	@Inject
+	FavoriteService _favoriteService;
 
 	@Inject
 	CurrentVertxRequest _request;
@@ -83,9 +87,16 @@ public class ProductResource
 	@Mutation
 	@Description("Delete Product")
 	@RolesAllowed(Roles.ADMIN)
-	@Transactional
 	public Boolean deleteProduct(Long id)
 	{
 		return _productService.deleteById(id);
+	}
+
+	@Mutation
+	@Description("Toggle favorite")
+	@RolesAllowed(Roles.CUSTOMER)
+	public Boolean toggleFavorite(Long productId)
+	{
+		return _favoriteService.toggleFavorite(productId, _jwtUtils.getPinJwtAccountId(_request));
 	}
 }
