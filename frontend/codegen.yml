@@ -3,6 +3,11 @@ schema: "http://localhost:8080/nexcalimat/graphql/"
 documents: "src/**/*.graphql"
 config:
   withHooks: false
+  strictScalars: true
+  scalars:
+    BigDecimal: number
+    BigInteger: number
+    DateTime: string
 generates:
   src/lib/generated/graphql.ts:
     plugins:

@@ -8,7 +8,6 @@
 
 	import '../app.scss';
 
-	import Footer from '$lib/components/main/Footer.svelte';
 	import Header from '$lib/components/main/Header.svelte';
 	import { client } from '../urqlClient';
 
@@ -25,7 +24,7 @@
 		<main class="flex grow flex-col">
 			<slot />
 		</main>
-		<Footer />
+		<!-- <Footer /> -->
 	</div>
 </div>
 

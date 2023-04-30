@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { base } from '$app/paths';
+	import { page } from '$app/stores';
 	import Product from '$lib/components/products/Product.svelte';
 	import { GetProductsWithFavoritesDocument, type GetProductsWithFavoritesQuery } from '$lib/generated/graphql';
 	import { getContextClient, queryStore } from '@urql/svelte';
@@ -14,12 +16,14 @@
 		Loading products...
 	{:else if $products.error}
 		Something went wrong...
-		{$products.error.graphQLErrors[0].extensions['code']}
 	{:else if $products.data?.productsWithFavorites?.data}
+		<div></div>
 		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 			{#each $products.data?.productsWithFavorites?.data as product}
 				{#if product}
-					<Product product="{product}" />
+					<a class="unstyled" href="{base}/store/accounts/{$page.params.accountId}/products/{product.id}">
+						<Product product="{product}" />
+					</a>
 				{/if}
 			{/each}
 		</div>
@@ -27,7 +31,4 @@
 </div>
 
 <style lang="scss">
-	.products-grid {
-		grid-area: 2 / 1 / 6 / 6;
-	}
 </style>

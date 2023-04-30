@@ -1,4 +1,4 @@
-import type { Account } from '$lib/graphql/generated/graphql';
+import type { Account } from '$lib/generated/graphql';
 
 export function getImageUrl(account: Account) {
 	return account.picture && account.picture.length

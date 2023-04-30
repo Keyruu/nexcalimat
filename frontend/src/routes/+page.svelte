@@ -14,11 +14,11 @@
 			>
 		</h1>
 		<div class="flex items-center gap-2">
-			<a href="{base}/store/accounts" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case">
+			<a href="{base}/store/accounts" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case hover:scale-105">
 				<Icon icon="mdi:store" style="font-size: 24px" />
 				{$_('homepage.store-login')}</a
 			>
-			<a href="{base}/admin/login" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case">
+			<a href="{base}/admin/login" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case hover:scale-105">
 				<Icon icon="mdi:account-wrench" style="font-size: 24px" />
 				{$_('homepage.admin-login')}</a
 			>

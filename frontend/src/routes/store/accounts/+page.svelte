@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import UserCard from '$lib/components/storeLogin/UserCard.svelte';
 	import { GetAccountsDocument, type GetAccountsQuery } from '$lib/generated/graphql';
@@ -20,9 +21,9 @@
 			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 				{#each $accounts.data.accounts.data as account (account?.id)}
 					{#if account}
-						<div class="flex items-center justify-center">
+						<a href="{base}/store/accounts/{account.id}" class="unstyled flex items-center justify-center">
 							<UserCard account="{account}" />
-						</div>
+						</a>
 					{/if}
 				{/each}
 			</div>

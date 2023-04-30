@@ -12,11 +12,13 @@
 		type PinLoginQuery,
 		type PinLoginQueryVariables
 	} from '$lib/generated/graphql';
-	import { accountToken } from '$lib/stores/accountStore';
+	import { authHeader } from '$lib/stores/authHeader';
 	import { AlertType } from '$lib/types/AlertType';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { getContextClient, queryStore } from '@urql/svelte';
+	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
+	import type { Unsubscriber } from 'svelte/store';
 
 	let pin: string;
 
@@ -29,30 +31,33 @@
 		client: urqlClient,
 		query: AccountByIdDocument,
 		variables: {
-			id: Number($page.params.id)
+			id: Number($page.params.accountId)
 		}
 	});
 
-	async function handleSubmit() {
-		const pinStore = queryStore<PinLoginQuery, PinLoginQueryVariables>({
+	const login = () =>
+		queryStore<PinLoginQuery, PinLoginQueryVariables>({
 			client: urqlClient,
 			query: PinLoginDocument,
 			variables: {
 				login: {
-					id: Number($page.params.id),
+					id: Number($page.params.accountId),
 					pin
 				}
 			}
 		});
 
+	let unsubscribeLogin: Unsubscriber;
+
+	async function handleSubmit() {
 		console.log('submit was pressed', pin);
 
-		pinStore.subscribe((result) => {
-			if (result.data?.pinLogin) {
+		unsubscribeLogin = login().subscribe((result) => {
+			if (result.fetching === false && result.data?.pinLogin) {
 				const token = result.data.pinLogin;
-				console.log(token);
+				console.log(result);
 				localStorage.setItem('authHeader', `PIN ${token}`);
-				accountToken.set(token!);
+				authHeader.set(`PIN ${token}`);
 				triggerSuccess();
 				goToFunctionPage();
 			} else if (result.error) {
@@ -62,8 +67,14 @@
 	}
 
 	function goToFunctionPage() {
-		goto(`${base}/store/accounts/${$page.params.id}/products`);
+		goto(`${base}/store/accounts/${$page.params.accountId}/products`);
 	}
+
+	onDestroy(() => {
+		if (unsubscribeLogin) {
+			unsubscribeLogin();
+		}
+	});
 </script>
 
 <div class="flex items-center justify-center">
