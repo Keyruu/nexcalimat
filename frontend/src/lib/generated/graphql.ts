@@ -266,7 +266,7 @@ export type Query = {
   pinLogin?: Maybe<Scalars['String']>;
   /** Get Product by ID */
   product?: Maybe<Product>;
-  /** Get Product by ID */
+  /** Get ProductWithFavorite by ID */
   productWithFavorite?: Maybe<ProductWithFavorite>;
   /** Get all Products */
   products?: Maybe<PaginationResponse_Product>;
@@ -335,6 +335,7 @@ export type QueryProductsArgs = {
 export type QueryProductsWithFavoritesArgs = {
   page?: InputMaybe<PagePojoInput>;
   sort?: InputMaybe<SortPojoInput>;
+  type?: InputMaybe<ProductType>;
 };
 
 
@@ -407,7 +408,9 @@ export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
 
-export type ProductsWithFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProductsWithFavoritesQueryVariables = Exact<{
+  type?: InputMaybe<ProductType>;
+}>;
 
 
 export type ProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
@@ -487,8 +490,8 @@ export const ProductsDocument = gql`
 }
     `;
 export const ProductsWithFavoritesDocument = gql`
-    query ProductsWithFavorites {
-  productsWithFavorites {
+    query ProductsWithFavorites($type: ProductType) {
+  productsWithFavorites(type: $type) {
     data {
       id
       name

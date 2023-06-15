@@ -12,6 +12,7 @@ import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Product;
+import de.keyruu.nexcalimat.model.ProductType;
 import de.keyruu.nexcalimat.model.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
@@ -53,11 +54,14 @@ public class ProductResource
 	@Query
 	@Description("Get all Products with Favorites")
 	@RolesAllowed({ Roles.CUSTOMER })
-	public PaginationResponse<ProductWithFavorite> productsWithFavorites(Optional<PagePojo> page, Optional<SortPojo> sort)
+	public PaginationResponse<ProductWithFavorite> productsWithFavorites(
+		Optional<PagePojo> page,
+		Optional<SortPojo> sort,
+		Optional<ProductType> type)
 	{
 		return _productService
 			.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("isFavorite")),
-				_jwtUtils.getPinJwtAccountId(_request));
+				_jwtUtils.getPinJwtAccountId(_request), type);
 	}
 
 	@Query
@@ -69,8 +73,8 @@ public class ProductResource
 	}
 
 	@Query
-	@Description("Get Product by ID")
-	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
+	@Description("Get ProductWithFavorite by ID")
+	@RolesAllowed(Roles.CUSTOMER)
 	public ProductWithFavorite productWithFavorite(Long id)
 	{
 		return _productService.findByIdWithFavorite(id, _jwtUtils.getPinJwtAccountId(_request));

@@ -1,5 +1,5 @@
-query ProductsWithFavorites {
-  productsWithFavorites {
+query ProductsWithFavorites($type: ProductType) {
+  productsWithFavorites(type: $type) {
     data {
       id
       name

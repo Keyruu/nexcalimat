@@ -3,6 +3,7 @@ package de.keyruu.nexcalimat.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.filestore.PictureType;
@@ -10,6 +11,7 @@ import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
+import de.keyruu.nexcalimat.model.ProductType;
 import de.keyruu.nexcalimat.model.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.repository.ProductWithFavoriteRepository;
@@ -38,10 +40,16 @@ public class ProductService
 		return new PaginationResponse<>(products, count, mapper);
 	}
 
-	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId)
+	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{
 		String query = "deletedAt IS NULL AND (accountId = :accountId OR accountId IS NULL)";
 		Parameters params = Parameters.with("accountId", accountId);
+		if (type.isPresent())
+		{
+			query += " AND type = :type";
+			params = params.and("type", type.get());
+		}
+
 		List<ProductWithFavorite> products = _productWithFavoriteRepository
 			.find(query,
 				mapper.getSort(), params)
