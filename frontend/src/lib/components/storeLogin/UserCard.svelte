@@ -24,9 +24,11 @@
 	</figure>
 
 	<section class="mb-8 mt-4 flex flex-col items-center justify-center text-center">
-		<h3 class="group-hover:text-accent block truncate text-base font-bold">{account.name}</h3>
-		{#if account.balance != null}
-			<p class="block truncate" use:centToEuro>{account.balance}</p>
-		{/if}
+		<div class="flex h-16 w-[90%] items-center justify-center">
+			<h3 class="group-hover:text-accent line-clamp-2 text-center align-middle text-base font-bold">
+				{account.name}
+			</h3>
+		</div>
+		<p class="truncate" use:centToEuro>{account.balance}</p>
 	</section>
 </div>

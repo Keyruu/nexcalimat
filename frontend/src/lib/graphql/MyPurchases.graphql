@@ -1,0 +1,13 @@
+query MyPurchases {
+  myPurchases(sort: {columns: [{direction: Descending, name: "createdAt"}]}) {
+    data {
+      id
+      createdAt
+      paidPrice
+      product {
+        name
+        picture
+      }
+    }
+  }
+}

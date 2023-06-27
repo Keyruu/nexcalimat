@@ -8,7 +8,10 @@
 		type ProductsWithFavoritesQuery,
 		type ProductsWithFavoritesQueryVariables
 	} from '$lib/generated/graphql';
+	import { error } from '$lib/utils/storeError';
 	import { getContextClient, queryStore, type OperationResultStore } from '@urql/svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import type { Unsubscriber } from 'svelte/store';
 
 	let typeFilter: ProductType | undefined;
 
@@ -22,6 +25,16 @@
 		}
 	});
 
+	let unsubscribe: Unsubscriber;
+
+	onMount(() => {
+		unsubscribe = products.subscribe((result) => {
+			if (result.error) {
+				error(result.error);
+			}
+		});
+	});
+
 	function setFilter(type: ProductType) {
 		if (typeFilter === type) {
 			typeFilter = undefined;
@@ -29,6 +42,10 @@
 			typeFilter = type;
 		}
 	}
+
+	onDestroy(() => {
+		unsubscribe();
+	});
 </script>
 
 <div class="w-full">

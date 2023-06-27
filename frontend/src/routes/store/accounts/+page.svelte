@@ -3,11 +3,13 @@
 	import Alert from '$lib/components/alerts/Alert.svelte';
 	import UserCard from '$lib/components/storeLogin/UserCard.svelte';
 	import { AccountsDocument, type AccountsQuery } from '$lib/generated/graphql';
+	import { authHeader } from '$lib/stores/authHeader';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 
 	localStorage.setItem('authHeader', '');
+	authHeader.set(undefined);
 
 	const accounts = queryStore<AccountsQuery>({
 		client: getContextClient(),

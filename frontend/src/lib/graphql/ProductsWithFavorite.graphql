@@ -1,5 +1,5 @@
 query ProductsWithFavorites($type: ProductType) {
-  productsWithFavorites(type: $type) {
+  productsWithFavorites(type: $type, sort: {columns: [{direction: Ascending, name: "name"}]}) {
     data {
       id
       name

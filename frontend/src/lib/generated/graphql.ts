@@ -389,6 +389,11 @@ export type MakePurchaseMutationVariables = Exact<{
 
 export type MakePurchaseMutation = { __typename?: 'Mutation', makePurchase?: Array<{ __typename?: 'Purchase', id?: number | null, paidPrice?: number | null } | null> | null };
 
+export type MyPurchasesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyPurchasesQuery = { __typename?: 'Query', myPurchases?: { __typename?: 'PaginationResponse_Purchase', data?: Array<{ __typename?: 'Purchase', id?: number | null, createdAt?: string | null, paidPrice?: number | null, product?: { __typename?: 'Product', name?: string | null, picture?: string | null } | null } | null> | null } | null };
+
 export type PinLoginQueryVariables = Exact<{
   login?: InputMaybe<PinLoginInput>;
 }>;
@@ -415,6 +420,13 @@ export type ProductsWithFavoritesQueryVariables = Exact<{
 
 export type ProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
 
+export type RefundMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInteger']>;
+}>;
+
+
+export type RefundMutation = { __typename?: 'Mutation', refundPurchase?: boolean | null };
+
 export type ToggleFavoriteMutationVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']>;
 }>;
@@ -437,7 +449,7 @@ export const AccountByIdDocument = gql`
     `;
 export const AccountsDocument = gql`
     query Accounts {
-  accounts {
+  accounts(sort: {columns: [{direction: Ascending, name: "name"}]}) {
     data {
       id
       name
@@ -456,6 +468,21 @@ export const MakePurchaseDocument = gql`
   makePurchase(productId: $id, amount: $amount) {
     id
     paidPrice
+  }
+}
+    `;
+export const MyPurchasesDocument = gql`
+    query MyPurchases {
+  myPurchases(sort: {columns: [{direction: Descending, name: "createdAt"}]}) {
+    data {
+      id
+      createdAt
+      paidPrice
+      product {
+        name
+        picture
+      }
+    }
   }
 }
     `;
@@ -491,7 +518,10 @@ export const ProductsDocument = gql`
     `;
 export const ProductsWithFavoritesDocument = gql`
     query ProductsWithFavorites($type: ProductType) {
-  productsWithFavorites(type: $type) {
+  productsWithFavorites(
+    type: $type
+    sort: {columns: [{direction: Ascending, name: "name"}]}
+  ) {
     data {
       id
       name
@@ -501,6 +531,11 @@ export const ProductsWithFavoritesDocument = gql`
       isFavorite
     }
   }
+}
+    `;
+export const RefundDocument = gql`
+    mutation Refund($id: BigInteger) {
+  refundPurchase(id: $id)
 }
     `;
 export const ToggleFavoriteDocument = gql`

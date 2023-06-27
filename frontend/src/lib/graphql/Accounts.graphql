@@ -1,5 +1,5 @@
 query Accounts {
-	accounts {
+	accounts(sort: {columns: [{direction: Ascending, name: "name"}]}) {
 		data {
 			id
 			name

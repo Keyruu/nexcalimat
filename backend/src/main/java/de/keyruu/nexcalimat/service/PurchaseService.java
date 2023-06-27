@@ -116,7 +116,7 @@ public class PurchaseService
 
 	private PaginationResponse<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
 	{
-		String query = "account";
+		String query = "account = ?1 AND deletedAt IS NULL";
 		List<Purchase> purchases = _purchaseRepository.find(query, mapper.getSort(), account).page(mapper.getPage()).list();
 		long count = _purchaseRepository.count(query, account);
 		return new PaginationResponse<>(purchases, count, mapper);

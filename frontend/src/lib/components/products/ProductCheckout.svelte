@@ -76,7 +76,7 @@
 	});
 </script>
 
-<div class="card variant-glass-surface flex h-[34rem] w-80 flex-col items-center justify-center">
+<div class="card variant-glass-surface flex w-3/4 flex-col items-center justify-center pb-8">
 	<div class="absolute right-0 top-0 m-4">
 		<button
 			type="button"
@@ -98,10 +98,8 @@
 	<figure class="m-4 mb-0 flex items-center justify-center py-4 sm:h-80">
 		<img class="max-h-full max-w-full" src="{getProductPicture(product)}" alt="{product.name}" />
 	</figure>
-	<h2 class="my-2 text-center font-bold">{product.name}</h2>
-	{#if product.price}
-		<h3 class="font-bold" use:centToEuro>{product.price}</h3>
-	{/if}
+	<h2 class="mx-1 my-2 text-center font-bold">{product.name}</h2>
+	<h3 class="my-2 font-bold" use:centToEuro>{product.price}</h3>
 	<div class="flex flex-row items-center justify-center">
 		<div class="btn-group variant-ghost my-2">
 			<button

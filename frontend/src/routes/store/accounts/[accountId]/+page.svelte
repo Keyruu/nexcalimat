@@ -27,6 +27,8 @@
 
 	const urqlClient = getContextClient();
 
+	authHeader.set(undefined);
+
 	const account = queryStore<AccountByIdQuery, AccountByIdQueryVariables>({
 		client: urqlClient,
 		query: AccountByIdDocument,
