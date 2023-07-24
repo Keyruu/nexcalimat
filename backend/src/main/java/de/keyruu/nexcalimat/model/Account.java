@@ -15,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
@@ -52,6 +53,9 @@ public class Account implements HasPicture
 	@Column(name = "pin_hash")
 	@Ignore
 	private String pinHash;
+
+	@Transient
+	private Boolean hasPin;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
 	@Ignore
@@ -153,6 +157,11 @@ public class Account implements HasPicture
 	public void setPinHash(String pinHash)
 	{
 		this.pinHash = pinHash;
+	}
+
+	public Boolean getHasPin()
+	{
+		return pinHash != null;
 	}
 
 	public Set<Purchase> getPurchases()

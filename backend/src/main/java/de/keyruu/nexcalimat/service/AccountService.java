@@ -68,6 +68,11 @@ public class AccountService
 		return _accountRepo.findById(id);
 	}
 
+	public Account findByExtId(String extId)
+	{
+		return _accountRepo.find("extId", extId).firstResultOptional().orElseThrow(AccountNotFoundException::new);
+	}
+
 	@Transactional
 	public Account signUp(String pin, JsonWebToken idToken)
 	{
