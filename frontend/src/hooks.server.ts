@@ -1,7 +1,3 @@
-import { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID } from '$env/static/private';
-import type { Provider } from '@auth/core/providers';
-import AzureADProvider from '@auth/core/providers/azure-ad';
-import { SvelteKitAuth } from '@auth/sveltekit';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { locale } from 'svelte-i18n';
@@ -15,14 +11,15 @@ const i18n: Handle = async ({ event, resolve }) => {
 	return await resolve(event);
 };
 
-const auth: Handle = SvelteKitAuth({
-	providers: [
-		AzureADProvider({
-			clientId: AZURE_AD_CLIENT_ID,
-			clientSecret: AZURE_AD_CLIENT_SECRET,
-			tenantId: AZURE_AD_TENANT_ID
-		})
-	] as Provider[]
-});
+// const auth: Handle = SvelteKitAuth({
+// 	providers: [
+// 		AzureADProvider({
+// 			clientId: AZURE_AD_CLIENT_ID,
+// 			clientSecret: AZURE_AD_CLIENT_SECRET,
+// 			tenantId: AZURE_AD_TENANT_ID
+// 		})
+// 	] as Provider[]
+// });
 
-export const handle: Handle = sequence(auth, i18n);
+// export const handle: Handle = sequence(auth, i18n);
+export const handle: Handle = sequence(i18n);

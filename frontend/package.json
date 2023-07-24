@@ -54,11 +54,11 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@auth/core": "^0.5.1",
-		"@auth/sveltekit": "^0.3.1",
 		"@urql/svelte": "^4.0.0",
+		"dayjs": "^1.11.8",
 		"dotenv": "^16.0.3",
 		"graphql": "^16.6.0",
+		"oidc-client-ts": "^2.2.4",
 		"svelte-i18n": "^3.6.0"
 	}
 }

@@ -18,24 +18,10 @@
 				<Icon icon="mdi:store" style="font-size: 24px" />
 				{$_('homepage.store-login')}</a
 			>
-			<a href="{base}/admin/login" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case hover:scale-105">
+			<a href="{base}/admin" class="btn btn-lg variant-ghost-surface my-2 gap-2 normal-case hover:scale-105">
 				<Icon icon="mdi:account-wrench" style="font-size: 24px" />
 				{$_('homepage.admin-login')}</a
 			>
 		</div>
 	</div>
 </div>
-
-<style lang="scss">
-	$blue-glow: #5272ff;
-
-	.glow-shadow {
-		transition: 0.2s;
-		transition-property: box-shadow;
-		box-shadow: 0 0 25px $blue-glow;
-	}
-
-	.glow-shadow:hover {
-		box-shadow: 0 0 5px $blue-glow, 0 0 25px $blue-glow, 0 0 50px $blue-glow, 0 0 100px $blue-glow;
-	}
-</style>
