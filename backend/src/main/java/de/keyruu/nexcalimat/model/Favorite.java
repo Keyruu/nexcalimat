@@ -13,45 +13,45 @@ import jakarta.persistence.UniqueConstraint;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "account_id", "product_id" }) })
 public class Favorite
 {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "account_id")
-  private Account account;
+	@ManyToOne
+	@JoinColumn(name = "account_id")
+	private Account account;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
 
-  public Long getId()
-  {
-    return id;
-  }
+	public Long getId()
+	{
+		return id;
+	}
 
-  public void setId(Long id)
-  {
-    this.id = id;
-  }
+	public void setId(Long id)
+	{
+		this.id = id;
+	}
 
-  public Account getAccount()
-  {
-    return account;
-  }
+	public Account getAccount()
+	{
+		return account;
+	}
 
-  public void setAccount(Account account)
-  {
-    this.account = account;
-  }
+	public void setAccount(Account account)
+	{
+		this.account = account;
+	}
 
-  public Product getProduct()
-  {
-    return product;
-  }
+	public Product getProduct()
+	{
+		return product;
+	}
 
-  public void setProduct(Product product)
-  {
-    this.product = product;
-  }
+	public void setProduct(Product product)
+	{
+		this.product = product;
+	}
 }

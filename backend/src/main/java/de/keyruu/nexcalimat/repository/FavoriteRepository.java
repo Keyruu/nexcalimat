@@ -7,5 +7,5 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class FavoriteRepository implements PanacheRepository<Favorite>
 {
-  //
+	//
 }

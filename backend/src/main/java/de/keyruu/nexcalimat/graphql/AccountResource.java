@@ -14,7 +14,6 @@ import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Account;
-import de.keyruu.nexcalimat.repository.AccountRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.AccountService;
@@ -25,9 +24,6 @@ import jakarta.transaction.Transactional;
 @GraphQLApi
 public class AccountResource
 {
-	@Inject
-	AccountRepository _accountRepository;
-
 	@Inject
 	AccountService _accountService;
 

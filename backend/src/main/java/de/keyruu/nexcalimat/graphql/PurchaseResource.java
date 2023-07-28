@@ -14,7 +14,6 @@ import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Purchase;
-import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.PurchaseService;
@@ -27,9 +26,6 @@ import jakarta.transaction.Transactional;
 @GraphQLApi
 public class PurchaseResource
 {
-	@Inject
-	PurchaseRepository _purchaseRepository;
-
 	@Inject
 	PurchaseService _purchaseService;
 

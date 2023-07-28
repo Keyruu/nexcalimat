@@ -8,7 +8,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
-import de.keyruu.nexcalimat.filestore.FilestoreClient;
 import de.keyruu.nexcalimat.filestore.PictureType;
 import de.keyruu.nexcalimat.graphql.exception.AccountExistsException;
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
@@ -19,7 +18,6 @@ import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
 import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.repository.AccountRepository;
-import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
@@ -35,19 +33,10 @@ public class AccountService
 	AccountRepository _accountRepo;
 
 	@Inject
-	PurchaseRepository _purchaseRepo;
-
-	@Inject
 	JwtUtils _jwtUtils;
 
 	@Inject
-	FilestoreClient _filestoreClient;
-
-	@Inject
 	PictureService _pictureService;
-
-	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.user-id")
-	String _userIdClaim;
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
 	String _nameClaim;
@@ -102,7 +91,7 @@ public class AccountService
 	{
 		Account account = _accountRepo.findByIdOptional(login.getId()).orElseThrow(AccountNotFoundException::new);
 
-		if (BcryptUtil.matches(login.getPin(), account.getPinHash()) == false)
+		if (!BcryptUtil.matches(login.getPin(), account.getPinHash()))
 		{
 			throw new WrongPinException();
 		}
@@ -197,7 +186,7 @@ public class AccountService
 
 	public static void validatePin(String pin)
 	{
-		if (isNumeric(pin) == false || pin.length() != 4)
+		if (!isNumeric(pin) || pin.length() != 4)
 		{
 			throw new PinValidationException();
 		}

@@ -17,37 +17,37 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class FavoriteService
 {
-  @Inject
-  private FavoriteRepository _favoriteRepository;
+	@Inject
+	FavoriteRepository _favoriteRepository;
 
-  @Inject
-  private ProductRepository _productRepository;
+	@Inject
+	ProductRepository _productRepository;
 
-  @Inject
-  private AccountRepository _accountRepository;
+	@Inject
+	AccountRepository _accountRepository;
 
-  @Transactional
-  public Boolean toggleFavorite(Long productId, Long accountId)
-  {
-    Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
-    Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+	@Transactional
+	public Boolean toggleFavorite(Long productId, Long accountId)
+	{
+		Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
+		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-    Optional<Favorite> favorite = _favoriteRepository
-      .find("product.id = ?1 AND account.id = ?2", productId, accountId)
-      .firstResultOptional();
+		Optional<Favorite> favorite = _favoriteRepository
+			.find("product.id = ?1 AND account.id = ?2", productId, accountId)
+			.firstResultOptional();
 
-    if (favorite.isPresent())
-    {
-      _favoriteRepository.delete(favorite.get());
-      return false;
-    }
-    else
-    {
-      Favorite newFavorite = new Favorite();
-      newFavorite.setAccount(account);
-      newFavorite.setProduct(product);
-      _favoriteRepository.persist(newFavorite);
-      return true;
-    }
-  }
+		if (favorite.isPresent())
+		{
+			_favoriteRepository.delete(favorite.get());
+			return false;
+		}
+		else
+		{
+			Favorite newFavorite = new Favorite();
+			newFavorite.setAccount(account);
+			newFavorite.setProduct(product);
+			_favoriteRepository.persist(newFavorite);
+			return true;
+		}
+	}
 }

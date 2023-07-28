@@ -2,11 +2,11 @@ package de.keyruu.nexcalimat.model;
 
 public interface HasPicture
 {
-  Long getId();
+	Long getId();
 
-  void setId(Long id);
+	void setId(Long id);
 
-  String getPicture();
+	String getPicture();
 
-  void setPicture(String picture);
+	void setPicture(String picture);
 }

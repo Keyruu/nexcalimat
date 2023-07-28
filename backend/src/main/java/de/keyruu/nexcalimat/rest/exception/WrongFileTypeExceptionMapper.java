@@ -10,9 +10,9 @@ import de.keyruu.nexcalimat.filestore.exception.WrongFileTypeException;
 @Provider
 public class WrongFileTypeExceptionMapper implements ExceptionMapper<WrongFileTypeException>
 {
-  @Override
-  public Response toResponse(WrongFileTypeException exception)
-  {
-    return Response.status(Status.BAD_REQUEST).entity("Wrong file type!").build();
-  }
+	@Override
+	public Response toResponse(WrongFileTypeException exception)
+	{
+		return Response.status(Status.BAD_REQUEST).entity("Wrong file type!").build();
+	}
 }

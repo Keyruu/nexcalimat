@@ -77,7 +77,7 @@ public class PurchaseService
 		Purchase purchase = _purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);
 		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-		if (purchase.getAccount().equals(account) == false)
+		if (!purchase.getAccount().equals(account))
 		{
 			throw new ForbiddenException();
 		}

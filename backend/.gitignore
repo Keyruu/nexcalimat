@@ -40,6 +40,5 @@ nb-configuration.xml
 .env
 
 .apt_generated_tests
-.vscode
 
 .java-version

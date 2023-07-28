@@ -11,29 +11,29 @@ import jakarta.persistence.Table;
 @Table(name = "product_with_favorite")
 public class ProductWithFavorite extends SimpleProduct
 {
-  @Column(name = "is_favorite")
-  private Boolean isFavorite;
+	@Column(name = "is_favorite")
+	private Boolean isFavorite;
 
-  @Column(name = "account_id")
-  private Long accountId;
+	@Column(name = "account_id")
+	private Long accountId;
 
-  public Boolean getIsFavorite()
-  {
-    return isFavorite;
-  }
+	public Boolean getIsFavorite()
+	{
+		return isFavorite;
+	}
 
-  public void setIsFavorite(Boolean isFavorite)
-  {
-    this.isFavorite = isFavorite;
-  }
+	public void setIsFavorite(Boolean isFavorite)
+	{
+		this.isFavorite = isFavorite;
+	}
 
-  public Long getAccountId()
-  {
-    return accountId;
-  }
+	public Long getAccountId()
+	{
+		return accountId;
+	}
 
-  public void setAccountId(Long accountId)
-  {
-    this.accountId = accountId;
-  }
+	public void setAccountId(Long accountId)
+	{
+		this.accountId = accountId;
+	}
 }
