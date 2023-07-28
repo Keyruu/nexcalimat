@@ -81,9 +81,9 @@ public class PurchaseResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.myPurchases.data.size()", is(3))
+			.body("data.myPurchases.data.size()", is(2))
 			.body("data.myPurchases.page", is(0))
-			.body("data.myPurchases.total", is(3))
+			.body("data.myPurchases.total", is(2))
 			.body("data.myPurchases.data[1].account.name", is("Dieter Dubinsky"));
 	}
 
@@ -99,9 +99,9 @@ public class PurchaseResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.myPurchases.data.size()", is(3))
+			.body("data.myPurchases.data.size()", is(2))
 			.body("data.myPurchases.page", is(0))
-			.body("data.myPurchases.total", is(3))
+			.body("data.myPurchases.total", is(2))
 			.body("data.myPurchases.data[1].account.name", is("Dieter Dubinsky"));
 	}
 

@@ -3,9 +3,6 @@ package de.keyruu.nexcalimat;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -17,10 +14,11 @@ import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.AccountService;
-import de.keyruu.nexcalimat.service.ProductService;
 import de.keyruu.nexcalimat.service.PurchaseService;
 import de.keyruu.nexcalimat.utils.TestUtils;
 import io.smallrye.jwt.build.Jwt;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 public class NexcalimatTest
 {
@@ -29,6 +27,7 @@ public class NexcalimatTest
 	protected Account even = TestUtils.even();
 	protected Product peitsche = TestUtils.peitsche();
 	protected Product yoyo = TestUtils.yoyo();
+	protected Product maske = TestUtils.maske();
 	protected Purchase purchase1 = TestUtils.purchase(dubinsky, peitsche, 7000);
 	protected Purchase purchase2 = TestUtils.purchase(even, peitsche, 5000);
 	protected Purchase purchase3 = TestUtils.purchase(even, yoyo, 80);
@@ -40,9 +39,6 @@ public class NexcalimatTest
 
 	@Inject
 	AccountRepository _accountRepository;
-
-	@Inject
-	ProductService _productService;
 
 	@Inject
 	ProductRepository _productRepository;
@@ -68,7 +64,7 @@ public class NexcalimatTest
 	protected void testData()
 	{
 		_accountRepository.persist(dubinsky, even, hai);
-		_productRepository.persist(peitsche, yoyo);
+		_productRepository.persist(peitsche, yoyo, maske);
 		_purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
 		_accountService.deleteById(hai.getId());
 		_purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());

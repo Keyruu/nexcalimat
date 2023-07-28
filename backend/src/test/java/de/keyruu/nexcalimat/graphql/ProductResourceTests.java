@@ -5,13 +5,12 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.Set;
 
-import jakarta.ws.rs.core.HttpHeaders;
-
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.oidc.server.OidcWiremockTestResource;
+import jakarta.ws.rs.core.HttpHeaders;
 
 @QuarkusTest
 @QuarkusTestResource(OidcWiremockTestResource.class)
@@ -41,9 +40,9 @@ public class ProductResourceTests extends GraphQLTest
 			.post("/graphql")
 			.then()
 			.statusCode(200)
-			.body("data.products.data.size()", is(2))
+			.body("data.products.data.size()", is(3))
 			.body("data.products.page", is(0))
-			.body("data.products.total", is(2))
+			.body("data.products.total", is(3))
 			.body("data.products.data[0].name", is("Die Peitsche des Mönchs"))
 			.body("data.products.data[0].price", is(6000))
 			.body("data.products.data[1].name", is("Das Yoyo von Long"))

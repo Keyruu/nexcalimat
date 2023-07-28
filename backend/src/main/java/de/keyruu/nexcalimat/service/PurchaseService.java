@@ -72,6 +72,7 @@ public class PurchaseService
 		return purchases;
 	}
 
+	@Transactional
 	public Boolean refund(Long purchaseId, Long accountId)
 	{
 		Purchase purchase = _purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);

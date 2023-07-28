@@ -61,6 +61,16 @@ public class TestUtils
 		return p;
 	}
 
+	public static Product maske()
+	{
+		Product p = new Product();
+		p.setBundleSize(4);
+		p.setName("Die Maske des Wixxers");
+		p.setPrice(66);
+		p.setType(ProductType.HOT_DRINK);
+		return p;
+	}
+
 	public static Purchase purchase(Account a, Product pr, Integer paidPrice)
 	{
 		Purchase p = new Purchase();

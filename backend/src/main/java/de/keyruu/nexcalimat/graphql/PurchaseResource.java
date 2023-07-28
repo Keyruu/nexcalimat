@@ -21,7 +21,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
 @GraphQLApi
 public class PurchaseResource
@@ -84,7 +83,6 @@ public class PurchaseResource
 	@Mutation
 	@Description("Refund Purchase")
 	@RolesAllowed(Roles.CUSTOMER)
-	@Transactional
 	public Boolean refundPurchase(Long id)
 	{
 		return _purchaseService.refund(id, _jwtUtils.getPinJwtAccountId(_request));

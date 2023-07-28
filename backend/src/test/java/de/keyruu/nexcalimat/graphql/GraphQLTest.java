@@ -14,7 +14,6 @@ import de.keyruu.nexcalimat.NexcalimatTest;
 
 public class GraphQLTest extends NexcalimatTest
 {
-
 	void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher)
 	{
 		given()
