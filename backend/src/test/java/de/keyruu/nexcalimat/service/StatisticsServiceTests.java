@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
 
 import de.keyruu.nexcalimat.NexcalimatTest;
@@ -28,6 +30,26 @@ public class StatisticsServiceTests extends NexcalimatTest
 	}
 
 	@Test
+	public void testProductPurchaseCountPeitscheLastMonth()
+	{
+		PurchaseCount purchaseCountForProduct = _statisticsService.getPurchaseCountForProductLastMonth(peitsche.getId());
+
+		assertNotNull(purchaseCountForProduct);
+		assertEquals("Die Peitsche des Mönchs", purchaseCountForProduct.getProduct().getName());
+		assertEquals(2, purchaseCountForProduct.getCount());
+	}
+
+	@Test
+	public void testProductPurchaseCountPeitscheTimeRange()
+	{
+		PurchaseCount purchaseCountForProduct = _statisticsService.getPurchaseCountForProduct(peitsche.getId(), LocalDateTime.of(2022, 11, 11, 0, 0), LocalDateTime.of(2022, 12, 12, 0, 0));
+
+		assertNotNull(purchaseCountForProduct);
+		assertEquals("Die Peitsche des Mönchs", purchaseCountForProduct.getProduct().getName());
+		assertEquals(0, purchaseCountForProduct.getCount());
+	}
+
+	@Test
 	public void testProductPurchaseCountYoyo()
 	{
 		PurchaseCount purchaseCountForProduct = _statisticsService.getPurchaseCountForProduct(yoyo.getId());
@@ -42,7 +64,9 @@ public class StatisticsServiceTests extends NexcalimatTest
 	{
 		PurchaseCount purchaseCountForProduct = _statisticsService.getPurchaseCountForProduct(333L);
 
-		assertNull(purchaseCountForProduct);
+		assertNotNull(purchaseCountForProduct);
+		assertNull(purchaseCountForProduct.getProduct());
+		assertEquals(0, purchaseCountForProduct.getCount());
 	}
 
 	@Test
