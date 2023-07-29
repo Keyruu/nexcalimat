@@ -49,6 +49,7 @@ public class AccountResource
 
 	@Query
 	@Description("Get my account")
+	@RolesAllowed(Roles.USER)
 	public Account myAccount()
 	{
 		return _accountService.findByExtId(_jwtUtils.getExtIdFromToken(_jwt));
