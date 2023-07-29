@@ -1,0 +1,3 @@
+mutation SetPin($pin: String) {
+  pin(pin: $pin)
+}

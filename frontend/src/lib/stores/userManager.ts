@@ -1,11 +1,11 @@
 import { goto } from "$app/navigation";
+import { PUBLIC_BASE_URL, PUBLIC_OIDC_AUTHORITY, PUBLIC_OIDC_CLIENT_ID, PUBLIC_OIDC_SCOPE } from "$env/static/public";
 import { MyAccountDocument, type Account, type MyAccountQuery } from "$lib/generated/graphql";
 import { queryStore } from "@urql/svelte";
 import { User, UserManager } from "oidc-client-ts";
 import { writable } from "svelte/store";
 import { client } from "../../urqlClient";
 import { authHeader } from "./authHeader";
-import { PUBLIC_BASE_URL, PUBLIC_OIDC_AUTHORITY, PUBLIC_OIDC_CLIENT_ID, PUBLIC_OIDC_SCOPE } from "$env/static/public";
 
 
 export const userManager = new UserManager({
@@ -35,15 +35,18 @@ userManager.events.addSilentRenewError(async (error) => {
 userManager.events.addUserLoaded(async (user) => {
   user.expires_at = user.profile.exp;
   userManager.storeUser(user);
+
+  setUser(user);
+
+  console.log("addUserLoaded", user);
+})
+
+export function setUser(user: User) {
   oidcUser.set(user);
 
   localStorage.setItem('authHeader', `Bearer ${user.id_token}`);
   authHeader.set(`Bearer ${user.id_token}`);
-
-
-
-  console.log("addUserLoaded", user);
-})
+}
 
 export function handleMyAccount() {
   const accountQuery = queryStore<MyAccountQuery>({

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { handleMyAccount, oidcUser, userManager } from '$lib/stores/userManager';
+	import { handleMyAccount, setUser, userManager } from '$lib/stores/userManager';
 	import { get } from 'svelte/store';
 
 	handleUser();
@@ -12,7 +12,7 @@
 		} else if (user && user.expired) {
 			userManager.signinSilent();
 		} else if (user) {
-			oidcUser.set(user);
+			setUser(user);
 
 			handleMyAccount();
 		}

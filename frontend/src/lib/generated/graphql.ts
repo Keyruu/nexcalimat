@@ -435,6 +435,13 @@ export type RefundMutationVariables = Exact<{
 
 export type RefundMutation = { __typename?: 'Mutation', refundPurchase?: boolean | null };
 
+export type SetPinMutationVariables = Exact<{
+  pin?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SetPinMutation = { __typename?: 'Mutation', pin?: boolean | null };
+
 export type ToggleFavoriteMutationVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']>;
 }>;
@@ -556,6 +563,11 @@ export const ProductsWithFavoritesDocument = gql`
 export const RefundDocument = gql`
     mutation Refund($id: BigInteger) {
   refundPurchase(id: $id)
+}
+    `;
+export const SetPinDocument = gql`
+    mutation SetPin($pin: String) {
+  pin(pin: $pin)
 }
     `;
 export const ToggleFavoriteDocument = gql`

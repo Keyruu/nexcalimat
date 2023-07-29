@@ -1,10 +1,53 @@
-<script>
+<script lang="ts">
+	import { goto } from '$app/navigation';
 	import Keypad from '$lib/components/storeLogin/Keypad.svelte';
+	import { SetPinDocument, type SetPinMutation, type SetPinMutationVariables } from '$lib/generated/graphql';
+	import { mutationStore } from '@urql/svelte';
+	import { onDestroy } from 'svelte';
+	import type { Unsubscriber } from 'svelte/store';
+	import { client } from '../../../urqlClient';
+
+	let triggerSuccess: () => void;
+	let triggerMiss: () => void;
+	let pin: string = '';
+
+	const setPin = () =>
+		mutationStore<SetPinMutation, SetPinMutationVariables>({
+			client,
+			query: SetPinDocument,
+			variables: {
+				pin
+			}
+		});
+
+	let unsubscribe: Unsubscriber;
+
+	function handleSubmit() {
+		console.log('submit was pressed', pin);
+		unsubscribe = setPin().subscribe((result) => {
+			if (result.data?.pin) {
+				console.log(result);
+				triggerSuccess();
+				goto('/admin');
+			} else if (result.error) {
+				triggerMiss();
+			}
+		});
+	}
+
+	onDestroy(() => {
+		if (unsubscribe) unsubscribe();
+	});
 </script>
 
 <div class="mt-4 flex flex-col items-center justify-center">
-	<div class="variant-ghost-surface card rounded-xl p-6">
-		<h2 class="my-4">Set your initial PIN</h2>
-		<Keypad />
+	<h1 class="my-8">Set your initial PIN</h1>
+	<div class="variant-ghost-surface card rounded-xl p-10">
+		<Keypad
+			bind:value="{pin}"
+			on:submit="{handleSubmit}"
+			bind:triggerSuccess="{triggerSuccess}"
+			bind:triggerMiss="{triggerMiss}"
+		/>
 	</div>
 </div>
