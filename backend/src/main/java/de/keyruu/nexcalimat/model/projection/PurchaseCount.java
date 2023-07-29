@@ -24,4 +24,9 @@ public class PurchaseCount
 	{
 		return _count;
 	}
+
+	public long getRecommendedPurchaseAmount()
+	{
+		return (long)Math.ceil((double)_count / _product.getBundleSize());
+	}
 }

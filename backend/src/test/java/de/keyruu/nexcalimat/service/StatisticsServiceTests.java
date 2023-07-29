@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +38,7 @@ public class StatisticsServiceTests extends NexcalimatTest
 		assertNotNull(purchaseCountForProduct);
 		assertEquals("Die Peitsche des Mönchs", purchaseCountForProduct.getProduct().getName());
 		assertEquals(2, purchaseCountForProduct.getCount());
+		assertEquals(1, purchaseCountForProduct.getRecommendedPurchaseAmount());
 	}
 
 	@Test
@@ -77,5 +79,13 @@ public class StatisticsServiceTests extends NexcalimatTest
 		assertNotNull(purchaseCountForProduct);
 		assertEquals("Die Maske des Wixxers", purchaseCountForProduct.getProduct().getName());
 		assertEquals(0, purchaseCountForProduct.getCount());
+	}
+
+	@Test
+	public void testPurchaseCountForAllBoughtProductsLastMonth()
+	{
+		List<PurchaseCount> purchaseCounts = _statisticsService.getPurchaseCountForAllBoughtProductsLastMonth();
+
+		assertNotNull(purchaseCounts);
 	}
 }

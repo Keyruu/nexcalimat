@@ -2,6 +2,7 @@ package de.keyruu.nexcalimat.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import de.keyruu.nexcalimat.model.projection.PurchaseCount;
 import de.keyruu.nexcalimat.repository.ProductRepository;
@@ -32,6 +33,13 @@ public class StatisticsService
 		return getPurchaseCountForProductInternal(productId, start, end);
 	}
 
+	public List<PurchaseCount> getPurchaseCountForAllBoughtProductsLastMonth()
+	{
+		LocalDateTime today = LocalDateTime.now();
+		LocalDateTime oneMonthAgo = today.minus(1, ChronoUnit.MONTHS);
+		return getPurchaseCountForAllBoughtProductsInternal(oneMonthAgo, today);
+	}
+
 	private PurchaseCount getPurchaseCountForProductInternal(Long productId, LocalDateTime start, LocalDateTime end)
 	{
 		String query = "SELECT p, COUNT(pu) from Product p LEFT OUTER JOIN p.purchases pu WHERE p.id = :productId AND pu.deletedAt IS NULL\n";
@@ -48,5 +56,22 @@ public class StatisticsService
 			.project(PurchaseCount.class)
 			.firstResultOptional()
 			.orElseGet(() -> new PurchaseCount(_productRepository.findById(productId), 0));
+	}
+
+	private List<PurchaseCount> getPurchaseCountForAllBoughtProductsInternal(LocalDateTime start, LocalDateTime end)
+	{
+		String query = "SELECT p, COUNT(pu) as count from Product p LEFT OUTER JOIN p.purchases pu WHERE pu.deletedAt IS NULL\n";
+		Parameters params = new Parameters();
+		if (start != null && end != null)
+		{
+			query += "AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
+			params.and("start", start)
+				.and("end", end);
+		}
+		query += "GROUP BY p ORDER BY count";
+
+		return _productRepository.find(query, params)
+			.project(PurchaseCount.class)
+			.list();
 	}
 }
