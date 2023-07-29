@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Account } from '$lib/generated/graphql';
 	import { getImageUrl } from '$lib/utils/accountUtils.js';
-	import { centToEuro } from '$lib/utils/formatEuro';
+	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { Avatar } from '@skeletonlabs/skeleton';
 
 	export let account: Account;
@@ -29,6 +29,6 @@
 				{account.name}
 			</h3>
 		</div>
-		<p class="truncate" use:centToEuro>{account.balance}</p>
+		<p class="truncate">{numberCentToEuro(account.balance)}</p>
 	</section>
 </div>

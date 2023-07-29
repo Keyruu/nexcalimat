@@ -26,6 +26,7 @@ export type Account = HasPicture & {
   deletedAt?: Maybe<Scalars['DateTime']>;
   email?: Maybe<Scalars['String']>;
   extId?: Maybe<Scalars['String']>;
+  hasPin?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['BigInteger']>;
   name?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
@@ -260,6 +261,8 @@ export type Query = {
   accounts?: Maybe<PaginationResponse_Account>;
   /** Get deleted Accounts */
   deletedAccounts?: Maybe<PaginationResponse_Account>;
+  /** Get my account */
+  myAccount?: Maybe<Account>;
   /** Get personal Purchases */
   myPurchases?: Maybe<PaginationResponse_Purchase>;
   /** Login with PIN */
@@ -389,6 +392,11 @@ export type MakePurchaseMutationVariables = Exact<{
 
 export type MakePurchaseMutation = { __typename?: 'Mutation', makePurchase?: Array<{ __typename?: 'Purchase', id?: number | null, paidPrice?: number | null } | null> | null };
 
+export type MyAccountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyAccountQuery = { __typename?: 'Query', myAccount?: { __typename?: 'Account', id?: number | null, balance?: number | null, email?: string | null, picture?: string | null, name?: string | null, hasPin?: boolean | null } | null };
+
 export type MyPurchasesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -468,6 +476,18 @@ export const MakePurchaseDocument = gql`
   makePurchase(productId: $id, amount: $amount) {
     id
     paidPrice
+  }
+}
+    `;
+export const MyAccountDocument = gql`
+    query MyAccount {
+  myAccount {
+    id
+    balance
+    email
+    picture
+    name
+    hasPin
   }
 }
     `;

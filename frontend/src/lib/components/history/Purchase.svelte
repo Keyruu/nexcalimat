@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Purchase } from '$lib/generated/graphql';
-	import { formatDate } from '$lib/utils/formatDate';
-	import { centToEuro } from '$lib/utils/formatEuro';
+	import { stringFormatDate } from '$lib/utils/formatDate';
+	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -23,12 +23,12 @@
 			</div>
 			<div class="m-4 flex flex-col items-center justify-center">
 				<h3 class="font-bold">Price:</h3>
-				<h3 use:centToEuro>{purchase.paidPrice}</h3>
+				<h3>{numberCentToEuro(purchase.paidPrice)}</h3>
 			</div>
 			{#if purchase.createdAt}
 				<div class="mr-6 flex flex-col items-center justify-center">
 					<h3 class="font-bold">Bought at:</h3>
-					<h3 use:formatDate>{purchase.createdAt}</h3>
+					<h3>{stringFormatDate(purchase.createdAt)}</h3>
 				</div>
 				{#if Date.now() - Date.parse(purchase.createdAt) < 5 * 60 * 1000}
 					<div class="relative right-1 mt-[-165px]">

@@ -48,14 +48,14 @@
 				toastStore.trigger({
 					message: 'Purchase was refunded.',
 					classes: 'text-green-300',
-					background: 'variant-ghost-success'
+					background: 'variant-glass-success'
 				});
 				refresh();
 			} else if (result.error) {
 				toastStore.trigger({
 					message: 'Something went wrong.',
 					classes: 'text-red-300',
-					background: 'variant-ghost-error'
+					background: 'variant-glass-error'
 				});
 			}
 		});

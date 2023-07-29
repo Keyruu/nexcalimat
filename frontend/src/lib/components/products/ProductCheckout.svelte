@@ -11,8 +11,10 @@
 		type ToggleFavoriteMutation,
 		type ToggleFavoriteMutationVariables
 	} from '$lib/generated/graphql';
+	import { authHeader } from '$lib/stores/authHeader';
 	import { centToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
+	import { error } from '$lib/utils/storeError';
 	import Icon from '@iconify/svelte';
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import { getContextClient, mutationStore } from '@urql/svelte';
@@ -61,7 +63,10 @@
 					classes: 'text-green-300',
 					background: 'variant-ghost-success'
 				});
+				authHeader.set(undefined);
 				goto(`${base}/store/accounts`);
+			} else if (result.error) {
+				error(result.error);
 			}
 		});
 	}

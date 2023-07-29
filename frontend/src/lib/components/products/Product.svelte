@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ProductWithFavorite } from '$lib/generated/graphql';
-	import { centToEuro } from '$lib/utils/formatEuro';
+	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
 
 	export let product: ProductWithFavorite;
@@ -23,8 +23,8 @@
 				<div class="badge bg-pink-500">♥</div>
 			{/if}
 			{#if product.price && product.type}
-				<div class="badge variant-filled-surface font-bold" use:centToEuro>
-					{product.price}
+				<div class="badge variant-filled-surface font-bold">
+					{numberCentToEuro(product.price)}
 				</div>
 				<div
 					class="

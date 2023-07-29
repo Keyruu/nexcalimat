@@ -1,0 +1,10 @@
+query MyAccount {
+  myAccount {
+    id
+    balance
+    email
+    picture
+    name
+    hasPin
+  }
+}
