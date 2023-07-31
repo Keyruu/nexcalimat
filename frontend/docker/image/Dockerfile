@@ -7,4 +7,4 @@ LABEL org.opencontainers.image.licenses=GPL-3.0-only
 COPY . .
 
 EXPOSE 3000
-CMD ["node", "-r","dotenv/config", "./build"]
+CMD ["node", "./build"]
