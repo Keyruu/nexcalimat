@@ -44,6 +44,8 @@ userManager.events.addUserLoaded(async (user) => {
 
   setUser(user);
 
+  handleMyAccount();
+
   console.log("addUserLoaded", user);
 })
 
@@ -70,7 +72,7 @@ export function handleMyAccount() {
     } else if (result.error) {
       if (result.error.graphQLErrors.length > 0) {
         if (result.error.graphQLErrors[0].extensions?.code === 'account-not-found') {
-          goto('/admin/set-pin')
+          goto('/admin/set-pin?signup=true')
         }
       }
       console.log(result.error.graphQLErrors)

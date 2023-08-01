@@ -252,6 +252,13 @@ export type Purchase = {
   product?: Maybe<Product>;
 };
 
+export type PurchaseCount = {
+  __typename?: 'PurchaseCount';
+  count: Scalars['BigInteger'];
+  product?: Maybe<Product>;
+  recommendedPurchaseAmount: Scalars['BigInteger'];
+};
+
 /** Query root */
 export type Query = {
   __typename?: 'Query';
@@ -277,6 +284,8 @@ export type Query = {
   productsWithFavorites?: Maybe<PaginationResponse_ProductWithFavorite>;
   /** Get Purchase by ID */
   purchase?: Maybe<Purchase>;
+  /** Get purchase counts for all bought products of the last month */
+  purchaseCountsLastMonth?: Maybe<Array<Maybe<PurchaseCount>>>;
   /** Get all Purchases */
   purchases?: Maybe<PaginationResponse_Purchase>;
 };
@@ -442,6 +451,13 @@ export type SetPinMutationVariables = Exact<{
 
 export type SetPinMutation = { __typename?: 'Mutation', pin?: boolean | null };
 
+export type SignUpMutationVariables = Exact<{
+  pin?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SignUpMutation = { __typename?: 'Mutation', signUp?: { __typename?: 'Account', id?: number | null } | null };
+
 export type ToggleFavoriteMutationVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']>;
 }>;
@@ -568,6 +584,13 @@ export const RefundDocument = gql`
 export const SetPinDocument = gql`
     mutation SetPin($pin: String) {
   pin(pin: $pin)
+}
+    `;
+export const SignUpDocument = gql`
+    mutation SignUp($pin: String) {
+  signUp(pin: $pin) {
+    id
+  }
 }
     `;
 export const ToggleFavoriteDocument = gql`
