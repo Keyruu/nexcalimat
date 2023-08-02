@@ -50,6 +50,44 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
+	public void testGetProductsWithSort()
+	{
+		given()
+			.when()
+			.header(HttpHeaders.AUTHORIZATION, "PIN " + getPinToken(dubinsky.getId()))
+			.body(getGraphQLBody("graphql/GetProductsWithSort.graphql"))
+			.post("/graphql")
+			.then()
+			.statusCode(200)
+			.body("data.products.data.size()", is(3))
+			.body("data.products.page", is(0))
+			.body("data.products.total", is(3))
+			.body("data.products.data[2].name", is("Die Peitsche des Mönchs"))
+			.body("data.products.data[2].price", is(6000))
+			.body("data.products.data[0].name", is("Das Yoyo von Long"))
+			.body("data.products.data[0].price", is(80));
+	}
+
+	@Test
+	public void testGetProductsWithFavorite()
+	{
+		given()
+			.when()
+			.header(HttpHeaders.AUTHORIZATION, "PIN " + getPinToken(dubinsky.getId()))
+			.body(getGraphQLBody("graphql/GetProductsWithFavorite.graphql"))
+			.post("/graphql")
+			.then()
+			.statusCode(200)
+			.body("data.productsWithFavorites.data.size()", is(3))
+			.body("data.productsWithFavorites.page", is(0))
+			.body("data.productsWithFavorites.total", is(3))
+			.body("data.productsWithFavorites.data[2].name", is("Die Peitsche des Mönchs"))
+			.body("data.productsWithFavorites.data[2].price", is(6000))
+			.body("data.productsWithFavorites.data[0].name", is("Das Yoyo von Long"))
+			.body("data.productsWithFavorites.data[0].price", is(80));
+	}
+
+	@Test
 	public void testGetPeitsche()
 	{
 		given()

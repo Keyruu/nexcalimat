@@ -10,10 +10,12 @@ import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.Purchase;
 import de.keyruu.nexcalimat.repository.AccountRepository;
+import de.keyruu.nexcalimat.repository.FavoriteRepository;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.AccountService;
+import de.keyruu.nexcalimat.service.FavoriteService;
 import de.keyruu.nexcalimat.service.PurchaseService;
 import de.keyruu.nexcalimat.utils.TestUtils;
 import io.smallrye.jwt.build.Jwt;
@@ -49,6 +51,12 @@ public class NexcalimatTest
 	@Inject
 	PurchaseRepository _purchaseRepository;
 
+	@Inject
+	FavoriteService _favoriteService;
+
+	@Inject
+	FavoriteRepository _favoriteRepository;
+
 	protected String getEarlsToken()
 	{
 		return getOidcToken("earl", Set.of("some-random-admin-group-name"), "", "Earl of Cockwood");
@@ -65,6 +73,8 @@ public class NexcalimatTest
 	{
 		_accountRepository.persist(dubinsky, even, hai);
 		_productRepository.persist(peitsche, yoyo, maske);
+		_favoriteService.toggleFavorite(yoyo.getId(), dubinsky.getId());
+		_favoriteService.toggleFavorite(peitsche.getId(), even.getId());
 		_purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
 		_accountService.deleteById(hai.getId());
 		_purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
@@ -80,6 +90,7 @@ public class NexcalimatTest
 	@Transactional
 	protected void delete()
 	{
+		_favoriteRepository.deleteAll();
 		_purchaseRepository.deleteAll();
 		_accountRepository.deleteAll();
 		_productRepository.deleteAll();

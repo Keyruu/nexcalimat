@@ -1,0 +1,13 @@
+query {
+  products(sort: {columns: [{direction: Ascending, name: "name"}]}) {
+    data {
+      id
+      name
+      price
+      bundleSize
+      type
+    }
+    page
+    total
+  }
+}

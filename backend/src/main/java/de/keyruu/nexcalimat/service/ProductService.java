@@ -42,6 +42,7 @@ public class ProductService
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{
+		_productRepository.findAllWithFavorite(accountId);
 		String query = "deletedAt IS NULL AND (accountId = :accountId OR accountId IS NULL)";
 		Parameters params = Parameters.with("accountId", accountId);
 		if (type.isPresent())
