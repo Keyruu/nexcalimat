@@ -1,6 +1,7 @@
 package de.keyruu.nexcalimat.model.projection;
 
 import de.keyruu.nexcalimat.model.Product;
+import de.keyruu.nexcalimat.model.ProductType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
@@ -27,6 +28,10 @@ public class PurchaseCount
 
 	public long getRecommendedPurchaseAmount()
 	{
-		return (long)Math.ceil((double)_count / _product.getBundleSize());
+		if (_product.getType() == ProductType.COLD_DRINK)
+		{
+			return (long)Math.ceil((double)_count / _product.getBundleSize());
+		}
+		return 0;
 	}
 }
