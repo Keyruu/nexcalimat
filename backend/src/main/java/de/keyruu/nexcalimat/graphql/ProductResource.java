@@ -13,7 +13,7 @@ import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.SortPojo;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.ProductType;
-import de.keyruu.nexcalimat.model.ProductWithFavorite;
+import de.keyruu.nexcalimat.model.projection.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;

@@ -12,10 +12,8 @@ import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.ProductType;
-import de.keyruu.nexcalimat.model.ProductWithFavorite;
+import de.keyruu.nexcalimat.model.projection.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
-import de.keyruu.nexcalimat.repository.ProductWithFavoriteRepository;
-import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -25,9 +23,6 @@ public class ProductService
 {
 	@Inject
 	ProductRepository _productRepository;
-
-	@Inject
-	ProductWithFavoriteRepository _productWithFavoriteRepository;
 
 	@Inject
 	PictureService _pictureService;
@@ -42,29 +37,14 @@ public class ProductService
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{
-		_productRepository.findAllWithFavorite(accountId);
-		String query = "deletedAt IS NULL AND (accountId = :accountId OR accountId IS NULL)";
-		Parameters params = Parameters.with("accountId", accountId);
-		if (type.isPresent())
-		{
-			query += " AND type = :type";
-			params = params.and("type", type.get());
-		}
-
-		List<ProductWithFavorite> products = _productWithFavoriteRepository
-			.find(query,
-				mapper.getSort(), params)
-			.page(mapper.getPage())
-			.list();
-		long count = _productWithFavoriteRepository.count(query, params);
+		List<ProductWithFavorite> products = _productRepository.findAllWithFavorite(accountId, mapper, type);
+		long count = _productRepository.findAllWithFavoriteCount(accountId, type);
 		return new PaginationResponse<>(products, count, mapper);
 	}
 
 	public ProductWithFavorite findByIdWithFavorite(Long id, Long accountId)
 	{
-		return _productWithFavoriteRepository
-			.find("id = ?1 AND (accountId = ?2 OR accountId IS NULL)", id, accountId)
-			.firstResult();
+		return _productRepository.findProductWithFavoriteById(id, accountId);
 	}
 
 	public Product findById(Long id)
