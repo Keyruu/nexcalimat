@@ -70,7 +70,7 @@
 </script>
 
 <div class="mt-4 flex flex-col items-center justify-center">
-	<h1 class="my-8">Set your initial PIN</h1>
+	<h1 class="my-8">Set your PIN</h1>
 	<div class="card variant-ghost-surface rounded-xl p-10">
 		<Keypad
 			bind:value="{pin}"

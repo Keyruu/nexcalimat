@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { oidcUser } from '$lib/stores/userManager';
@@ -35,7 +36,7 @@
 			{:else if $page.route.id?.startsWith('/admin')}
 				{#if $oidcUser?.profile.name}
 					<div class="flex flex-row">
-						<button class="btn variant-ghost mr-2">Set PIN</button>
+						<button class="btn variant-ghost mr-2" on:click="{() => goto('/admin/set-pin')}">Set PIN</button>
 						<Avatar
 							src="{$oidcUser.profile.picture}"
 							width="w-12"
