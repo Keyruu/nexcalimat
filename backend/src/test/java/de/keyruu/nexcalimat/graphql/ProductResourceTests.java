@@ -83,8 +83,8 @@ public class ProductResourceTests extends GraphQLTest
 			.body("data.productsWithFavorites.total", is(3))
 			.body("data.productsWithFavorites.data[2].name", is("Die Peitsche des Mönchs"))
 			.body("data.productsWithFavorites.data[2].price", is(6000))
-			.body("data.productsWithFavorites.data[0].name", is("Das Yoyo von Long"))
-			.body("data.productsWithFavorites.data[0].price", is(80));
+			.body("data.productsWithFavorites.data[0].name", is("Die Maske des Wixxers"))
+			.body("data.productsWithFavorites.data[0].price", is(66));
 	}
 
 	@Test

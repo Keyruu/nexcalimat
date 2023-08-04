@@ -73,8 +73,8 @@ public class NexcalimatTest
 	{
 		_accountRepository.persist(dubinsky, even, hai);
 		_productRepository.persist(peitsche, yoyo, maske);
-		_favoriteService.toggleFavorite(yoyo.getId(), dubinsky.getId());
 		_favoriteService.toggleFavorite(peitsche.getId(), even.getId());
+		_favoriteService.toggleFavorite(maske.getId(), dubinsky.getId());
 		_purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
 		_accountService.deleteById(hai.getId());
 		_purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
