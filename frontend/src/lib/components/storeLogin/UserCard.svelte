@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { Account } from '$lib/generated/graphql';
-	import { getImageUrl } from '$lib/utils/accountUtils.js';
+	import { getInitials } from '$lib/utils/accountUtils.js';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
+	import { getAccountPicture } from '$lib/utils/pictureUtils';
 	import { Avatar } from '@skeletonlabs/skeleton';
 
 	export let account: Account;
-
-	$: img = getImageUrl(account as Account);
 </script>
 
 <div
@@ -14,10 +13,8 @@
 >
 	<figure class="flex justify-center pb-2 pt-5">
 		<Avatar
-			initials="{account.name
-				?.split(' ')
-				.map((n) => n[0])
-				.join('')}"
+		  src="{getAccountPicture(account)}"
+			initials="{getInitials(account)}"
 			background="variant-filled-surface"
 			class="h-20 w-20"
 		/>

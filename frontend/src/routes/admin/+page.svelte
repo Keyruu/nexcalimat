@@ -1,21 +1,61 @@
 <script lang="ts">
-	import { AccountsDocument, type AccountsQuery } from '$lib/generated/graphql';
-	import { oidcUser } from '$lib/stores/userManager';
-	import { queryStore, type AnyVariables, type OperationResultStore } from '@urql/svelte';
-	import { client } from '../../urqlClient';
+	import { env } from '$env/dynamic/public';
+	import { authHeader } from '$lib/stores/authHeader';
+	import { account, handleMyAccount, oidcUser } from '$lib/stores/userManager';
+	import { getInitials } from '$lib/utils/accountUtils';
+	import { numberCentToEuro } from '$lib/utils/formatEuro';
+	import { getAccountPicture } from '$lib/utils/pictureUtils';
+	import Icon from '@iconify/svelte';
+	import { Avatar, FileButton } from '@skeletonlabs/skeleton';
+	import { _ } from 'svelte-i18n';
 
-	let accounts: OperationResultStore<AccountsQuery, AnyVariables>;
+	async function upload(e: Event) {
+		console.log('file data:', e);
+		const target = e.target as HTMLInputElement;
+		const formData = new FormData();
+		formData.append('file', target.files![0]);
+		formData.append('filename', target.files![0].name);
+		if (target.files && target.files[0]) {
+			await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/account/${$account?.id}`, {
+				method: 'POST',
+				headers: {
+					Authorization: $authHeader!
+				},
+				body: formData
+			});
 
-	$: if ($oidcUser) {
-		accounts = queryStore<AccountsQuery>({ client, query: AccountsDocument });
+			handleMyAccount();
+		}
 	}
 </script>
 
-{#if $oidcUser}
-	<h1>logged in {$oidcUser.profile.preferred_username} + {$oidcUser.expired}</h1>
-	{#if $accounts.data?.accounts?.data}
-		<p>{$accounts.data?.accounts?.data[0]?.email}</p>
-	{/if}
+{#if $oidcUser && $account}
+	<div class="flex flex-col justify-center items-center">
+		<div class="relative my-4">
+			<Avatar
+				src="{getAccountPicture($account)}"
+				alt="{getInitials($account)}"
+				class="w-32 border-4 shadow-md border-surface-300-600-token"
+			/>
+			<FileButton
+				name="files"
+				button="btn-icon variant-filled"
+				class="bottom-0 right-0 absolute rounded-full border-2 border-slate-400"
+				on:change="{upload}"
+			>
+				<Icon icon="fa6-solid:upload" class="" />
+			</FileButton>
+		</div>
+		<h1 class="mb-4">{$account.name}</h1>
+		<div class="mb-4 flex flex-row">
+			<p class="font-bold text-xl">{$_('admin.balance')}:&nbsp;</p>
+			<p class="text-xl">{numberCentToEuro($account.balance)}</p>
+		</div>
+		<div class="mb-4 flex flex-row">
+			<p class="font-bold text-xl">{$_('admin.email')}:&nbsp;</p>
+			<p class="text-xl">{$account.email}</p>
+		</div>
+	</div>
 {:else}
-	<h1>not logged in</h1>
+	<h1>{$_('admin.logging-in')}</h1>
 {/if}

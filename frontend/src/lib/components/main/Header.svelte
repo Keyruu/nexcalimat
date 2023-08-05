@@ -2,9 +2,11 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
-	import { oidcUser } from '$lib/stores/userManager';
+	import { account } from '$lib/stores/userManager';
+	import { getAccountPicture } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
 	import { Avatar } from '@skeletonlabs/skeleton';
+	import { _ } from 'svelte-i18n';
 </script>
 
 <header class="text-neutral-content flex h-20 flex-row bg-blue-950">
@@ -34,13 +36,13 @@
 					</li>
 				{/if}
 			{:else if $page.route.id?.startsWith('/admin')}
-				{#if $oidcUser?.profile.name}
+				{#if $account?.name}
 					<div class="flex flex-row">
-						<button class="btn variant-ghost mr-2" on:click="{() => goto('/admin/set-pin')}">Set PIN</button>
+						<button class="btn variant-ghost mr-2" on:click="{() => goto('/admin/set-pin')}">{$_('header.setpin')}</button>
 						<Avatar
-							src="{$oidcUser.profile.picture}"
+							src="{getAccountPicture($account)}"
 							width="w-12"
-							initials="{$oidcUser.profile.name
+							initials="{$account?.name
 								.split(' ')
 								.map((n) => n[0])
 								.join('')}"

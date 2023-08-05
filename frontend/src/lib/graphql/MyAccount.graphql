@@ -1,10 +1,14 @@
 query MyAccount {
   myAccount {
-    id
-    balance
-    email
-    picture
-    name
-    hasPin
+    account {
+      balance
+      email
+      extId
+      hasPin
+      id
+      name
+      picture
+    }
+    isAdmin
   }
 }

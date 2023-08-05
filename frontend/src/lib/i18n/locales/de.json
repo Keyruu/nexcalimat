@@ -17,5 +17,14 @@
 		"no-accounts": "Accounts konnten nicht geladen werden!",
 		"no-account": "Account konnte nicht geladen werden!",
 		"account-not-found": "Account konnte nicht gefunden werden!"
+	},
+	"admin": {
+		"my-account": "Mein Account",
+		"accounts": "Accounts",
+		"products": "Produkte",
+		"statistics": "Statistiken",
+		"logging-in": "Einloggen...",
+		"balance": "Guthaben",
+		"email": "E-Mail"
 	}
 }

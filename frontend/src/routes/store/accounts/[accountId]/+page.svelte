@@ -14,6 +14,8 @@
 	} from '$lib/generated/graphql';
 	import { authHeader } from '$lib/stores/authHeader';
 	import { AlertType } from '$lib/types/AlertType';
+	import { getInitials } from '$lib/utils/accountUtils';
+	import { getAccountPicture } from '$lib/utils/pictureUtils';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
@@ -85,10 +87,8 @@
 			<div class="text-center">
 				<div class="variant-glass-surface rounded-2xl p-20 shadow-xl">
 					<Avatar
-						initials="{$account.data?.account?.name
-							?.split(' ')
-							.map((n) => n[0])
-							.join('')}"
+						src="{getAccountPicture($account.data.account)}"
+						initials="{getInitials($account.data.account)}"
 						background="variant-filled-surface"
 						class="mx-auto h-24 w-24 border-4 shadow-md border-surface-300-600-token"
 					/>

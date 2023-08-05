@@ -4,7 +4,7 @@
 		"admin-login": "Admin"
 	},
 	"header": {
-		"signup": "Signup"
+		"setpin": "Set PIN"
 	},
 	"steps": {
 		"select-account": "Select account",
@@ -17,5 +17,14 @@
 		"no-accounts": "Could not load accounts!",
 		"no-account": "Could not load account!",
 		"account-not-found": "Account not found!"
+	},
+	"admin": {
+		"my-account": "My Account",
+		"accounts": "Accounts",
+		"products": "Products",
+		"statistics": "Statistics",
+		"logging-in": "Logging in...",
+		"balance": "Balance",
+		"email": "Email"
 	}
 }

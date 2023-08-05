@@ -9,6 +9,7 @@ import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.MyAccount;
 import de.keyruu.nexcalimat.graphql.pojo.PagePojo;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.graphql.pojo.PinLogin;
@@ -17,6 +18,7 @@ import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import de.keyruu.nexcalimat.service.AccountService;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -32,6 +34,9 @@ public class AccountResource
 
 	@Inject
 	JsonWebToken _jwt;
+
+	@Inject
+	SecurityIdentity _identity;
 
 	@Query
 	@Description("Get all Accounts")
@@ -50,9 +55,11 @@ public class AccountResource
 	@Query
 	@Description("Get my account")
 	@RolesAllowed(Roles.USER)
-	public Account myAccount()
+	public MyAccount myAccount()
 	{
-		return _accountService.findByExtId(_jwtUtils.getExtIdFromToken(_jwt));
+		boolean isAdmin = _identity.getRoles().contains(Roles.ADMIN);
+		Account account = _accountService.findByExtId(_jwtUtils.getExtIdFromToken(_jwt));
+		return new MyAccount(account, isAdmin);
 	}
 
 	@Query

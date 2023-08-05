@@ -154,6 +154,12 @@ export type MutationUpdateProductArgs = {
   product?: InputMaybe<ProductInput>;
 };
 
+export type MyAccount = {
+  __typename?: 'MyAccount';
+  account?: Maybe<Account>;
+  isAdmin?: Maybe<Scalars['Boolean']>;
+};
+
 export type PagePojoInput = {
   index?: InputMaybe<Scalars['Int']>;
   size?: InputMaybe<Scalars['Int']>;
@@ -226,7 +232,6 @@ export enum ProductType {
 
 export type ProductWithFavorite = {
   __typename?: 'ProductWithFavorite';
-  accountId?: Maybe<Scalars['BigInteger']>;
   bundleSize?: Maybe<Scalars['Int']>;
   /** ISO-8601 */
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -269,7 +274,7 @@ export type Query = {
   /** Get deleted Accounts */
   deletedAccounts?: Maybe<PaginationResponse_Account>;
   /** Get my account */
-  myAccount?: Maybe<Account>;
+  myAccount?: Maybe<MyAccount>;
   /** Get personal Purchases */
   myPurchases?: Maybe<PaginationResponse_Purchase>;
   /** Login with PIN */
@@ -404,7 +409,7 @@ export type MakePurchaseMutation = { __typename?: 'Mutation', makePurchase?: Arr
 export type MyAccountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyAccountQuery = { __typename?: 'Query', myAccount?: { __typename?: 'Account', id?: number | null, balance?: number | null, email?: string | null, picture?: string | null, name?: string | null, hasPin?: boolean | null } | null };
+export type MyAccountQuery = { __typename?: 'Query', myAccount?: { __typename?: 'MyAccount', isAdmin?: boolean | null, account?: { __typename?: 'Account', balance?: number | null, email?: string | null, extId?: string | null, hasPin?: boolean | null, id?: number | null, name?: string | null, picture?: string | null } | null } | null };
 
 export type MyPurchasesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -505,12 +510,16 @@ export const MakePurchaseDocument = gql`
 export const MyAccountDocument = gql`
     query MyAccount {
   myAccount {
-    id
-    balance
-    email
-    picture
-    name
-    hasPin
+    account {
+      balance
+      email
+      extId
+      hasPin
+      id
+      name
+      picture
+    }
+    isAdmin
   }
 }
     `;

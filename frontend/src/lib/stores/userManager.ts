@@ -21,6 +21,7 @@ export const userManager = new UserManager({
 
 export const oidcUser = writable<User | null>(null);
 export const account = writable<Account | undefined>(undefined);
+export const isAdmin = writable<boolean>(false);
 
 // userManager.events.addAccessTokenExpired(async () => {
 //   const user = await userManager.getUser();
@@ -63,16 +64,17 @@ export function handleMyAccount() {
   })
 
   accountQuery.subscribe((result) => {
-    if (result.data?.myAccount) {
+    if (result.data?.myAccount?.account) {
       const myAccount = result.data.myAccount;
-      account.set(myAccount);
-      if (!myAccount.hasPin) {
-        goto('/admin/set-pin')
+      account.set(myAccount.account ?? undefined);
+      isAdmin.set(myAccount.isAdmin ?? false);
+      if (!myAccount.account?.hasPin) {
+        goto('/admin/set-pin');
       }
     } else if (result.error) {
       if (result.error.graphQLErrors.length > 0) {
         if (result.error.graphQLErrors[0].extensions?.code === 'account-not-found') {
-          goto('/admin/set-pin?signup=true')
+          goto('/admin/set-pin?signup=true');
         }
       }
       console.log(result.error.graphQLErrors)

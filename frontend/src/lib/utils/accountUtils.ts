@@ -1,7 +1,9 @@
 import type { Account } from '$lib/generated/graphql';
 
-export function getImageUrl(account: Account) {
-	return account.picture && account.picture.length
-		? account.picture
-		: `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name ?? '')}`;
+export function getInitials(account: Account) {
+	if (!account.name) return ''
+	return account.name
+		?.split(' ')
+		.map((n) => n[0])
+		.join('')
 }
