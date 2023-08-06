@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { env } from '$env/dynamic/public';
-	import { authHeader } from '$lib/stores/authHeader';
 	import { account, handleMyAccount, oidcUser } from '$lib/stores/userManager';
 	import { getInitials } from '$lib/utils/accountUtils';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
-	import { getAccountPicture } from '$lib/utils/pictureUtils';
+	import { getAccountPicture, uploadAccountImage } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
 	import { Avatar, FileButton } from '@skeletonlabs/skeleton';
 	import { _ } from 'svelte-i18n';
@@ -12,17 +10,8 @@
 	async function upload(e: Event) {
 		console.log('file data:', e);
 		const target = e.target as HTMLInputElement;
-		const formData = new FormData();
-		formData.append('file', target.files![0]);
-		formData.append('filename', target.files![0].name);
-		if (target.files && target.files[0]) {
-			await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/account/${$account?.id}`, {
-				method: 'POST',
-				headers: {
-					Authorization: $authHeader!
-				},
-				body: formData
-			});
+		if (target.files && target.files[0] && $account) {
+			await uploadAccountImage(target.files[0], $account);
 
 			handleMyAccount();
 		}

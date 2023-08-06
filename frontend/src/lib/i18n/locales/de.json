@@ -25,6 +25,10 @@
 		"statistics": "Statistiken",
 		"logging-in": "Einloggen...",
 		"balance": "Guthaben",
-		"email": "E-Mail"
-	}
+		"email": "E-Mail",
+		"no-account-found": "Kein Account gefunden!",
+		"name": "Name",
+		"sort": "Sortierung"
+	},
+	"forbidden": "Sie haben keine Berechtigung auf dies zuzugreifen!"
 }

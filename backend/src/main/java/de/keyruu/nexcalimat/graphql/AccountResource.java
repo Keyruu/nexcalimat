@@ -40,9 +40,9 @@ public class AccountResource
 
 	@Query
 	@Description("Get all Accounts")
-	public PaginationResponse<Account> accounts(Optional<PagePojo> page, Optional<SortPojo> sort)
+	public PaginationResponse<Account> accounts(Optional<PagePojo> page, Optional<SortPojo> sort, Optional<String> searchByName)
 	{
-		return _accountService.listAll(Mapper.map(page, sort));
+		return _accountService.listAll(Mapper.map(page, sort), searchByName);
 	}
 
 	@Query

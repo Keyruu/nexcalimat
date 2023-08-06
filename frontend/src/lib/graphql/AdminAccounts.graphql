@@ -1,0 +1,14 @@
+query AdminAccounts($sort: SortPojoInput!, $searchByName: String) {
+	accounts(sort: $sort, searchByName: $searchByName) {
+		data {
+			id
+			name
+			email
+			balance
+			picture
+			extId
+		}
+		page
+		total
+	}
+}

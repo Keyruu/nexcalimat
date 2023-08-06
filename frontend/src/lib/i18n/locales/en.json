@@ -25,6 +25,10 @@
 		"statistics": "Statistics",
 		"logging-in": "Logging in...",
 		"balance": "Balance",
-		"email": "Email"
-	}
+		"email": "Email",
+		"no-account-found": "No account found!",
+		"name": "Name",
+		"sort": "Sort"
+	},
+	"forbidden": "You are not allowed to access this!"
 }

@@ -9,8 +9,8 @@ import { authHeader } from "./authHeader";
 
 
 export const userManager = new UserManager({
-  authority: env.PUBLIC_OIDC_AUTHORITY,
-  client_id: env.PUBLIC_OIDC_CLIENT_ID,
+  authority: env.PUBLIC_OIDC_AUTHORITY!,
+  client_id: env.PUBLIC_OIDC_CLIENT_ID!,
   redirect_uri: `${env.PUBLIC_BASE_URL}/admin/login/callback`,
   response_type: "code",
   scope: env.PUBLIC_OIDC_SCOPE,
@@ -75,9 +75,11 @@ export function handleMyAccount() {
       if (result.error.graphQLErrors.length > 0) {
         if (result.error.graphQLErrors[0].extensions?.code === 'account-not-found') {
           goto('/admin/set-pin?signup=true');
+        } else if (result.error.graphQLErrors[0].extensions?.code === 'forbidden') {
+          goto('/forbidden');
         }
+        console.log(result.error.graphQLErrors)
       }
-      console.log(result.error.graphQLErrors)
     }
   })
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { handleMyAccount, setUser, userManager } from '$lib/stores/userManager';
+	import { account, handleMyAccount, isAdmin, setUser, userManager } from '$lib/stores/userManager';
 	import { TabAnchor, TabGroup } from '@skeletonlabs/skeleton';
 	import { _ } from 'svelte-i18n';
 	import { get } from 'svelte/store';
@@ -21,15 +21,19 @@
 	}
 </script>
 
-<TabGroup justify="justify-center">
-	<TabAnchor href="/admin" selected={$page.route.id === '/admin'} class="unstyled"><p class="">{$_('admin.my-account')}</p></TabAnchor>
-	<TabAnchor href="/admin/accounts" selected={$page.route.id === '/admin/accounts'} class="unstyled">
-		{$_('admin.accounts')}
-	</TabAnchor>
-	<TabAnchor href="/admin/products" selected={$page.route.id === '/admin/products'} class="unstyled">
-		{$_('admin.products')}
-	</TabAnchor>
-	<TabAnchor href="/admin/statistics" selected={$page.route.id === '/admin/statistics'} class="unstyled">
+<TabGroup justify="justify-center" class="mt-4">
+	<TabAnchor href="/admin" selected="{$page.route.id === '/admin'}" class="unstyled"
+		><p class="">{$_('admin.my-account')}</p></TabAnchor
+	>
+	{#if $account && $isAdmin}
+		<TabAnchor href="/admin/accounts" selected="{$page.route.id === '/admin/accounts'}" class="unstyled">
+			{$_('admin.accounts')}
+		</TabAnchor>
+		<TabAnchor href="/admin/products" selected="{$page.route.id === '/admin/products'}" class="unstyled">
+			{$_('admin.products')}
+		</TabAnchor>
+	{/if}
+	<TabAnchor href="/admin/statistics" selected="{$page.route.id === '/admin/statistics'}" class="unstyled">
 		{$_('admin.statistics')}
 	</TabAnchor>
 </TabGroup>
