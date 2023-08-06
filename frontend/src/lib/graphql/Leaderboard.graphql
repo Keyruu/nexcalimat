@@ -1,0 +1,14 @@
+query Leaderboard($page: PagePojoInput) {
+	leaderboard(page: $page) {
+		data {
+			account {
+				id
+				name
+				picture
+			}
+			count
+		}
+		page
+		total
+	}
+}

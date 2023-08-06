@@ -1,0 +1,12 @@
+query PurchaseCountsLastMonth {
+	purchaseCountsLastMonth {
+		count
+		product {
+			id
+			name
+			picture
+			bundleSize
+		}
+		recommendedPurchaseAmount
+	}
+}

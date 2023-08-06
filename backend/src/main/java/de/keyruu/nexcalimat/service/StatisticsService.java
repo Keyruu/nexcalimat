@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import de.keyruu.nexcalimat.graphql.pojo.Mapper;
+import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
 import de.keyruu.nexcalimat.model.ProductType;
-import de.keyruu.nexcalimat.model.projection.PurchaseCount;
+import de.keyruu.nexcalimat.model.projection.AccountPurchaseCount;
+import de.keyruu.nexcalimat.model.projection.ProductPurchaseCount;
+import de.keyruu.nexcalimat.repository.AccountRepository;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,62 +21,103 @@ public class StatisticsService
 	@Inject
 	ProductRepository _productRepository;
 
-	public PurchaseCount getPurchaseCountForProduct(Long productId)
+	@Inject
+	AccountRepository _accountRepository;
+
+	public ProductPurchaseCount getPurchaseCountForProduct(Long productId)
 	{
 		return getPurchaseCountForProductInternal(productId, null, null);
 	}
 
-	public PurchaseCount getPurchaseCountForProductLastMonth(Long productId)
+	public ProductPurchaseCount getPurchaseCountForProductLastMonth(Long productId)
 	{
 		LocalDateTime today = LocalDateTime.now();
 		LocalDateTime oneMonthAgo = today.minus(1, ChronoUnit.MONTHS);
 		return getPurchaseCountForProduct(productId, oneMonthAgo, today);
 	}
 
-	public PurchaseCount getPurchaseCountForProduct(Long productId, LocalDateTime start, LocalDateTime end)
+	public ProductPurchaseCount getPurchaseCountForProduct(Long productId, LocalDateTime start, LocalDateTime end)
 	{
 		return getPurchaseCountForProductInternal(productId, start, end);
 	}
 
-	public List<PurchaseCount> getPurchaseCountForAllBoughtProductsLastMonth()
+	public List<ProductPurchaseCount> getPurchaseCountForAllBoughtProductsLastMonth()
 	{
-		LocalDateTime today = LocalDateTime.of(2023, 4, 1, 0, 0);
+		LocalDateTime today = LocalDateTime.now();
 		LocalDateTime oneMonthAgo = today.minus(1, ChronoUnit.MONTHS);
 		return getPurchaseCountForAllBoughtProductsInternal(oneMonthAgo, today);
 	}
 
-	private PurchaseCount getPurchaseCountForProductInternal(Long productId, LocalDateTime start, LocalDateTime end)
+	public PaginationResponse<AccountPurchaseCount> getLeaderboard(Mapper mapper)
 	{
-		String query = "SELECT p, COUNT(pu) from Product p LEFT OUTER JOIN p.purchases pu WHERE p.id = :productId AND pu.deletedAt IS NULL\n";
+		LocalDateTime today = LocalDateTime.now();
+		LocalDateTime oneMonthAgo = today.minus(1, ChronoUnit.MONTHS);
+		String query = """
+			SELECT a, COUNT(pu) as count from Account a LEFT JOIN a.purchases pu
+			ON pu.deletedAt IS NULL AND pu.createdAt >= :start AND pu.createdAt <= :end
+			WHERE a.deletedAt IS NULL
+			GROUP BY a
+			ORDER BY count DESC
+			""";
+		long total = getNotDeletedAccountsCount();
+		Parameters params = Parameters.with("start", oneMonthAgo).and("end", today);
+		List<AccountPurchaseCount> data = _accountRepository.find(query, params)
+			.project(AccountPurchaseCount.class)
+			.page(mapper.getPage())
+			.list();
+		return new PaginationResponse<>(data, total, mapper);
+	}
+
+	private ProductPurchaseCount getPurchaseCountForProductInternal(Long productId, LocalDateTime start, LocalDateTime end)
+	{
+		String query = """
+			SELECT p, COUNT(pu) as count from Product p LEFT JOIN p.purchases pu
+			ON pu.deletedAt IS NULL
+			""";
 		Parameters params = Parameters.with("productId", productId);
 		if (start != null && end != null)
 		{
-			query += "AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
+			query += " AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
 			params.and("start", start)
 				.and("end", end);
 		}
-		query += "GROUP BY p";
+		query += """
+			WHERE p.deletedAt IS NULL AND p.id = :productId
+			GROUP BY p
+			""";
 
 		return _productRepository.find(query, params)
-			.project(PurchaseCount.class)
+			.project(ProductPurchaseCount.class)
 			.firstResultOptional()
-			.orElseGet(() -> new PurchaseCount(_productRepository.findById(productId), 0));
+			.orElseGet(() -> new ProductPurchaseCount(_productRepository.findById(productId), 0));
 	}
 
-	private List<PurchaseCount> getPurchaseCountForAllBoughtProductsInternal(LocalDateTime start, LocalDateTime end)
+	private List<ProductPurchaseCount> getPurchaseCountForAllBoughtProductsInternal(LocalDateTime start, LocalDateTime end)
 	{
-		String query = "SELECT p, COUNT(pu) as count from Product p LEFT OUTER JOIN p.purchases pu WHERE p.type = :type AND pu.deletedAt IS NULL\n";
+		String query = """
+			SELECT p, COUNT(pu) as count from Product p LEFT JOIN p.purchases pu
+			ON pu.deletedAt IS NULL
+			""";
 		Parameters params = Parameters.with("type", ProductType.COLD_DRINK);
 		if (start != null && end != null)
 		{
-			query += "AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
+			query += " AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
 			params.and("start", start)
 				.and("end", end);
 		}
-		query += "GROUP BY p ORDER BY count DESC";
+		query += """
+			WHERE p.deletedAt IS NULL AND p.type = :type
+			GROUP BY p
+			ORDER BY count DESC
+			""";
 
 		return _productRepository.find(query, params)
-			.project(PurchaseCount.class)
+			.project(ProductPurchaseCount.class)
 			.list();
+	}
+
+	private long getNotDeletedAccountsCount()
+	{
+		return _accountRepository.find("SELECT a FROM Account a WHERE a.deletedAt IS NULL").count();
 	}
 }

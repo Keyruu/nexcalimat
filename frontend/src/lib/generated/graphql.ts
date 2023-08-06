@@ -47,6 +47,12 @@ export type AccountInput = {
   picture?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AccountPurchaseCount = {
+  __typename?: 'AccountPurchaseCount';
+  account?: Maybe<Account>;
+  count: Scalars['BigInteger']['output'];
+};
+
 export type ColumnPojoInput = {
   direction?: InputMaybe<DirectionPojo>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -174,6 +180,13 @@ export type PaginationResponse_Account = {
   total: Scalars['BigInteger']['output'];
 };
 
+export type PaginationResponse_AccountPurchaseCount = {
+  __typename?: 'PaginationResponse_AccountPurchaseCount';
+  data?: Maybe<Array<Maybe<AccountPurchaseCount>>>;
+  page: Scalars['Int']['output'];
+  total: Scalars['BigInteger']['output'];
+};
+
 export type PaginationResponse_Product = {
   __typename?: 'PaginationResponse_Product';
   data?: Maybe<Array<Maybe<Product>>>;
@@ -227,6 +240,13 @@ export type ProductInput = {
   type?: InputMaybe<ProductType>;
 };
 
+export type ProductPurchaseCount = {
+  __typename?: 'ProductPurchaseCount';
+  count: Scalars['BigInteger']['output'];
+  product?: Maybe<Product>;
+  recommendedPurchaseAmount: Scalars['BigInteger']['output'];
+};
+
 export enum ProductType {
   ColdDrink = 'COLD_DRINK',
   HotDrink = 'HOT_DRINK'
@@ -259,13 +279,6 @@ export type Purchase = {
   product?: Maybe<Product>;
 };
 
-export type PurchaseCount = {
-  __typename?: 'PurchaseCount';
-  count: Scalars['BigInteger']['output'];
-  product?: Maybe<Product>;
-  recommendedPurchaseAmount: Scalars['BigInteger']['output'];
-};
-
 /** Query root */
 export type Query = {
   __typename?: 'Query';
@@ -275,6 +288,8 @@ export type Query = {
   accounts?: Maybe<PaginationResponse_Account>;
   /** Get deleted Accounts */
   deletedAccounts?: Maybe<PaginationResponse_Account>;
+  /** Get account purchase counts for the last month aka the leaderboard */
+  leaderboard?: Maybe<PaginationResponse_AccountPurchaseCount>;
   /** Get my account */
   myAccount?: Maybe<MyAccount>;
   /** Get personal Purchases */
@@ -291,8 +306,8 @@ export type Query = {
   productsWithFavorites?: Maybe<PaginationResponse_ProductWithFavorite>;
   /** Get Purchase by ID */
   purchase?: Maybe<Purchase>;
-  /** Get purchase counts for all bought products of the last month */
-  purchaseCountsLastMonth?: Maybe<Array<Maybe<PurchaseCount>>>;
+  /** Get purchase counts for all bought products of the lasPt month */
+  purchaseCountsLastMonth?: Maybe<Array<Maybe<ProductPurchaseCount>>>;
   /** Get all Purchases */
   purchases?: Maybe<PaginationResponse_Purchase>;
 };
@@ -316,6 +331,12 @@ export type QueryAccountsArgs = {
 export type QueryDeletedAccountsArgs = {
   page?: InputMaybe<PagePojoInput>;
   sort?: InputMaybe<SortPojoInput>;
+};
+
+
+/** Query root */
+export type QueryLeaderboardArgs = {
+  page?: InputMaybe<PagePojoInput>;
 };
 
 
@@ -409,6 +430,13 @@ export type AdminAccountsQueryVariables = Exact<{
 
 export type AdminAccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
 
+export type LeaderboardQueryVariables = Exact<{
+  page?: InputMaybe<PagePojoInput>;
+}>;
+
+
+export type LeaderboardQuery = { __typename?: 'Query', leaderboard?: { __typename?: 'PaginationResponse_AccountPurchaseCount', page: number, total: number, data?: Array<{ __typename?: 'AccountPurchaseCount', count: number, account?: { __typename?: 'Account', id?: number | null, name?: string | null, picture?: string | null } | null } | null> | null } | null };
+
 export type MakePurchaseMutationVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']['input']>;
   amount?: InputMaybe<Scalars['Int']['input']>;
@@ -452,6 +480,11 @@ export type ProductsWithFavoritesQueryVariables = Exact<{
 
 
 export type ProductsWithFavoritesQuery = { __typename?: 'Query', productsWithFavorites?: { __typename?: 'PaginationResponse_ProductWithFavorite', data?: Array<{ __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null> | null } | null };
+
+export type PurchaseCountsLastMonthQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PurchaseCountsLastMonthQuery = { __typename?: 'Query', purchaseCountsLastMonth?: Array<{ __typename?: 'ProductPurchaseCount', count: number, recommendedPurchaseAmount: number, product?: { __typename?: 'Product', id?: number | null, name?: string | null, picture?: string | null, bundleSize?: number | null } | null } | null> | null };
 
 export type RefundMutationVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']['input']>;
@@ -528,6 +561,22 @@ export const AdminAccountsDocument = gql`
       balance
       picture
       extId
+    }
+    page
+    total
+  }
+}
+    `;
+export const LeaderboardDocument = gql`
+    query Leaderboard($page: PagePojoInput) {
+  leaderboard(page: $page) {
+    data {
+      account {
+        id
+        name
+        picture
+      }
+      count
     }
     page
     total
@@ -617,6 +666,20 @@ export const ProductsWithFavoritesDocument = gql`
       picture
       isFavorite
     }
+  }
+}
+    `;
+export const PurchaseCountsLastMonthDocument = gql`
+    query PurchaseCountsLastMonth {
+  purchaseCountsLastMonth {
+    count
+    product {
+      id
+      name
+      picture
+      bundleSize
+    }
+    recommendedPurchaseAmount
   }
 }
     `;

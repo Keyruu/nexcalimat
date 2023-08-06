@@ -5,32 +5,32 @@ import de.keyruu.nexcalimat.model.ProductType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public class PurchaseCount
+public class ProductPurchaseCount
 {
-	private final Product _product;
-	private final long _count;
+	private final Product product;
+	private final long count;
 
-	public PurchaseCount(Product product, long count)
+	public ProductPurchaseCount(Product product, long count)
 	{
-		_product = product;
-		_count = count;
+		this.product = product;
+		this.count = count;
 	}
 
 	public Product getProduct()
 	{
-		return _product;
+		return product;
 	}
 
 	public long getCount()
 	{
-		return _count;
+		return count;
 	}
 
 	public long getRecommendedPurchaseAmount()
 	{
-		if (_product.getType() == ProductType.COLD_DRINK)
+		if (product.getType() == ProductType.COLD_DRINK)
 		{
-			return (long)Math.ceil((double)_count / _product.getBundleSize());
+			return (long)Math.ceil((double)count / product.getBundleSize());
 		}
 		return 0;
 	}

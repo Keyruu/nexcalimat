@@ -3,10 +3,10 @@
 	import Icon from '@iconify/svelte';
 
 	const icons: Record<AlertType, { icon: string; styleClass: string }> = {
-		[AlertType.Info]: { icon: 'mdi:information-outline', styleClass: 'alert-info' },
-		[AlertType.Success]: { icon: 'mdi:check-circle-outline', styleClass: 'alert-success' },
-		[AlertType.Warning]: { icon: 'mdi:alert-circle-outline', styleClass: 'alert-warning' },
-		[AlertType.Error]: { icon: 'mdi:close-circle-outline', styleClass: 'alert-error' }
+		[AlertType.Info]: { icon: 'mdi:information-outline', styleClass: 'variant-filled-surface' },
+		[AlertType.Success]: { icon: 'mdi:check-circle-outline', styleClass: 'variant-filled-success' },
+		[AlertType.Warning]: { icon: 'mdi:alert-circle-outline', styleClass: 'variant-filled-warning' },
+		[AlertType.Error]: { icon: 'mdi:close-circle-outline', styleClass: 'variant-filled-error' }
 	};
 
 	export let type: AlertType = AlertType.Info;
@@ -16,10 +16,8 @@
 </script>
 
 <div class="p-4">
-	<div class="{`alert shadow-lg ${styleClass}`}">
-		<div>
-			<Icon icon="{icon}" style="font-size: 24px" />
-			<span><slot /></span>
-		</div>
-	</div>
+	<aside class="{`alert shadow-lg ${styleClass} flex flex-row items-center`}">
+		<Icon class="mr-2" {icon} style="font-size: 24px" />
+		<slot />
+	</aside>
 </div>

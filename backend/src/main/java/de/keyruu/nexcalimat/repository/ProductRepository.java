@@ -43,8 +43,7 @@ public class ProductRepository implements PanacheRepository<Product>
 	{
 		String query = "SELECT p";
 		query += !isCount ? ", f.account IS NOT NULL AS isFavorite " : " ";
-		query += "FROM Product p LEFT JOIN p.favorites f WITH f.account.id = :accountId " +
-			"WHERE p.deletedAt IS NULL";
+		query += "FROM Product p LEFT JOIN p.favorites f WITH f.account.id = :accountId WHERE p.deletedAt IS NULL";
 		Parameters params = Parameters.with("accountId", accountId);
 
 		if (type.isPresent())

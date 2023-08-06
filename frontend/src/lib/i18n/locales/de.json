@@ -4,7 +4,8 @@
 		"admin-login": "Admin"
 	},
 	"header": {
-		"setpin": "PIN setzen"
+		"setpin": "PIN setzen",
+		"leaderboard": "Leaderboard"
 	},
 	"steps": {
 		"select-account": "Account auswählen",

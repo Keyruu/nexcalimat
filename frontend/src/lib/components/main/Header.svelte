@@ -11,7 +11,7 @@
 
 <header class="text-neutral-content flex h-20 flex-row bg-blue-950">
 	<div class="flex flex-1 items-center">
-		{#if $page.route.id?.startsWith('/store/accounts/')}
+		{#if $page.route.id?.startsWith('/store/accounts/') || $page.route.id === '/store/leaderboard'}
 			<button class="btn-icon variant-ghost ml-2" on:click="{() => history.back()}">
 				<Icon icon="fa-solid:arrow-left" />
 			</button>
@@ -22,9 +22,18 @@
 		</a>
 	</div>
 	<div class="mr-4 flex flex-none items-center">
-		<ul class="menu menu-horizontal p-0">
+		<ul class="flex flex-row space-x-1 p-0">
 			<!-- check if the path starts with /store -->
 			{#if $page.route.id?.startsWith('/store')}
+				{#if $page.route.id === '/store/accounts'}
+					<li>
+						<a class="btn variant-ghost" href="{base}/store/leaderboard"
+							><Icon icon="fa6-solid:ranking-star" />&nbsp;
+							{$_('header.leaderboard')}</a
+						>
+					</li>
+				{/if}
+
 				{#if $page.route.id?.includes('/products') || $page.route.id?.includes('/history')}
 					<li>
 						<a
@@ -38,7 +47,9 @@
 			{:else if $page.route.id?.startsWith('/admin')}
 				{#if $account?.name}
 					<div class="flex flex-row">
-						<button class="btn variant-ghost mr-2" on:click="{() => goto('/admin/set-pin')}">{$_('header.setpin')}</button>
+						<button class="btn variant-ghost mr-2" on:click="{() => goto('/admin/set-pin')}"
+							>{$_('header.setpin')}</button
+						>
 						<Avatar
 							src="{getAccountPicture($account)}"
 							width="w-12"
