@@ -20,19 +20,25 @@
 		columns: [{ name: column, direction }]
 	};
 
+	function getSort(columnName: string, directionPojo: DirectionPojo): SortPojoInput {
+		return {
+			columns: [{ name: columnName, direction: directionPojo }]
+		};
+	}
+
 	function sortByName() {
 		column = 'name';
-		sort = sort;
+		sort = getSort(column, direction);
 	}
 
 	function sortByBalance() {
 		column = 'balance';
-		sort = sort;
+		sort = getSort(column, direction);
 	}
 
 	function toggleDirection() {
 		direction = direction === DirectionPojo.Ascending ? DirectionPojo.Descending : DirectionPojo.Ascending;
-		sort = sort;
+		sort = getSort(column, direction);
 	}
 
 	function search() {
@@ -58,13 +64,15 @@
 		</form>
 		<p>{$_('admin.sort')}:</p>
 		<div class="btn-group variant-filled m-4">
-			<button on:click="{sortByName}" disabled="{column === 'name'}" class="{column === 'name' ? 'variant-soft' : ''}"
-				>{$_('admin.name')}</button
+			<button
+				on:click="{sortByName}"
+				disabled="{column === 'name'}"
+				class="{column === 'name' ? 'variant-soft' : 'variant-filled'}">{$_('admin.name')}</button
 			>
 			<button
 				on:click="{sortByBalance}"
 				disabled="{column === 'balance'}"
-				class="{column === 'balance' ? 'variant-soft' : ''}">{$_('admin.balance')}</button
+				class="{column === 'balance' ? 'variant-soft' : 'variant-filled'}">{$_('admin.balance')}</button
 			>
 			<button on:click="{toggleDirection}">
 				<Icon icon="{direction === DirectionPojo.Ascending ? 'fa-solid:arrow-up' : 'fa-solid:arrow-down'}" />
@@ -72,7 +80,7 @@
 		</div>
 	</div>
 	{#if $accounts.data?.accounts?.data && $accounts.data.accounts.data.length > 0}
-		<div class="flex m-4">
+		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 m-4">
 			{#each $accounts.data.accounts.data as account}
 				{#if account}
 					<UserCard {account} />

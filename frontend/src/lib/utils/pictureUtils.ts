@@ -31,6 +31,17 @@ export async function uploadAccountImage(file: File, account: Account) {
   });
 }
 
+export async function uploadMyAccountImage(file: File) {
+  const formData = getFormData(file);
+  await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/myAccount`, {
+    method: 'POST',
+    headers: {
+      Authorization: get(authHeader)!
+    },
+    body: formData
+  });
+}
+
 export async function uploadProductImage(file: File, product: Product) {
   const formData = getFormData(file);
   await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/account/${product.id}`, {

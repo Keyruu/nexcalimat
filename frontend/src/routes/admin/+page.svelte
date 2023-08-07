@@ -2,7 +2,7 @@
 	import { account, handleMyAccount, oidcUser } from '$lib/stores/userManager';
 	import { getInitials } from '$lib/utils/accountUtils';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
-	import { getAccountPicture, uploadAccountImage } from '$lib/utils/pictureUtils';
+	import { getAccountPicture, uploadMyAccountImage } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
 	import { Avatar, FileButton } from '@skeletonlabs/skeleton';
 	import { _ } from 'svelte-i18n';
@@ -11,7 +11,7 @@
 		console.log('file data:', e);
 		const target = e.target as HTMLInputElement;
 		if (target.files && target.files[0] && $account) {
-			await uploadAccountImage(target.files[0], $account);
+			await uploadMyAccountImage(target.files[0]);
 
 			handleMyAccount();
 		}
