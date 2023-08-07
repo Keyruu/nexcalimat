@@ -161,19 +161,19 @@ public class AccountService
 		Account dbAccount = _accountRepo.findByIdOptional(account.getId())
 			.orElseThrow(AccountNotFoundException::new);
 
-		if (account.getBalance() == null)
+		if (account.getBalance() != null)
 		{
 			dbAccount.setBalance(account.getBalance());
 		}
-		if (account.getName() == null)
+		if (account.getName() != null)
 		{
 			dbAccount.setName(account.getName());
 		}
-		if (account.getExtId() == null)
+		if (account.getExtId() != null)
 		{
 			dbAccount.setExtId(account.getExtId());
 		}
-		if (account.getEmail() == null)
+		if (account.getEmail() != null)
 		{
 			dbAccount.setEmail(account.getEmail());
 		}
