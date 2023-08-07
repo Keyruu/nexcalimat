@@ -8,6 +8,7 @@
 		type SortPojoInput
 	} from '$lib/generated/graphql';
 	import Icon from '@iconify/svelte';
+	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import { queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 	import { client } from '../../../urqlClient';
@@ -19,6 +20,7 @@
 	let sort: SortPojoInput = {
 		columns: [{ name: column, direction }]
 	};
+	let archived = false;
 
 	function getSort(columnName: string, directionPojo: DirectionPojo): SortPojoInput {
 		return {
@@ -59,9 +61,10 @@
 	<div class="flex flex-row items-center">
 		<form on:submit="{search}" class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-80 m-4">
 			<div class="input-group-shim"><Icon icon="fa-solid:search" /></div>
-			<input type="search" placeholder="Search..." bind:value="{boundSearchByName}" />
+			<input type="search" placeholder="{$_('admin.search')}" bind:value="{boundSearchByName}" />
 			<button class="variant-filled-secondary"><Icon icon="fa-solid:arrow-right" /></button>
 		</form>
+		<span class="divider-vertical h-8 ml-6 mr-6"></span>
 		<p>{$_('admin.sort')}:</p>
 		<div class="btn-group variant-filled m-4">
 			<button
@@ -78,12 +81,17 @@
 				<Icon icon="{direction === DirectionPojo.Ascending ? 'fa-solid:arrow-up' : 'fa-solid:arrow-down'}" />
 			</button>
 		</div>
+		<span class="divider-vertical h-8 ml-6 mr-6"></span>
+		<p>{$_('admin.archived')}:&nbsp;</p>
+		<SlideToggle name="archived" bind:value="{archived}" class="mr-4" />
 	</div>
 	{#if $accounts.data?.accounts?.data && $accounts.data.accounts.data.length > 0}
 		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 m-4">
 			{#each $accounts.data.accounts.data as account}
 				{#if account}
-					<UserCard {account} />
+					<div class="flex justify-center items-center">
+						<UserCard {account} adminMode />
+					</div>
 				{/if}
 			{/each}
 		</div>

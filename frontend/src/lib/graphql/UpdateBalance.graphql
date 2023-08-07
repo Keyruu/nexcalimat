@@ -1,0 +1,5 @@
+mutation UpdateBalance($id: BigInteger!, $balance: BigInteger!) {
+  updateAccount(account: {id: $id, balance: $balance}) {
+    balance
+  }
+}

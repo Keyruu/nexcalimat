@@ -23,7 +23,7 @@
 		<div class="relative my-4">
 			<Avatar
 				src="{getAccountPicture($account)}"
-				alt="{getInitials($account)}"
+				initials="{getInitials($account)}"
 				class="w-32 border-4 shadow-md border-surface-300-600-token"
 			/>
 			<FileButton

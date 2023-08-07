@@ -3,17 +3,59 @@
 	import { getInitials } from '$lib/utils/accountUtils.js';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getAccountPicture } from '$lib/utils/pictureUtils';
-	import { Avatar } from '@skeletonlabs/skeleton';
+	import Icon from '@iconify/svelte';
+	import { Avatar, modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { createEventDispatcher } from 'svelte';
+	import BalanceModal from '../admin/BalanceModal.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let account: Account;
+	export let adminMode = false;
+
+	let editMode = false;
+
+	function triggerBalanceModal(account: Account | null) {
+		const modalComponent: ModalComponent = {
+			// Pass a reference to your custom component
+			ref: BalanceModal,
+			props: {
+				account: account
+			}
+		};
+
+		const modal: ModalSettings = {
+			type: 'component',
+			response: (r: boolean) => console.log('response:', r),
+			component: modalComponent
+		};
+		modalStore.trigger(modal);
+	}
 </script>
 
 <div
 	class="card card-hover variant-glass-surface w-48 cursor-pointer shadow-md hover:variant-ghost-surface hover:shadow-xl"
+	on:mouseleave="{() => (editMode = false)}"
+	role="figure"
 >
+	{#if adminMode}
+		<div class="absolute top-0 right-0">
+			<button class="btn-icon hover:variant-soft" on:click="{() => (editMode = !editMode)}"
+				><Icon icon="fa6-solid:ellipsis-vertical" /></button
+			>
+			{#if editMode}
+				<div class="btn-group-vertical variant-filled-surface absolute z-50">
+					<button on:click="{() => triggerBalanceModal(account)}" class="variant-filled-success"
+						><Icon icon="fa6-solid:sack-dollar" /></button
+					>
+					<button class="variant-filled-error"><Icon icon="fa-solid:archive" /></button>
+				</div>
+			{/if}
+		</div>
+	{/if}
 	<figure class="flex justify-center pb-2 pt-5">
 		<Avatar
-		  src="{getAccountPicture(account)}"
+			src="{getAccountPicture(account)}"
 			initials="{getInitials(account)}"
 			background="variant-filled-surface"
 			class="h-20 w-20"

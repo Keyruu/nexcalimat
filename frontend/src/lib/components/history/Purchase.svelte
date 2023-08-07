@@ -15,7 +15,7 @@
 	<div class="variant-ghost-surface m-4 flex flex-row items-center justify-center rounded-xl p-4">
 		{#if purchase.product}
 			<div class="flex flex-col">
-				<img class="h-24 w-24" src="{getProductPicture(purchase.product)}" alt="{purchase.product.name}" />
+				<img class="h-40 w-40" src="{getProductPicture(purchase.product)}" alt="{purchase.product.name}" />
 			</div>
 			<div class="m-4 flex flex-1 flex-col items-center justify-center">
 				<h3 class="font-bold">Product:</h3>

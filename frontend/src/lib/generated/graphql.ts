@@ -481,6 +481,14 @@ export type ToggleFavoriteMutationVariables = Exact<{
 
 export type ToggleFavoriteMutation = { __typename?: 'Mutation', toggleFavorite?: boolean | null };
 
+export type UpdateBalanceMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  balance: Scalars['BigInteger']['input'];
+}>;
+
+
+export type UpdateBalanceMutation = { __typename?: 'Mutation', updateAccount?: { __typename?: 'Account', balance?: number | null } | null };
+
 
 export const AccountByIdDocument = gql`
     query AccountById($id: BigInteger) {
@@ -632,5 +640,12 @@ export const SignUpDocument = gql`
 export const ToggleFavoriteDocument = gql`
     mutation ToggleFavorite($id: BigInteger) {
   toggleFavorite(productId: $id)
+}
+    `;
+export const UpdateBalanceDocument = gql`
+    mutation UpdateBalance($id: BigInteger!, $balance: BigInteger!) {
+  updateAccount(account: {id: $id, balance: $balance}) {
+    balance
+  }
 }
     `;

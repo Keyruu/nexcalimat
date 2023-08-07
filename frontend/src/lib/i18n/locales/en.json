@@ -28,7 +28,17 @@
 		"email": "Email",
 		"no-account-found": "No account found!",
 		"name": "Name",
-		"sort": "Sort"
+		"sort": "Sort",
+		"search": "Search...",
+		"balance-modal": {
+			"header": "Add or set balance for",
+			"add-mode": "Add to balance of the account.",
+			"set-mode": "Set balance of the account.",
+			"add": "Add",
+			"set": "Set"
+		},
+		"archived": "Archived"
 	},
-	"forbidden": "You are not allowed to access this!"
+	"forbidden": "You are not allowed to access this!",
+	"cancel": "Cancel"
 }

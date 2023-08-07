@@ -28,7 +28,17 @@
 		"email": "E-Mail",
 		"no-account-found": "Kein Account gefunden!",
 		"name": "Name",
-		"sort": "Sortierung"
+		"sort": "Sortierung",
+		"search": "Suchen...",
+		"balance-modal": {
+			"header": "Setze oder füge Guthaben hinzu für",
+			"add-mode": "Füge zu Guthaben des Accounts hinzu",
+			"set-mode": "Setze Guthaben von Account",
+			"add": "Hinzufügen",
+			"set": "Setzen"
+		},
+		"archived": "Archiviert"
 	},
-	"forbidden": "Sie haben keine Berechtigung auf dies zuzugreifen!"
+	"forbidden": "Sie haben keine Berechtigung auf dies zuzugreifen!",
+	"cancel": "Abbrechen"
 }

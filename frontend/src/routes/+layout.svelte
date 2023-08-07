@@ -9,7 +9,7 @@
 	import '../app.scss';
 
 	import Header from '$lib/components/main/Header.svelte';
-	import { Toast } from '@skeletonlabs/skeleton';
+	import { Modal, Toast } from '@skeletonlabs/skeleton';
 	import { client } from '../urqlClient';
 
 	setContextClient(client);
@@ -19,6 +19,7 @@
 	<title>nexcalimat</title>
 </svelte:head>
 
+<Modal />
 <div class="flex h-screen flex-col justify-center overflow-hidden">
 	<Header />
 	<div class="background flex flex-1 flex-col overflow-y-auto">
