@@ -13,15 +13,14 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
 
-	const client = getContextClient();
 	$: purchases = queryStore<MyPurchasesQuery>({
-		client,
+		client: getContextClient(),
 		query: MyPurchasesDocument
 	});
 
 	function refresh() {
-		queryStore<MyPurchasesQuery>({
-			client,
+		purchases = queryStore<MyPurchasesQuery>({
+			client: getContextClient(),
 			query: MyPurchasesDocument,
 			requestPolicy: 'network-only'
 		});
@@ -29,7 +28,7 @@
 
 	const refund = (id: number) =>
 		mutationStore<RefundMutation, RefundMutationVariables>({
-			client,
+			client: getContextClient(),
 			query: RefundDocument,
 			variables: {
 				id: id
@@ -91,7 +90,7 @@
 		{#each $purchases.data.myPurchases.data as purchase (purchase?.id)}
 			{#if purchase && purchase.id}
 				{#if purchase}
-					<Purchase on:refund="{() => submitRefund(purchase?.id)}" purchase="{purchase}" />
+					<Purchase on:refund="{() => submitRefund(purchase?.id)}" {purchase} />
 				{/if}
 			{/if}
 		{/each}

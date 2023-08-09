@@ -1,4 +1,5 @@
 import type { Maybe } from "$lib/generated/graphql";
+import { env } from "$env/dynamic/public";
 import dayjs from "dayjs";
 
 export function formatDate(node: HTMLElement) {
@@ -6,5 +7,5 @@ export function formatDate(node: HTMLElement) {
 }
 
 export function stringFormatDate(date: Maybe<string> | undefined): string {
-  return dayjs(date).format("DD.MM.YYYY HH:mm");
+  return dayjs.tz(date, env.PUBLIC_TIMEZONE).format("DD.MM.YYYY HH:mm");
 }

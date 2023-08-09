@@ -12,6 +12,13 @@
 	import { Modal, Toast } from '@skeletonlabs/skeleton';
 	import { client } from '../urqlClient';
 
+	import dayjs from 'dayjs';
+	import timezone from 'dayjs/plugin/timezone';
+	import utc from 'dayjs/plugin/utc';
+
+	dayjs.extend(timezone);
+	dayjs.extend(utc);
+
 	setContextClient(client);
 </script>
 
