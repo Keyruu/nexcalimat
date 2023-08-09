@@ -1,4 +1,4 @@
-name: Build and Push Backend
+name: Build and Push Backend Java
 
 on:
   push:

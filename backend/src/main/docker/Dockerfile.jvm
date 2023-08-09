@@ -77,6 +77,10 @@
 ###
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
 
+LABEL org.opencontainers.image.source=https://github.com/keyruu/nexcalimat
+LABEL org.opencontainers.image.description="Server for nexcalimat"
+LABEL org.opencontainers.image.licenses=GPL-3.0-only
+
 ENV LANGUAGE='en_US:en'
 
 
