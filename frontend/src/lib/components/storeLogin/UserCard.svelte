@@ -1,26 +1,73 @@
 <script lang="ts">
-	import type { Account } from '$lib/generated/graphql';
+	import {
+		DeleteAccountDocument,
+		EraseAccountDocument,
+		ReactivateAccountDocument,
+		type Account,
+		type DeleteAccountMutation,
+		type DeleteAccountMutationVariables,
+		type EraseAccountMutation,
+		type EraseAccountMutationVariables,
+		type ReactivateAccountMutation,
+		type ReactivateAccountMutationVariables
+	} from '$lib/generated/graphql';
 	import { getInitials } from '$lib/utils/accountUtils.js';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getAccountPicture } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
 	import { Avatar, modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import { createEventDispatcher } from 'svelte';
+	import { mutationStore } from '@urql/svelte';
+	import { createEventDispatcher, onDestroy } from 'svelte';
+	import { _ } from 'svelte-i18n';
+	import type { Unsubscriber } from 'svelte/store';
+	import { client } from '../../../urqlClient';
 	import BalanceModal from '../admin/BalanceModal.svelte';
 
 	const dispatch = createEventDispatcher();
 
 	export let account: Account;
 	export let adminMode = false;
+	export let deletionMode = false;
 
 	let editMode = false;
 
-	function triggerBalanceModal(account: Account | null) {
+	const deleteAccount = () =>
+		mutationStore<DeleteAccountMutation, DeleteAccountMutationVariables>({
+			client,
+			query: DeleteAccountDocument,
+			variables: {
+				id: account.id!
+			}
+		});
+
+	const reactiveAccount = () =>
+		mutationStore<ReactivateAccountMutation, ReactivateAccountMutationVariables>({
+			client,
+			query: ReactivateAccountDocument,
+			variables: {
+				id: account.id!
+			}
+		});
+
+	const eraseAccount = () =>
+		mutationStore<EraseAccountMutation, EraseAccountMutationVariables>({
+			client,
+			query: EraseAccountDocument,
+			variables: {
+				id: account.id!
+			}
+		});
+
+	let deleteAccountUnsubscribe: Unsubscriber,
+		reactiveAccountUnsubscribe: Unsubscriber,
+		eraseAccountUnsubscribe: Unsubscriber;
+
+	function triggerBalanceModal() {
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component
 			ref: BalanceModal,
 			props: {
-				account: account
+				account
 			}
 		};
 
@@ -31,6 +78,70 @@
 		};
 		modalStore.trigger(modal);
 	}
+
+	function triggerDeletionModal() {
+		const modal: ModalSettings = {
+			type: 'confirm',
+			// Data
+			title: $_('admin.delete-account-modal.title'),
+			body: $_('admin.delete-account-modal.body'),
+			// TRUE if confirm pressed, FALSE if cancel pressed
+			response: (r: boolean) => {
+				if (r) {
+					deleteAccountUnsubscribe = deleteAccount().subscribe(({ data, error }) => {
+						if (data?.deleteAccount) {
+							console.log('Account deleted');
+						}
+					});
+				}
+			}
+		};
+		modalStore.trigger(modal);
+	}
+	function triggerReactivationModal() {
+		const modal: ModalSettings = {
+			type: 'confirm',
+			// Data
+			title: $_('admin.reactivate-account-modal.title'),
+			body: $_('admin.reactivate-account-modal.body'),
+			// TRUE if confirm pressed, FALSE if cancel pressed
+			response: (r: boolean) => {
+				if (r) {
+					reactiveAccountUnsubscribe = reactiveAccount().subscribe(({ data, error }) => {
+						if (data?.reactivateAccount) {
+							console.log('Account reactivated');
+						}
+					});
+				}
+			}
+		};
+		modalStore.trigger(modal);
+	}
+	function triggerErasingModal() {
+		const modal: ModalSettings = {
+			type: 'confirm',
+			// Data
+			title: $_('admin.erase-account-modal.title'),
+			body: $_('admin.erase-account-modal.body'),
+			// TRUE if confirm pressed, FALSE if cancel pressed
+			response: (r: boolean) => {
+				if (r) {
+					eraseAccountUnsubscribe = eraseAccount().subscribe(({ data, error }) => {
+						if (data?.eraseAccount) {
+							console.log('Account erased');
+						}
+					});
+				}
+			}
+		};
+		modalStore.trigger(modal);
+	}
+
+	onDestroy(() => {
+		deleteAccountUnsubscribe?.();
+		reactiveAccountUnsubscribe?.();
+		eraseAccountUnsubscribe?.();
+	});
 </script>
 
 <div
@@ -38,17 +149,28 @@
 	on:mouseleave="{() => (editMode = false)}"
 	role="figure"
 >
-	{#if adminMode}
+	{#if adminMode || deletionMode}
 		<div class="absolute top-0 right-0">
 			<button class="btn-icon hover:variant-soft" on:click="{() => (editMode = !editMode)}"
 				><Icon icon="fa6-solid:ellipsis-vertical" /></button
 			>
-			{#if editMode}
+			{#if editMode && adminMode}
 				<div class="btn-group-vertical variant-filled-surface absolute z-50">
-					<button on:click="{() => triggerBalanceModal(account)}" class="variant-filled-success"
+					<button on:click="{triggerBalanceModal}" class="variant-filled-success"
 						><Icon icon="fa6-solid:sack-dollar" /></button
 					>
-					<button class="variant-filled-error"><Icon icon="fa-solid:archive" /></button>
+					<button on:click="{triggerDeletionModal}" class="variant-filled-error"
+						><Icon icon="fa-solid:archive" /></button
+					>
+				</div>
+			{:else if editMode && deletionMode}
+				<div class="btn-group-vertical variant-filled-surface absolute z-50">
+					<button on:click="{triggerReactivationModal}" class="variant-filled-success"
+						><Icon icon="fa6-solid:arrow-left" /></button
+					>
+					<button on:click="{triggerErasingModal}" class="variant-filled-error"
+						><Icon icon="fa6-solid:trash-can" /></button
+					>
 				</div>
 			{/if}
 		</div>

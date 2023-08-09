@@ -90,17 +90,11 @@
 						src="{getAccountPicture($account.data.account)}"
 						initials="{getInitials($account.data.account)}"
 						background="variant-filled-surface"
-						class="mx-auto h-24 w-24 border-4 shadow-md border-surface-300-600-token"
+						class="mx-auto md:h-24 md:w-24 border-4 shadow-md border-surface-300-600-token"
 					/>
 					<h1 class="mb-8 mt-5 text-3xl font-medium">{$account.data.account.name}</h1>
 
-					<Keypad
-						class="mt-4"
-						bind:value="{pin}"
-						on:submit="{handleSubmit}"
-						bind:triggerSuccess="{triggerSuccess}"
-						bind:triggerMiss="{triggerMiss}"
-					/>
+					<Keypad class="mt-4" bind:value="{pin}" on:submit="{handleSubmit}" bind:triggerSuccess bind:triggerMiss />
 				</div>
 			</div>
 		{:else}

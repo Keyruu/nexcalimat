@@ -81,7 +81,7 @@
 	});
 </script>
 
-<div class="card variant-glass-surface flex w-3/4 flex-col items-center justify-center pb-8">
+<div class="card variant-glass-surface flex md:w-3/4 flex-col items-center justify-center pb-8">
 	<div class="absolute right-0 top-0 m-4">
 		<button
 			type="button"
@@ -100,7 +100,7 @@
 			/>
 		</button>
 	</div>
-	<figure class="m-4 mb-0 flex items-center justify-center py-4 sm:h-80">
+	<figure class="m-10 md:m-4 mb-0 flex items-center justify-center py-4 sm:h-80">
 		<img class="max-h-full max-w-full" src="{getProductPicture(product)}" alt="{product.name}" />
 	</figure>
 	<h2 class="mx-1 my-2 text-center font-bold">{product.name}</h2>
@@ -117,12 +117,20 @@
 		</div>
 	</div>
 </div>
-<div class="mt-2 flex w-80">
-	<a href="{getCancelHref($page.url.pathname)}" type="button" class="btn btn-icon btn-icon-lg variant-ghost-error">
+<div class="mt-2 flex w-full md:w-3/4">
+	<a
+		href="{getCancelHref($page.url.pathname)}"
+		type="button"
+		class="md:h-20 md:w-20 btn btn-icon btn-icon-lg variant-ghost-error"
+	>
 		<Icon icon="material-symbols:cancel-outline-rounded" class="h-6 w-6 text-error-500" />
 	</a>
 	<div class="flex-1"></div>
-	<button on:click="{checkout}" type="button" class="btn btn-icon btn-icon-lg variant-ghost-success ml-auto">
+	<button
+		on:click="{checkout}"
+		type="button"
+		class="md:h-20 md:w-20 btn btn-icon btn-icon-lg variant-ghost-success ml-auto"
+	>
 		<Icon icon="material-symbols:shopping-cart-checkout-rounded" class="h-6 w-6 text-success-500" />
 	</button>
 </div>

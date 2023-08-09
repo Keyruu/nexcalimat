@@ -66,7 +66,7 @@
 				<button
 					type="button"
 					disabled="{buttonsDisabled}"
-					class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
+					class="variant-ghost btn btn-icon md:h-20 md:w-20 rounded-full text-xl"
 					on:click="{() => select(i + 1)}">{i + 1}</button
 				>
 			</div>
@@ -74,7 +74,7 @@
 		<div class="flex items-center justify-center">
 			<button
 				type="button"
-				class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
+				class="variant-ghost btn btn-icon md:h-20 md:w-20 rounded-full text-xl"
 				disabled="{!value || buttonsDisabled}"
 				on:click="{deleteLast}">←</button
 			>
@@ -83,7 +83,7 @@
 			<button
 				type="button"
 				disabled="{buttonsDisabled}"
-				class="variant-ghost btn btn-icon h-20 w-20 rounded-full text-xl"
+				class="variant-ghost btn btn-icon md:h-20 md:w-20 rounded-full text-xl"
 				on:click="{() => select(0)}">0</button
 			>
 		</div>

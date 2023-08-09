@@ -51,9 +51,11 @@
 	});
 </script>
 
-<div class="flex flex-col items-center p-4">
+<div class="flex flex-col items-center p-4 overflow-x-hidden">
 	{#if ['/history', '/store/leaderboard'].some((r) => $page.route.id?.includes(r)) == false}
-		<div class="mb-16 mt-6 flex w-[80%] items-center justify-center">
+		<div
+			class="md:mb-16 md:mt-6 flex w-[80%] items-center justify-center invisible h-0 md:h-auto md:visible lg:visible"
+		>
 			<ol
 				class="flex w-full items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base"
 			>

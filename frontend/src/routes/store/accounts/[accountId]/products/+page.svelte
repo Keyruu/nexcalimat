@@ -57,6 +57,8 @@
 				: 'variant-soft'}"
 			on:click="{() => setFilter(ProductType.ColdDrink)}"
 			on:keypress
+			role="button"
+			tabindex="0"
 		>
 			cold
 		</span>
@@ -64,6 +66,8 @@
 			class="chip mr-2 text-2xl {typeFilter === ProductType.HotDrink ? 'variant-filled-error' : 'variant-soft'}"
 			on:click="{() => setFilter(ProductType.HotDrink)}"
 			on:keypress
+			role="button"
+			tabindex="0"
 		>
 			hot
 		</span>
@@ -73,11 +77,11 @@
 	{:else if $products.error}
 		Something went wrong...
 	{:else if $products.data?.productsWithFavorites?.data}
-		<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+		<div class="grid grid-cols-2 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 			{#each $products.data?.productsWithFavorites?.data as product}
 				{#if product}
-					<a class="unstyled m-4" href="{base}/store/accounts/{$page.params.accountId}/products/{product.id}">
-						<Product product="{product}" />
+					<a class="unstyled md:m-4" href="{base}/store/accounts/{$page.params.accountId}/products/{product.id}">
+						<Product {product} />
 					</a>
 				{/if}
 			{/each}

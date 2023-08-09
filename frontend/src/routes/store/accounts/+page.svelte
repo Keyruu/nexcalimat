@@ -20,11 +20,11 @@
 <div class="w-full py-4">
 	{#if !$accounts.fetching}
 		{#if $accounts.data?.accounts && $accounts.data?.accounts.data?.length}
-			<div class="grid grid-cols-1 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+			<div class="grid grid-cols-2 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
 				{#each $accounts.data.accounts.data as account (account?.id)}
 					{#if account}
 						<a href="{base}/store/accounts/{account.id}" class="unstyled flex items-center justify-center">
-							<UserCard account="{account}" />
+							<UserCard {account} />
 						</a>
 					{/if}
 				{/each}
