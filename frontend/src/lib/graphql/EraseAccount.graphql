@@ -1,0 +1,3 @@
+mutation EraseAccount($id: BigInteger!) {
+  eraseAccount(id: $id)
+}

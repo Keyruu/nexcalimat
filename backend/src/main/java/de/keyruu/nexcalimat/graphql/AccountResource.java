@@ -86,6 +86,14 @@ public class AccountResource
 	}
 
 	@Mutation
+	@Description("Reactivate an Account")
+	@RolesAllowed(Roles.ADMIN)
+	public Boolean reactivateAccount(Long id)
+	{
+		return _accountService.reactivateAccount(id);
+	}
+
+	@Mutation
 	@Description("Sign up with OIDC provider token and PIN")
 	@RolesAllowed(Roles.USER)
 	public Account signUp(String pin)

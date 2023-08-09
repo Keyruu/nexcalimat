@@ -1,0 +1,3 @@
+mutation ReactivateAccount($id: BigInteger!) {
+  reactivateAccount(id: $id)
+}

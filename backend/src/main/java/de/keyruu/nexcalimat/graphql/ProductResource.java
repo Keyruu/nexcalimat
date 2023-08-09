@@ -107,6 +107,22 @@ public class ProductResource
 	}
 
 	@Mutation
+	@Description("Erase Product")
+	@RolesAllowed(Roles.ADMIN)
+	public Boolean eraseProduct(Long id)
+	{
+		return _productService.eraseById(id);
+	}
+
+	@Mutation
+	@Description("Reactivate Product")
+	@RolesAllowed(Roles.ADMIN)
+	public Boolean reactivateProduct(Long id)
+	{
+		return _productService.reactivateProduct(id);
+	}
+
+	@Mutation
 	@Description("Toggle favorite")
 	@RolesAllowed(Roles.CUSTOMER)
 	public Boolean toggleFavorite(Long productId)

@@ -97,6 +97,17 @@ public class ProductService
 	}
 
 	@Transactional
+	public Boolean reactivateProduct(Long id)
+	{
+		Product dbProduct = _productRepository.findByIdOptional(id)
+			.orElseThrow(ProductNotFoundException::new);
+
+		dbProduct.setDeletedAt(null);
+		_productRepository.persist(dbProduct);
+		return true;
+	}
+
+	@Transactional
 	public Boolean deleteById(Long id)
 	{
 		Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
@@ -105,5 +116,11 @@ public class ProductService
 		_productRepository.persist(product);
 
 		return Boolean.TRUE;
+	}
+
+	@Transactional
+	public Boolean eraseById(Long id)
+	{
+		return _productRepository.deleteById(id);
 	}
 }

@@ -1,0 +1,3 @@
+mutation DeleteAccount($id: BigInteger!) {
+  deleteAccount(id: $id)
+}

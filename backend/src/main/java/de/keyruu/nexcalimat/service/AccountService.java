@@ -184,6 +184,17 @@ public class AccountService
 	}
 
 	@Transactional
+	public Boolean reactivateAccount(Long id)
+	{
+		Account dbAccount = _accountRepo.findByIdOptional(id)
+			.orElseThrow(AccountNotFoundException::new);
+
+		dbAccount.setDeletedAt(null);
+		_accountRepo.persist(dbAccount);
+		return true;
+	}
+
+	@Transactional
 	public Boolean eraseAccount(Long id)
 	{
 		return _accountRepo.deleteById(id);

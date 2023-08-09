@@ -1,0 +1,14 @@
+query DeletedAccounts($sort: SortPojoInput!) {
+	deletedAccounts(sort: $sort) {
+		data {
+			id
+			name
+			email
+			balance
+			picture
+			extId
+		}
+		page
+		total
+	}
+}
