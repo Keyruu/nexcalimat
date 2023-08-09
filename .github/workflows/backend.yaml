@@ -23,7 +23,7 @@ jobs:
       - name: Build and Test with Maven
         run: |
           cd backend/
-          mvn -B clean package -Pnative --file pom.xml
+          mvn -B clean package -Pnative --file pom.xml -Duser.timezone=Europe/Berlin
       - name: Codecov
         uses: codecov/codecov-action@v3
         with:
