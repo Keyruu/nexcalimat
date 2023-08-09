@@ -9,7 +9,7 @@
 <div
 	class="sm:w-50 card card-hover variant-glass-surface flex cursor-pointer flex-col shadow-md hover:variant-ghost-surface hover:shadow-xl sm:h-72 lg:h-[22rem] lg:w-64"
 >
-	<figure class="m-4 mb-0 flex items-center justify-center py-4 sm:h-36 lg:h-44">
+	<figure class="m-4 mb-0 flex items-center justify-center py-4 h-36 md:h-44">
 		<img class="max-h-full max-w-full" src="{getProductPicture(product)}" alt="{product.name}" />
 	</figure>
 	<div class="flex flex-1 flex-col items-center text-center">
