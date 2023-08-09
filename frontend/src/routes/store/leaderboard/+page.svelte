@@ -60,7 +60,7 @@
 
 <h1 class="h1 mb-4">{$_('header.leaderboard')}</h1>
 {#if $accountsWithPurchaseCount.data?.leaderboard && $accountsWithPurchaseCount.data?.leaderboard.data}
-	<ul class="list w-3/5">
+	<ul class="list sm:w-3/5 w-full">
 		{#each $accountsWithPurchaseCount.data.leaderboard.data as accountWithCount, index (accountWithCount?.account?.id)}
 			{#if accountWithCount && accountWithCount.account}
 				<li>
@@ -85,10 +85,11 @@
 		{/each}
 	</ul>
 {/if}
+
 {#if page.size}
 	<Paginator class="mt-4" controlVariant="variant-glass-surface" bind:settings="{page}" />
 {:else if !page.size && !$accountsWithPurchaseCount.fetching}
-	<div class="w-3/5">
+	<div class="sm:w-3/5 w-full">
 		<Alert type="{AlertType.Error}">{$_('errors.no-data')}</Alert>
 	</div>
 {/if}
