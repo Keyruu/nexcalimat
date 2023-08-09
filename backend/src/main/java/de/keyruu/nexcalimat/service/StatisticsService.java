@@ -1,7 +1,9 @@
 package de.keyruu.nexcalimat.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
@@ -51,7 +53,7 @@ public class StatisticsService
 	public PaginationResponse<AccountPurchaseCount> getLeaderboard(Mapper mapper)
 	{
 		LocalDateTime today = LocalDateTime.now();
-		LocalDateTime oneMonthAgo = today.minus(1, ChronoUnit.MONTHS);
+		LocalDateTime firstDayOfMonth = today.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIDNIGHT);
 		String query = """
 			SELECT a, COUNT(pu) as count from Account a LEFT JOIN a.purchases pu
 			ON pu.deletedAt IS NULL AND pu.createdAt >= :start AND pu.createdAt <= :end
@@ -60,7 +62,7 @@ public class StatisticsService
 			ORDER BY count DESC
 			""";
 		long total = getNotDeletedAccountsCount();
-		Parameters params = Parameters.with("start", oneMonthAgo).and("end", today);
+		Parameters params = Parameters.with("start", firstDayOfMonth).and("end", today);
 		List<AccountPurchaseCount> data = _accountRepository.find(query, params)
 			.project(AccountPurchaseCount.class)
 			.page(mapper.getPage())
