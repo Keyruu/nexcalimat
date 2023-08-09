@@ -2,8 +2,8 @@
     "theme_color": "#191ba2",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/store",
-    "start_url": "/store",
+    "scope": "/store/accounts",
+    "start_url": "/store/accounts",
     "name": "nexcalimat",
     "short_name": "nexcalimat",
     "icons": [
