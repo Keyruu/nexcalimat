@@ -105,16 +105,60 @@ public class ProductService
  @Transactional
  public Boolean reactivateProduct(Long id)
  {
- 	Product dbProduct = _productRepository.findByIdOptional(id)
- 		.orElseThrow(ProductNotFoundException::new);
+ 	try {
+ 		Product dbProduct = _productRepository.findByIdOptional(id)
+ 			.orElseThrow(ProductNotFoundException::new);
  
- 	if (dbProduct.getDeletedAt() == null) {
- 		throw new InvalidOperationException("Product is not deleted.");
+ 		if (dbProduct.getDeletedAt() == null) {
+ 			throw new InvalidOperationException("Product is not deleted.");
+ 		}
+ 
+ 		dbProduct.setDeletedAt(null);
+ 		_productRepository.persist(dbProduct);
+ 		return true;
+ 	} catch (InvalidOperationException e) {
+ 		// Handle the exception by logging an error message or taking appropriate action
+ 		// For example:
+ 		// logger.error("Error reactivating product with id: " + id, e);
+ 		return false;
+ 	}
+ }
+ 
+ @Transactional
+ public Boolean deleteById(Long id)
+ {
+ 	Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+ 
+ 	if (product.getDeletedAt() != null) {
+ 		throw new InvalidOperationException("Product is already deleted.");
  	}
  
- 	dbProduct.setDeletedAt(null);
- 	_productRepository.persist(dbProduct);
- 	return true;
+ 	product.setDeletedAt(LocalDateTime.now());
+ 	_productRepository.persist(product);
+ 
+ 	return Boolean.TRUE;
+ }
+ ====
+ @Transactional
+ public Boolean deleteById(Long id)
+ {
+ 	try {
+ 		Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+ 
+ 		if (product.getDeletedAt() != null) {
+ 			throw new InvalidOperationException("Product is already deleted.");
+ 		}
+ 
+ 		product.setDeletedAt(LocalDateTime.now());
+ 		_productRepository.persist(product);
+ 
+ 		return Boolean.TRUE;
+ 	} catch (InvalidOperationException e) {
+ 		// Handle the exception by logging an error message or taking appropriate action
+ 		// For example:
+ 		// logger.error("Error deleting product with id: " + id, e);
+ 		return false;
+ 	}
  }
 
  @Transactional
