@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.filestore.PictureType;
+import de.keyruu.nexcalimat.graphql.exception.IllegalOperationException;
 import de.keyruu.nexcalimat.graphql.exception.ProductNotFoundException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
 import de.keyruu.nexcalimat.graphql.pojo.PaginationResponse;
@@ -111,6 +112,11 @@ public class ProductService
 		Product dbProduct = _productRepository.findByIdOptional(id)
 			.orElseThrow(ProductNotFoundException::new);
 
+		if (dbProduct.getDeletedAt() == null)
+		{
+			throw new IllegalOperationException();
+		}
+
 		dbProduct.setDeletedAt(null);
 		_productRepository.persist(dbProduct);
 		return true;
@@ -120,6 +126,11 @@ public class ProductService
 	public Boolean deleteById(Long id)
 	{
 		Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+
+		if (product.getDeletedAt() != null)
+		{
+			throw new IllegalOperationException();
+		}
 
 		product.setDeletedAt(LocalDateTime.now());
 		_productRepository.persist(product);

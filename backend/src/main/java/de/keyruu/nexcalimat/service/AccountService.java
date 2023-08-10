@@ -12,6 +12,7 @@ import de.keyruu.nexcalimat.filestore.FileFormData;
 import de.keyruu.nexcalimat.filestore.PictureType;
 import de.keyruu.nexcalimat.graphql.exception.AccountExistsException;
 import de.keyruu.nexcalimat.graphql.exception.AccountNotFoundException;
+import de.keyruu.nexcalimat.graphql.exception.IllegalOperationException;
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
 import de.keyruu.nexcalimat.graphql.exception.WrongPinException;
 import de.keyruu.nexcalimat.graphql.pojo.Mapper;
@@ -192,6 +193,11 @@ public class AccountService
 		Account dbAccount = _accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
+		if (dbAccount.getDeletedAt() == null)
+		{
+			throw new IllegalOperationException();
+		}
+
 		dbAccount.setDeletedAt(null);
 		_accountRepo.persist(dbAccount);
 		return true;
@@ -228,6 +234,11 @@ public class AccountService
 	public Boolean deleteById(Long id)
 	{
 		Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+
+		if (account.getDeletedAt() != null)
+		{
+			throw new IllegalOperationException();
+		}
 
 		account.setDeletedAt(LocalDateTime.now());
 		_accountRepo.persist(account);
