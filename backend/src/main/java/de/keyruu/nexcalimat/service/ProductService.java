@@ -30,11 +30,11 @@ public class ProductService
  	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
  	{
  		String query = "deletedAt IS NULL";
- 		if (searchByName.isPresent())
- 		{
- 			query += " AND LOWER(name) LIKE '%" + searchByName.get().toLowerCase() + "%'";
- 		}
- 		List<Product> products = _productRepository.find(query, mapper.getSort()).page(mapper.getPage()).list();
+   		if (searchByName.isPresent())
+   		{
+   			query += " AND LOWER(name) LIKE :name";
+   		}
+   		List<Product> products = _productRepository.find(query, Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%"), mapper.getSort()).page(mapper.getPage()).list();
  		long count = _productRepository.count(query);
  		return new PaginationResponse<>(products, count, mapper);
  	}
