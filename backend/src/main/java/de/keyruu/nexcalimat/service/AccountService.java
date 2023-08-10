@@ -187,26 +187,26 @@ public class AccountService
 	}
 
  @Transactional
- public Boolean reactivateAccount(Long id)
- {
- 	try {
- 		Account dbAccount = _accountRepo.findByIdOptional(id)
- 			.orElseThrow(AccountNotFoundException::new);
- 
- 		if (dbAccount.getDeletedAt() == null) {
- 			throw new InvalidOperationException("Account is not deleted.");
- 		}
- 
- 		dbAccount.setDeletedAt(null);
- 		_accountRepo.persist(dbAccount);
- 		return true;
- 	} catch (InvalidOperationException e) {
- 		// Handle the exception by logging an error message or taking appropriate action
- 		// For example:
- 		// logger.error("Error reactivating account with id: " + id, e);
- 		return false;
- 	}
- }
+	public Boolean reactivateAccount(Long id)
+	{
+		try {
+			Account dbAccount = _accountRepo.findByIdOptional(id)
+				.orElseThrow(AccountNotFoundException::new);
+
+			if (dbAccount.getDeletedAt() == null) {
+				throw new InvalidOperationException("Account is not deleted.");
+			}
+
+			dbAccount.setDeletedAt(null);
+			_accountRepo.persist(dbAccount);
+			return true;
+		} catch (InvalidOperationException e) {
+			// Handle the exception by logging an error message or taking appropriate action
+			// For example:
+			// logger.error("Error reactivating account with id: " + id, e);
+			return false;
+		}
+	}
  
  @Transactional
  public Boolean deleteById(Long id)
