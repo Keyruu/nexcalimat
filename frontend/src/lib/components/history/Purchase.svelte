@@ -35,7 +35,6 @@
 					<h3 class="font-bold">Bought at:</h3>
 					<h3>{stringFormatDate(purchase.createdAt)}</h3>
 				</div>
-				{@const test = Date.now() - Date.parse(purchase.createdAt)}
 				{#if isInLastFiveMinutes(purchase.createdAt)}
 					<button
 						on:click="{() => dispatch('refund', { id: purchase.id })}"
