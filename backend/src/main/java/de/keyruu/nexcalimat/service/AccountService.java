@@ -23,6 +23,7 @@ import de.keyruu.nexcalimat.repository.AccountRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Parameters;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -46,17 +47,23 @@ public class AccountService
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
 	String _emailClaim;
-
 	public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
 	{
 		String query = "deletedAt IS NULL";
-		Parameters parameters = new Parameters();
+		PanacheQuery<Account> panacheQuery;
+
 		if (searchByName.isPresent())
 		{
 			query += " AND LOWER(name) LIKE :name";
-			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+
+			panacheQuery = _accountRepo.find(query, parameters, mapper.getSort());
 		}
-		List<Account> activeAccounts = _accountRepo.find(query, parameters, mapper.getSort()).page(mapper.getPage()).list();
+		else
+		{
+			panacheQuery = _accountRepo.find(query, mapper.getSort());
+		}
+		List<Account> activeAccounts = panacheQuery.page(mapper.getPage()).list();
 		long count = _accountRepo.count(query);
 		return new PaginationResponse<>(activeAccounts, count, mapper);
 	}

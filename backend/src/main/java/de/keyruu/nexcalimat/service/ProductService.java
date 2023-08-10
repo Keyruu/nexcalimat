@@ -15,6 +15,7 @@ import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.ProductType;
 import de.keyruu.nexcalimat.model.projection.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -32,14 +33,19 @@ public class ProductService
 	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
 	{
 		String query = "deletedAt IS NULL";
-		Parameters parameters = new Parameters();
+		PanacheQuery<Product> panacheQuery;
 		if (searchByName.isPresent())
 		{
 			query += " AND LOWER(name) LIKE :name";
-			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+
+			panacheQuery = _productRepository.find(query, parameters, mapper.getSort());
 		}
-		List<Product> products = _productRepository
-			.find(query, parameters, mapper.getSort())
+		else
+		{
+			panacheQuery = _productRepository.find(query, mapper.getSort());
+		}
+		List<Product> products = panacheQuery
 			.page(mapper.getPage()).list();
 		long count = _productRepository.count(query);
 		return new PaginationResponse<>(products, count, mapper);
