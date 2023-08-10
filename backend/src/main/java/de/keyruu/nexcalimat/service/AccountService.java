@@ -186,16 +186,60 @@ public class AccountService
  @Transactional
  public Boolean reactivateAccount(Long id)
  {
- 	Account dbAccount = _accountRepo.findByIdOptional(id)
- 		.orElseThrow(AccountNotFoundException::new);
+ 	try {
+ 		Account dbAccount = _accountRepo.findByIdOptional(id)
+ 			.orElseThrow(AccountNotFoundException::new);
  
- 	if (dbAccount.getDeletedAt() == null) {
- 		throw new InvalidOperationException("Account is not deleted.");
+ 		if (dbAccount.getDeletedAt() == null) {
+ 			throw new InvalidOperationException("Account is not deleted.");
+ 		}
+ 
+ 		dbAccount.setDeletedAt(null);
+ 		_accountRepo.persist(dbAccount);
+ 		return true;
+ 	} catch (InvalidOperationException e) {
+ 		// Handle the exception by logging an error message or taking appropriate action
+ 		// For example:
+ 		// logger.error("Error reactivating account with id: " + id, e);
+ 		return false;
+ 	}
+ }
+ 
+ @Transactional
+ public Boolean deleteById(Long id)
+ {
+ 	Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+ 
+ 	if (account.getDeletedAt() != null) {
+ 		throw new InvalidOperationException("Account is already deleted.");
  	}
  
- 	dbAccount.setDeletedAt(null);
- 	_accountRepo.persist(dbAccount);
- 	return true;
+ 	account.setDeletedAt(LocalDateTime.now());
+ 	_accountRepo.persist(account);
+ 
+ 	return Boolean.TRUE;
+ }
+ ====
+ @Transactional
+ public Boolean deleteById(Long id)
+ {
+ 	try {
+ 		Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+ 
+ 		if (account.getDeletedAt() != null) {
+ 			throw new InvalidOperationException("Account is already deleted.");
+ 		}
+ 
+ 		account.setDeletedAt(LocalDateTime.now());
+ 		_accountRepo.persist(account);
+ 
+ 		return Boolean.TRUE;
+ 	} catch (InvalidOperationException e) {
+ 		// Handle the exception by logging an error message or taking appropriate action
+ 		// For example:
+ 		// logger.error("Error deleting account with id: " + id, e);
+ 		return false;
+ 	}
  }
 
 	@Transactional
