@@ -9,18 +9,19 @@
 	} from '$lib/generated/graphql';
 	import { error } from '$lib/utils/storeError';
 	import { toastStore } from '@skeletonlabs/skeleton';
-	import { getContextClient, mutationStore, queryStore } from '@urql/svelte';
+	import { mutationStore, queryStore } from '@urql/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
+	import { client } from '../../../../../urqlClient';
 
 	$: purchases = queryStore<MyPurchasesQuery>({
-		client: getContextClient(),
+		client,
 		query: MyPurchasesDocument
 	});
 
 	function refresh() {
 		purchases = queryStore<MyPurchasesQuery>({
-			client: getContextClient(),
+			client,
 			query: MyPurchasesDocument,
 			requestPolicy: 'network-only'
 		});
@@ -28,7 +29,7 @@
 
 	const refund = (id: number) =>
 		mutationStore<RefundMutation, RefundMutationVariables>({
-			client: getContextClient(),
+			client,
 			query: RefundDocument,
 			variables: {
 				id: id
