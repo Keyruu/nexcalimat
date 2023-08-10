@@ -72,9 +72,7 @@
 			hot
 		</span>
 	</div>
-	{#if $products.fetching}
-		Loading products...
-	{:else if $products.error}
+	{#if $products.error}
 		Something went wrong...
 	{:else if $products.data?.productsWithFavorites?.data}
 		<div class="grid grid-cols-2 content-evenly gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
