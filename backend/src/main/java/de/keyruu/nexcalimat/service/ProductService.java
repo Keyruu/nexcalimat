@@ -103,26 +103,26 @@ public class ProductService
 	}
 
  @Transactional
- public Boolean reactivateProduct(Long id)
- {
- 	try {
- 		Product dbProduct = _productRepository.findByIdOptional(id)
- 			.orElseThrow(ProductNotFoundException::new);
- 
- 		if (dbProduct.getDeletedAt() == null) {
- 			throw new InvalidOperationException("Product is not deleted.");
- 		}
- 
- 		dbProduct.setDeletedAt(null);
- 		_productRepository.persist(dbProduct);
- 		return true;
- 	} catch (InvalidOperationException e) {
- 		// Handle the exception by logging an error message or taking appropriate action
- 		// For example:
- 		// logger.error("Error reactivating product with id: " + id, e);
- 		return false;
- 	}
- }
+	public Boolean reactivateProduct(Long id)
+	{
+		try {
+			Product dbProduct = _productRepository.findByIdOptional(id)
+				.orElseThrow(ProductNotFoundException::new);
+
+			if (dbProduct.getDeletedAt() == null) {
+				throw new InvalidOperationException("Product is not deleted.");
+			}
+
+			dbProduct.setDeletedAt(null);
+			_productRepository.persist(dbProduct);
+			return true;
+		} catch (@ErrorCode("product-not-found") InvalidOperationException e) {
+			// Handle the exception by logging an error message or taking appropriate action
+			// For example:
+			// logger.error("Error reactivating product with id: " + id, e);
+			return false;
+		}
+	}
  
  @Transactional
  public Boolean deleteById(Long id)
