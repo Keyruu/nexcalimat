@@ -4,11 +4,16 @@
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
 	import Icon from '@iconify/svelte';
+	import dayjs from 'dayjs';
 	import { createEventDispatcher } from 'svelte';
 
 	export let purchase: Purchase;
 
 	const dispatch = createEventDispatcher();
+
+	function isInLastFiveMinutes(date: string) {
+		return Date.now() - dayjs(date).utc(true).toDate().getTime() < 5 * 60 * 1000;
+	}
 </script>
 
 <div>
@@ -30,7 +35,8 @@
 					<h3 class="font-bold">Bought at:</h3>
 					<h3>{stringFormatDate(purchase.createdAt)}</h3>
 				</div>
-				{#if Date.now() - Date.parse(purchase.createdAt) < 5 * 60 * 1000}
+				{@const test = Date.now() - Date.parse(purchase.createdAt)}
+				{#if isInLastFiveMinutes(purchase.createdAt)}
 					<button
 						on:click="{() => dispatch('refund', { id: purchase.id })}"
 						class="btn-icon variant-filled-error absolute -right-4 -top-4"

@@ -2,7 +2,7 @@
     "theme_color": "#191ba2",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/store/accounts",
+    "scope": "/store",
     "start_url": "/store/accounts",
     "name": "nexcalimat",
     "short_name": "nexcalimat",
