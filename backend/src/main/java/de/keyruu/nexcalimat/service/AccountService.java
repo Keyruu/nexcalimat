@@ -45,17 +45,19 @@ public class AccountService
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
 	String _emailClaim;
 
-	public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
-	{
-		String query = "deletedAt IS NULL";
-		if (searchByName.isPresent())
-		{
-			query += " AND LOWER(name) LIKE '%" + searchByName.get().toLowerCase() + "%'";
-		}
-		List<Account> activeAccounts = _accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
-		long count = _accountRepo.count(query);
-		return new PaginationResponse<>(activeAccounts, count, mapper);
-	}
+ public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
+ {
+     String query = "deletedAt IS NULL";
+     PanacheQuery<Account> activeAccountsQuery = _accountRepo.find(query, mapper.getSort()).page(mapper.getPage());
+     if (searchByName.isPresent())
+     {
+         query += " AND LOWER(name) LIKE :searchByName";
+         activeAccountsQuery.bind("searchByName", "%" + searchByName.get().toLowerCase() + "%");
+     }
+     List<Account> activeAccounts = activeAccountsQuery.list();
+     long count = _accountRepo.count(query);
+     return new PaginationResponse<>(activeAccounts, count, mapper);
+ }
 
 	public Account findById(Long id)
 	{
