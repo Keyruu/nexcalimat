@@ -183,16 +183,20 @@ public class AccountService
 		return account;
 	}
 
-	@Transactional
-	public Boolean reactivateAccount(Long id)
-	{
-		Account dbAccount = _accountRepo.findByIdOptional(id)
-			.orElseThrow(AccountNotFoundException::new);
-
-		dbAccount.setDeletedAt(null);
-		_accountRepo.persist(dbAccount);
-		return true;
-	}
+ @Transactional
+ public Boolean reactivateAccount(Long id)
+ {
+ 	Account dbAccount = _accountRepo.findByIdOptional(id)
+ 		.orElseThrow(AccountNotFoundException::new);
+ 
+ 	if (dbAccount.getDeletedAt() == null) {
+ 		throw new InvalidOperationException("Account is not deleted.");
+ 	}
+ 
+ 	dbAccount.setDeletedAt(null);
+ 	_accountRepo.persist(dbAccount);
+ 	return true;
+ }
 
 	@Transactional
 	public Boolean eraseAccount(Long id)
@@ -221,16 +225,20 @@ public class AccountService
 		}
 	}
 
-	@Transactional
-	public Boolean deleteById(Long id)
-	{
-		Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
-
-		account.setDeletedAt(LocalDateTime.now());
-		_accountRepo.persist(account);
-
-		return Boolean.TRUE;
-	}
+ @Transactional
+ public Boolean deleteById(Long id)
+ {
+ 	Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+ 
+ 	if (account.getDeletedAt() != null) {
+ 		throw new InvalidOperationException("Account is already deleted.");
+ 	}
+ 
+ 	account.setDeletedAt(LocalDateTime.now());
+ 	_accountRepo.persist(account);
+ 
+ 	return Boolean.TRUE;
+ }
 
 	public PaginationResponse<Account> getDeletedAccounts(Mapper mapper)
 	{
