@@ -24,7 +24,7 @@ public class StatisticsResource
 	StatisticsService _statisticsService;
 
 	@Query
-	@Description("Get purchase counts for all bought products of the lasPt month")
+	@Description("Get purchase counts for all bought products of the last month")
 	@RolesAllowed(Roles.ADMIN)
 	public List<ProductPurchaseCount> purchaseCountsLastMonth()
 	{
