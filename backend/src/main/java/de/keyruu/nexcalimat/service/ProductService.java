@@ -27,17 +27,19 @@ public class ProductService
 	@Inject
 	PictureService _pictureService;
 
- 	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
- 	{
- 		String query = "deletedAt IS NULL";
-   		if (searchByName.isPresent())
-   		{
-   			query += " AND LOWER(name) LIKE :name";
-   		}
-   		List<Product> products = _productRepository.find(query, Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%"), mapper.getSort()).page(mapper.getPage()).list();
- 		long count = _productRepository.count(query);
- 		return new PaginationResponse<>(products, count, mapper);
- 	}
+  	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
+  	{
+  		String query = "deletedAt IS NULL";
+  		Parameters parameters = Parameters.empty();
+  		if (searchByName.isPresent())
+  		{
+  			query += " AND LOWER(name) LIKE :name";
+  			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+  		}
+  		List<Product> products = _productRepository.find(query, parameters, mapper.getSort()).page(mapper.getPage()).list();
+  		long count = _productRepository.count(query);
+  		return new PaginationResponse<>(products, count, mapper);
+  	}
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{
