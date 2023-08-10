@@ -14,6 +14,7 @@ import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.ProductType;
 import de.keyruu.nexcalimat.model.projection.ProductWithFavorite;
 import de.keyruu.nexcalimat.repository.ProductRepository;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,19 +28,21 @@ public class ProductService
 	@Inject
 	PictureService _pictureService;
 
-  	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
-  	{
-  		String query = "deletedAt IS NULL";
-  		Parameters parameters = Parameters.empty();
-  		if (searchByName.isPresent())
-  		{
-  			query += " AND LOWER(name) LIKE :name";
-  			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
-  		}
-  		List<Product> products = _productRepository.find(query, parameters, mapper.getSort()).page(mapper.getPage()).list();
-  		long count = _productRepository.count(query);
-  		return new PaginationResponse<>(products, count, mapper);
-  	}
+	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
+	{
+		String query = "deletedAt IS NULL";
+		Parameters parameters = new Parameters();
+		if (searchByName.isPresent())
+		{
+			query += " AND LOWER(name) LIKE :name";
+			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+		}
+		List<Product> products = _productRepository
+			.find(query, parameters, mapper.getSort())
+			.page(mapper.getPage()).list();
+		long count = _productRepository.count(query);
+		return new PaginationResponse<>(products, count, mapper);
+	}
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{

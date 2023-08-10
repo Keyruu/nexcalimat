@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import io.quarkus.panache.common.Parameters;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -23,6 +22,7 @@ import de.keyruu.nexcalimat.repository.AccountRepository;
 import de.keyruu.nexcalimat.security.JwtUtils;
 import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
+import io.quarkus.panache.common.Parameters;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -46,19 +46,19 @@ public class AccountService
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
 	String _emailClaim;
 
- public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
- {
-     String query = "deletedAt IS NULL";
-     Parameters parameters = Parameters.empty();
-     if (searchByName.isPresent())
-     {
-         query += " AND LOWER(name) LIKE :name";
-         parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
-     }
-     List<Account> activeAccounts = _accountRepo.find(query, parameters, mapper.getSort()).page(mapper.getPage()).list();
-     long count = _accountRepo.count(query);
-     return new PaginationResponse<>(activeAccounts, count, mapper);
- }
+	public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
+	{
+		String query = "deletedAt IS NULL";
+		Parameters parameters = new Parameters();
+		if (searchByName.isPresent())
+		{
+			query += " AND LOWER(name) LIKE :name";
+			parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
+		}
+		List<Account> activeAccounts = _accountRepo.find(query, parameters, mapper.getSort()).page(mapper.getPage()).list();
+		long count = _accountRepo.count(query);
+		return new PaginationResponse<>(activeAccounts, count, mapper);
+	}
 
 	public Account findById(Long id)
 	{
