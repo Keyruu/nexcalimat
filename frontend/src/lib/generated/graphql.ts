@@ -392,6 +392,7 @@ export type QueryProductWithFavoriteArgs = {
 /** Query root */
 export type QueryProductsArgs = {
   page?: InputMaybe<PagePojoInput>;
+  searchByName?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<SortPojoInput>;
 };
 
@@ -441,18 +442,13 @@ export type AccountByIdQueryVariables = Exact<{
 
 export type AccountByIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null };
 
-export type AccountsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
-
-export type AdminAccountsQueryVariables = Exact<{
-  sort: SortPojoInput;
+export type AccountsQueryVariables = Exact<{
+  sort?: InputMaybe<SortPojoInput>;
   searchByName?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type AdminAccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
+export type AccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
 
 export type DeleteAccountMutationVariables = Exact<{
   id: Scalars['BigInteger']['input'];
@@ -514,7 +510,9 @@ export type ProductByIdWithFavoriteQueryVariables = Exact<{
 
 export type ProductByIdWithFavoriteQuery = { __typename?: 'Query', productWithFavorite?: { __typename?: 'ProductWithFavorite', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, isFavorite?: boolean | null } | null };
 
-export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProductsQueryVariables = Exact<{
+  searchByName?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type ProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
@@ -588,23 +586,7 @@ export const AccountByIdDocument = gql`
 }
     `;
 export const AccountsDocument = gql`
-    query Accounts {
-  accounts(sort: {columns: [{direction: Ascending, name: "name"}]}) {
-    data {
-      id
-      name
-      email
-      balance
-      picture
-      extId
-    }
-    page
-    total
-  }
-}
-    `;
-export const AdminAccountsDocument = gql`
-    query AdminAccounts($sort: SortPojoInput!, $searchByName: String) {
+    query Accounts($sort: SortPojoInput = {columns: [{direction: Ascending, name: "name"}]}, $searchByName: String) {
   accounts(sort: $sort, searchByName: $searchByName) {
     data {
       id
@@ -718,8 +700,11 @@ export const ProductByIdWithFavoriteDocument = gql`
 }
     `;
 export const ProductsDocument = gql`
-    query Products {
-  products {
+    query Products($searchByName: String) {
+  products(
+    sort: {columns: [{direction: Ascending, name: "name"}]}
+    searchByName: $searchByName
+  ) {
     data {
       id
       name

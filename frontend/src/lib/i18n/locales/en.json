@@ -38,8 +38,45 @@
 			"add": "Add",
 			"set": "Set"
 		},
+		"delete-account-modal": {
+			"title": "Archive account",
+			"body": "Are you sure you want to archive this account?"
+		},
+		"reactivate-account-modal": {
+			"title": "Reactivate account",
+			"body": "Are you sure you want to reactivate this account?"
+		},
+		"erase-account-modal": {
+			"title": "Erase account",
+			"body": "Are you sure you want to erase this account? This is irreversible!"
+		},
 		"archived": "Archived"
 	},
 	"forbidden": "You are not allowed to access this!",
-	"cancel": "Cancel"
+	"confirm": "Confirm",
+	"cancel": "Cancel",
+	"toast": {
+		"purchase": {
+			"success": "Purchase was refunded."
+		},
+		"refunded": {
+			"success": "Purchase was refunded."
+		},
+		"generic": {
+			"error": "Something went wrong."
+		},
+		"unauthorized": "You were logged out. Please log in again.",
+		"balance": {
+			"success": "Balance was updated."
+		},
+		"erase-account": {
+			"success": "Account was erased."
+		},
+		"delete-account": {
+			"success": "Account was archived."
+		},
+		"reactivate-account": {
+			"success": "Account was reactivated."
+		}
+	}
 }

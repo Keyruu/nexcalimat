@@ -6,7 +6,7 @@
 		type ProductByIdWithFavoriteQuery,
 		type ProductByIdWithFavoriteQueryVariables
 	} from '$lib/generated/graphql';
-	import { error } from '$lib/utils/storeError';
+	import { handleError } from '$lib/utils/storeError';
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
 
@@ -23,7 +23,7 @@
 
 	let unsubscribe = product.subscribe((result) => {
 		if (result.error) {
-			error(result.error);
+			handleError(result.error);
 		}
 	});
 
@@ -35,6 +35,6 @@
 <div class="flex w-3/4 flex-col items-center justify-center">
 	<h3 class="mb-2 font-bold">You are buying:</h3>
 	{#if !$product.fetching && $product.data?.productWithFavorite}
-		<ProductCheckout product="{$product.data?.productWithFavorite}" bind:amount="{amount}" />
+		<ProductCheckout product="{$product.data?.productWithFavorite}" bind:amount />
 	{/if}
 </div>

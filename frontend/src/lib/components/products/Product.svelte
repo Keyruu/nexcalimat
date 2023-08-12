@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { ProductWithFavorite } from '$lib/generated/graphql';
+	import type { Product, ProductWithFavorite } from '$lib/generated/graphql';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
 
-	export let product: ProductWithFavorite;
+	export let product: ProductWithFavorite | Product;
 </script>
 
 <div
-	class="sm:w-50 card card-hover variant-glass-surface flex cursor-pointer flex-col shadow-md hover:variant-ghost-surface hover:shadow-xl sm:h-72 lg:h-[22rem] lg:w-64"
+	class="sm:w-50 card card-hover variant-glass-surface flex cursor-pointer flex-col shadow-md hover:variant-ghost-surface hover:shadow-xl lg:h-[22rem] lg:w-64"
 >
 	<figure class="m-4 mb-0 flex items-center justify-center py-4 h-36 md:h-44">
 		<img class="max-h-full max-w-full" src="{getProductPicture(product)}" alt="{product.name}" />
@@ -19,7 +19,7 @@
 			</h2>
 		</div>
 		<div class="my-4">
-			{#if product.isFavorite}
+			{#if product.__typename === 'ProductWithFavorite' && product.isFavorite}
 				<div class="badge bg-pink-500">♥</div>
 			{/if}
 			{#if product.price && product.type}

@@ -38,8 +38,45 @@
 			"add": "Hinzufügen",
 			"set": "Setzen"
 		},
+		"delete-account-modal": {
+			"title": "Account archivieren",
+			"body": "Sind Sie sicher, dass Sie diesen Account archivieren wollen?"
+		},
+		"reactivate-account-modal": {
+			"title": "Account reaktivieren",
+			"body": "Sind Sie sicher, dass Sie diesen Account reaktivieren wollen?"
+		},
+		"erase-account-modal": {
+			"title": "Account endgültig löschen",
+			"body": "Sind Sie sicher, dass Sie diesen Account endgültig löschen wollen? Dies kann nicht rückgängig gemacht werden!"
+		},
 		"archived": "Archiviert"
 	},
 	"forbidden": "Sie haben keine Berechtigung auf dies zuzugreifen!",
-	"cancel": "Abbrechen"
+	"confirm": "Bestätigen",
+	"cancel": "Abbrechen",
+	"toast": {
+		"purchase": {
+			"success": "Produkt erfolgreich gekauft."
+		},
+		"refund": {
+			"success": "Produkt erfolgreich zurückerstattet."
+		},
+		"generic": {
+			"error": "Da ist etwas schief gelaufen..."
+		},
+		"unauthorized": "Du wurdest ausgeloggt. Bitte logge dich erneut ein.",
+		"balance": {
+			"success": "Guthaben erfolgreich angepasst."
+		},
+		"erase-account": {
+			"success": "Account wurde endgültig gelöscht."
+		},
+		"delete-account": {
+			"success": "Account wurde archiviert."
+		},
+		"reactivate-account": {
+			"success": "Account wurde reaktiviert."
+		}
+	}
 }

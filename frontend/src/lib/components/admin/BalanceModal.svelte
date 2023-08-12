@@ -8,6 +8,7 @@
 	import Icon from '@iconify/svelte';
 	import { _ } from 'svelte-i18n';
 	// Stores
+	import { handleError } from '$lib/utils/storeError';
 	import { SlideToggle, modalStore } from '@skeletonlabs/skeleton';
 	import { mutationStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
@@ -49,6 +50,8 @@
 				if (data?.updateAccount?.balance != null) {
 					if ($modalStore[0].response) $modalStore[0].response(true);
 					modalStore.close();
+				} else if (error) {
+					handleError(error);
 				}
 			});
 		}

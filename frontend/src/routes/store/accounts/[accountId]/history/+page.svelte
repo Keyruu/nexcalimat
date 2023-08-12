@@ -7,22 +7,25 @@
 		type RefundMutation,
 		type RefundMutationVariables
 	} from '$lib/generated/graphql';
-	import { error } from '$lib/utils/storeError';
+	import { handleError } from '$lib/utils/storeError';
+	import { toastError, toastSuccess } from '$lib/utils/toastUtils';
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import { mutationStore, queryStore } from '@urql/svelte';
 	import { onDestroy, onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
 	import { client } from '../../../../../urqlClient';
 
-	$: purchases = queryStore<MyPurchasesQuery>({
+	const queryOptions = {
 		client,
 		query: MyPurchasesDocument
-	});
+	};
+
+	$: purchases = queryStore<MyPurchasesQuery>(queryOptions);
 
 	function refresh() {
 		purchases = queryStore<MyPurchasesQuery>({
-			client,
-			query: MyPurchasesDocument,
+			...queryOptions,
 			requestPolicy: 'network-only'
 		});
 	}
@@ -45,18 +48,10 @@
 
 		unsubscribeRefund = refund(id).subscribe((result) => {
 			if (result.fetching === false && result.data?.refundPurchase) {
-				toastStore.trigger({
-					message: 'Purchase was refunded.',
-					classes: 'text-green-300',
-					background: 'variant-glass-success'
-				});
+				toastStore.trigger(toastSuccess($_('toast.refund.success')));
 				refresh();
 			} else if (result.error) {
-				toastStore.trigger({
-					message: 'Something went wrong.',
-					classes: 'text-red-300',
-					background: 'variant-glass-error'
-				});
+				toastStore.trigger(toastError($_('toast.generic.error')));
 			}
 		});
 	}
@@ -66,7 +61,7 @@
 	onMount(() => {
 		unsubscribe = purchases.subscribe((result) => {
 			if (result.error) {
-				error(result.error);
+				handleError(result.error);
 			}
 		});
 	});

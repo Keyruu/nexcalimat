@@ -14,11 +14,13 @@
 	import { authHeader } from '$lib/stores/authHeader';
 	import { centToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
-	import { error } from '$lib/utils/storeError';
+	import { handleError } from '$lib/utils/storeError';
+	import { toastSuccess } from '$lib/utils/toastUtils';
 	import Icon from '@iconify/svelte';
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import { getContextClient, mutationStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
+	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
 
 	export let product: ProductWithFavorite;
@@ -58,15 +60,11 @@
 		makePurchaseUnsubscribe = makePurchase().subscribe((result) => {
 			if (result.data?.makePurchase) {
 				console.log(result.data?.makePurchase);
-				toastStore.trigger({
-					message: 'Purchase was made successfully',
-					classes: 'text-green-300',
-					background: 'variant-ghost-success'
-				});
+				toastStore.trigger(toastSuccess($_('toast.purchase.success')));
 				authHeader.set(undefined);
 				goto(`${base}/store/accounts`);
 			} else if (result.error) {
-				error(result.error);
+				handleError(result.error);
 			}
 		});
 	}

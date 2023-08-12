@@ -1,5 +1,5 @@
-query Accounts {
-	accounts(sort: {columns: [{direction: Ascending, name: "name"}]}) {
+query Accounts($sort: SortPojoInput = {columns: [{direction: Ascending, name: "name"}]}, $searchByName: String) {
+	accounts(sort: $sort, searchByName: $searchByName) {
 		data {
 			id
 			name

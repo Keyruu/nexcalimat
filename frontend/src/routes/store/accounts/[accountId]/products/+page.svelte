@@ -8,7 +8,7 @@
 		type ProductsWithFavoritesQuery,
 		type ProductsWithFavoritesQueryVariables
 	} from '$lib/generated/graphql';
-	import { error } from '$lib/utils/storeError';
+	import { handleError } from '$lib/utils/storeError';
 	import { getContextClient, queryStore, type OperationResultStore } from '@urql/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
@@ -30,7 +30,7 @@
 	onMount(() => {
 		unsubscribe = products.subscribe((result) => {
 			if (result.error) {
-				error(result.error);
+				handleError(result.error);
 			}
 		});
 	});

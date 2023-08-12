@@ -1,5 +1,5 @@
-query Products {
-  products {
+query Products($searchByName: String) {
+  products(sort: {columns: [{direction: Ascending, name: "name"}]}, searchByName: $searchByName) {
     data {
       id
       name

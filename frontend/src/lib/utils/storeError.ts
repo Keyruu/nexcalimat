@@ -2,8 +2,11 @@ import { goto } from "$app/navigation";
 import { base } from "$app/paths";
 import { toastStore } from "@skeletonlabs/skeleton";
 import type { CombinedError } from "@urql/svelte";
+import { toastError } from "./toastUtils";
 
-export function error(error: CombinedError) {
+import { _ } from 'svelte-i18n';
+import { get } from "svelte/store";
+export function handleError(error: CombinedError) {
   console.error(error);
   if (error.graphQLErrors.length > 0) {
     if (error.graphQLErrors[0].extensions?.code === 'unauthorized') {
@@ -17,10 +20,6 @@ export function error(error: CombinedError) {
 }
 
 function unauthorized() {
-  toastStore.trigger({
-    message: 'You were logged out. Please log in again.',
-    classes: 'text-red-300',
-    background: 'variant-ghost-error'
-  });
+  toastStore.trigger(toastError(get(_)('toast.unauthorized')));
   goto(`${base}/store/accounts`);
 }

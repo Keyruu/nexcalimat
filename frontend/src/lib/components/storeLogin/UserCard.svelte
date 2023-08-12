@@ -14,8 +14,10 @@
 	import { getInitials } from '$lib/utils/accountUtils.js';
 	import { numberCentToEuro } from '$lib/utils/formatEuro';
 	import { getAccountPicture } from '$lib/utils/pictureUtils';
+	import { handleError } from '$lib/utils/storeError';
+	import { toastSuccess } from '$lib/utils/toastUtils';
 	import Icon from '@iconify/svelte';
-	import { Avatar, modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { Avatar, modalStore, toastStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { mutationStore } from '@urql/svelte';
 	import { createEventDispatcher, onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
@@ -73,7 +75,12 @@
 
 		const modal: ModalSettings = {
 			type: 'component',
-			response: (r: boolean) => console.log('response:', r),
+			response: (r: boolean) => {
+				if (r) {
+					toastStore.trigger(toastSuccess($_('toast.balance.success')));
+					dispatch('refetch');
+				}
+			},
 			component: modalComponent
 		};
 		modalStore.trigger(modal);
@@ -85,12 +92,18 @@
 			// Data
 			title: $_('admin.delete-account-modal.title'),
 			body: $_('admin.delete-account-modal.body'),
+			buttonTextCancel: $_('cancel'),
+			buttonTextConfirm: $_('confirm'),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => {
 				if (r) {
 					deleteAccountUnsubscribe = deleteAccount().subscribe(({ data, error }) => {
 						if (data?.deleteAccount) {
 							console.log('Account deleted');
+							toastStore.trigger(toastSuccess($_('toast.delete-account.success')));
+							dispatch('refetch');
+						} else if (error) {
+							handleError(error);
 						}
 					});
 				}
@@ -104,12 +117,18 @@
 			// Data
 			title: $_('admin.reactivate-account-modal.title'),
 			body: $_('admin.reactivate-account-modal.body'),
+			buttonTextCancel: $_('cancel'),
+			buttonTextConfirm: $_('confirm'),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => {
 				if (r) {
 					reactiveAccountUnsubscribe = reactiveAccount().subscribe(({ data, error }) => {
 						if (data?.reactivateAccount) {
 							console.log('Account reactivated');
+							toastStore.trigger(toastSuccess($_('toast.reactivate-account.success')));
+							dispatch('refetch');
+						} else if (error) {
+							handleError(error);
 						}
 					});
 				}
@@ -123,12 +142,18 @@
 			// Data
 			title: $_('admin.erase-account-modal.title'),
 			body: $_('admin.erase-account-modal.body'),
+			buttonTextCancel: $_('cancel'),
+			buttonTextConfirm: $_('confirm'),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => {
 				if (r) {
 					eraseAccountUnsubscribe = eraseAccount().subscribe(({ data, error }) => {
 						if (data?.eraseAccount) {
 							console.log('Account erased');
+							toastStore.trigger(toastSuccess($_('toast.erase-account.success')));
+							dispatch('refetch');
+						} else if (error) {
+							handleError(error);
 						}
 					});
 				}
