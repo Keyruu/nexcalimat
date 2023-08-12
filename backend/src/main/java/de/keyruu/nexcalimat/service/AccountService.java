@@ -51,20 +51,21 @@ public class AccountService
 	{
 		String query = "deletedAt IS NULL";
 		PanacheQuery<Account> panacheQuery;
-
+		long count;
 		if (searchByName.isPresent())
 		{
 			query += " AND LOWER(name) LIKE :name";
 			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
 
-			panacheQuery = _accountRepo.find(query, parameters, mapper.getSort());
+			panacheQuery = _accountRepo.find(query, mapper.getSort(), parameters);
+			count = _accountRepo.count(query, parameters);
 		}
 		else
 		{
 			panacheQuery = _accountRepo.find(query, mapper.getSort());
+			count = _accountRepo.count(query);
 		}
 		List<Account> activeAccounts = panacheQuery.page(mapper.getPage()).list();
-		long count = _accountRepo.count(query);
 		return new PaginationResponse<>(activeAccounts, count, mapper);
 	}
 

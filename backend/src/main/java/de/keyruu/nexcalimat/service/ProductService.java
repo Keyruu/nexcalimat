@@ -34,20 +34,23 @@ public class ProductService
 	{
 		String query = "deletedAt IS NULL";
 		PanacheQuery<Product> panacheQuery;
+		long count;
 		if (searchByName.isPresent())
 		{
 			query += " AND LOWER(name) LIKE :name";
 			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
 
-			panacheQuery = _productRepository.find(query, parameters, mapper.getSort());
+			panacheQuery = _productRepository.find(query, mapper.getSort(), parameters);
+			count = _productRepository.count(query, parameters);
 		}
 		else
 		{
 			panacheQuery = _productRepository.find(query, mapper.getSort());
+			count = _productRepository.count(query);
 		}
 		List<Product> products = panacheQuery
 			.page(mapper.getPage()).list();
-		long count = _productRepository.count(query);
+
 		return new PaginationResponse<>(products, count, mapper);
 	}
 
