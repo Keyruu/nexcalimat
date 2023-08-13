@@ -33,7 +33,7 @@
 	<div class="flex flex-row items-center">
 		<SearchField on:search="{(search) => (searchByName = search.detail)}" />
 		<span class="divider-vertical h-8 ml-6 mr-6"></span>
-		<button class="btn variant-filled"><Icon icon="fa-solid:plus" />&nbsp;Create Product</button>
+		<a class="btn variant-filled" href="/admin/products/add"><Icon icon="fa-solid:plus" />&nbsp;Create Product</a>
 	</div>
 	{#if $products.data?.products?.data && $products.data.products.data.length > 0}
 		<Products products="{$products.data.products.data}" on:refetch="{refetch}" />

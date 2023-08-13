@@ -1,3 +1,4 @@
-import { writable } from 'svelte/store';
+import { localStorageStore } from '@skeletonlabs/skeleton';
+import type { Writable } from 'svelte/store';
 
-export const authHeader = writable<string | undefined>(undefined);
+export const authHeader: Writable<string | undefined> = localStorageStore('authHeader', undefined);

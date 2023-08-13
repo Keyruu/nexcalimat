@@ -1,0 +1,10 @@
+query ProductById($id: BigInteger) {
+	product(id: $id) {
+		id
+		name
+		price
+		type
+		picture
+		bundleSize
+	}
+}

@@ -330,7 +330,7 @@ export type Query = {
   productsWithFavorites?: Maybe<PaginationResponse_ProductWithFavorite>;
   /** Get Purchase by ID */
   purchase?: Maybe<Purchase>;
-  /** Get purchase counts for all bought products of the lasPt month */
+  /** Get purchase counts for all bought products of the last month */
   purchaseCountsLastMonth?: Maybe<Array<Maybe<ProductPurchaseCount>>>;
   /** Get all Purchases */
   purchases?: Maybe<PaginationResponse_Purchase>;
@@ -450,6 +450,13 @@ export type AccountsQueryVariables = Exact<{
 
 export type AccountsQuery = { __typename?: 'Query', accounts?: { __typename?: 'PaginationResponse_Account', page: number, total: number, data?: Array<{ __typename?: 'Account', id?: number | null, name?: string | null, email?: string | null, balance?: number | null, picture?: string | null, extId?: string | null } | null> | null } | null };
 
+export type CreateProductMutationVariables = Exact<{
+  product?: InputMaybe<ProductInput>;
+}>;
+
+
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct?: { __typename?: 'Product', id?: number | null } | null };
+
 export type DeleteAccountMutationVariables = Exact<{
   id: Scalars['BigInteger']['input'];
 }>;
@@ -503,6 +510,13 @@ export type PinLoginQueryVariables = Exact<{
 
 export type PinLoginQuery = { __typename?: 'Query', pinLogin?: string | null };
 
+export type ProductByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+}>;
+
+
+export type ProductByIdQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, bundleSize?: number | null } | null };
+
 export type ProductByIdWithFavoriteQueryVariables = Exact<{
   id?: InputMaybe<Scalars['BigInteger']['input']>;
 }>;
@@ -515,7 +529,7 @@ export type ProductsQueryVariables = Exact<{
 }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null } | null> | null } | null };
+export type ProductsQuery = { __typename?: 'Query', products?: { __typename?: 'PaginationResponse_Product', data?: Array<{ __typename?: 'Product', id?: number | null, name?: string | null, price?: number | null, type?: ProductType | null, picture?: string | null, bundleSize?: number | null } | null> | null } | null };
 
 export type ProductsWithFavoritesQueryVariables = Exact<{
   type?: InputMaybe<ProductType>;
@@ -572,6 +586,13 @@ export type UpdateBalanceMutationVariables = Exact<{
 
 export type UpdateBalanceMutation = { __typename?: 'Mutation', updateAccount?: { __typename?: 'Account', balance?: number | null } | null };
 
+export type UpdateProductMutationVariables = Exact<{
+  product?: InputMaybe<ProductInput>;
+}>;
+
+
+export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', id?: number | null } | null };
+
 
 export const AccountByIdDocument = gql`
     query AccountById($id: BigInteger) {
@@ -598,6 +619,13 @@ export const AccountsDocument = gql`
     }
     page
     total
+  }
+}
+    `;
+export const CreateProductDocument = gql`
+    mutation CreateProduct($product: ProductInput) {
+  createProduct(product: $product) {
+    id
   }
 }
     `;
@@ -687,6 +715,18 @@ export const PinLoginDocument = gql`
   pinLogin(login: $login)
 }
     `;
+export const ProductByIdDocument = gql`
+    query ProductById($id: BigInteger) {
+  product(id: $id) {
+    id
+    name
+    price
+    type
+    picture
+    bundleSize
+  }
+}
+    `;
 export const ProductByIdWithFavoriteDocument = gql`
     query ProductByIdWithFavorite($id: BigInteger) {
   productWithFavorite(id: $id) {
@@ -711,6 +751,7 @@ export const ProductsDocument = gql`
       price
       type
       picture
+      bundleSize
     }
   }
 }
@@ -777,6 +818,13 @@ export const UpdateBalanceDocument = gql`
     mutation UpdateBalance($id: BigInteger!, $balance: BigInteger!) {
   updateAccount(account: {id: $id, balance: $balance}) {
     balance
+  }
+}
+    `;
+export const UpdateProductDocument = gql`
+    mutation UpdateProduct($product: ProductInput) {
+  updateProduct(product: $product) {
+    id
   }
 }
     `;

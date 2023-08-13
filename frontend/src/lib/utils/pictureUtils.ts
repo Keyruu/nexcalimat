@@ -42,13 +42,22 @@ export async function uploadMyAccountImage(file: File) {
   });
 }
 
-export async function uploadProductImage(file: File, product: Product) {
+export async function uploadProductImage(file: File, product: Product): Promise<Response> {
   const formData = getFormData(file);
-  await fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/account/${product.id}`, {
+  return fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/product/${product.id}`, {
     method: 'POST',
     headers: {
       Authorization: get(authHeader)!
     },
     body: formData
+  });
+}
+
+export async function deleteProductImage(product: Product): Promise<Response> {
+  return fetch(`${env.PUBLIC_BACKEND_URL}/api/v1/picture/product/${product.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: get(authHeader)!
+    }
   });
 }

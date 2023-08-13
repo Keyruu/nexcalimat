@@ -4,6 +4,7 @@ import { toastStore } from "@skeletonlabs/skeleton";
 import type { CombinedError } from "@urql/svelte";
 import { toastError } from "./toastUtils";
 
+import { page } from "$app/stores";
 import { _ } from 'svelte-i18n';
 import { get } from "svelte/store";
 export function handleError(error: CombinedError) {
@@ -20,6 +21,8 @@ export function handleError(error: CombinedError) {
 }
 
 function unauthorized() {
-  toastStore.trigger(toastError(get(_)('toast.unauthorized')));
-  goto(`${base}/store/accounts`);
+  if (get(page).route.id?.startsWith('/store')) {
+    toastStore.trigger(toastError(get(_)('toast.unauthorized')));
+    goto(`${base}/store/accounts`);
+  }
 }

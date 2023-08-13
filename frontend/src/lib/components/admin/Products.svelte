@@ -9,7 +9,7 @@
 <Grid>
 	{#each products as product}
 		{#if product}
-			<ProductComponent {product} />
+			<ProductComponent {product} adminMode />
 		{/if}
 	{/each}
 </Grid>

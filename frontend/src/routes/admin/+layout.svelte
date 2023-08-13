@@ -29,7 +29,7 @@
 		<TabAnchor href="/admin/accounts" selected="{$page.route.id === '/admin/accounts'}" class="unstyled">
 			{$_('admin.accounts')}
 		</TabAnchor>
-		<TabAnchor href="/admin/products" selected="{$page.route.id === '/admin/products'}" class="unstyled">
+		<TabAnchor href="/admin/products" selected="{$page.route.id?.startsWith('/admin/products')}" class="unstyled">
 			{$_('admin.products')}
 		</TabAnchor>
 	{/if}
