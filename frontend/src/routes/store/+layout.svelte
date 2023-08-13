@@ -47,7 +47,7 @@
 	}
 
 	onDestroy(() => {
-		authHeader.set(undefined);
+		authHeader.set('');
 	});
 </script>
 

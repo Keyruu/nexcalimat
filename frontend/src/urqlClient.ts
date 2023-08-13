@@ -9,7 +9,7 @@ export const client = new Client({
   fetchOptions: () => {
     const header = get(authHeader);
     return {
-      headers: { authorization: header || '' },
+      headers: { authorization: header },
     };
   },
 });

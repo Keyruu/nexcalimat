@@ -8,8 +8,7 @@
 	import { getContextClient, queryStore } from '@urql/svelte';
 	import { _ } from 'svelte-i18n';
 
-	localStorage.setItem('authHeader', '');
-	authHeader.set(undefined);
+	authHeader.set('');
 
 	const accounts = queryStore<AccountsQuery>({
 		client: getContextClient(),

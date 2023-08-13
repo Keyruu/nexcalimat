@@ -61,7 +61,7 @@
 			if (result.data?.makePurchase) {
 				console.log(result.data?.makePurchase);
 				toastStore.trigger(toastSuccess($_('toast.purchase.success')));
-				authHeader.set(undefined);
+				authHeader.set('');
 				goto(`${base}/store/accounts`);
 			} else if (result.error) {
 				handleError(result.error);
