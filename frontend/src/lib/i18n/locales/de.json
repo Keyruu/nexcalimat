@@ -50,11 +50,39 @@
 			"title": "Account endgültig löschen",
 			"body": "Sind Sie sicher, dass Sie diesen Account endgültig löschen wollen? Dies kann nicht rückgängig gemacht werden!"
 		},
-		"archived": "Archiviert"
+		"archived": "Archiviert",
+		"image": {
+			"upload-failed": "Hochladen des Bildes fehlgeschlagen.",
+			"too-large": "Das Bild ist zu groß."
+		},
+		"product": {
+			"create": "Produkt erstellen"
+		},
+		"product-form": {
+			"edit-title": "Produkt bearbeiten",
+			"add-title": "Produkt hinzufügen",
+			"file-dropzone": {
+				"message": "Ziehe ein Bild hierhin, oder klicke um eines auszuwählen.",
+				"meta": "Nur PNG und JPG, max. 2000x2000px"
+			},
+			"new-image": "Neues Bild",
+			"name": "Name",
+			"type": "Typ",
+			"hot-drink": "Heißgetränk",
+			"cold-drink": "Kaltgetränk",
+			"price": "Preis",
+			"price-placeholder": "0,60",
+			"bundle-size": "Kastengröße"
+		},
+		"archive-product-modal": {
+			"title": "Produkt archivieren",
+			"body": "Sind Sie sicher, dass Sie dieses Produkt archivieren wollen?"
+		}
 	},
 	"forbidden": "Sie haben keine Berechtigung auf dies zuzugreifen!",
 	"confirm": "Bestätigen",
 	"cancel": "Abbrechen",
+	"save": "Speichern",
 	"toast": {
 		"purchase": {
 			"success": "Produkt erfolgreich gekauft."
@@ -77,6 +105,9 @@
 		},
 		"reactivate-account": {
 			"success": "Account wurde reaktiviert."
+		},
+		"delete-product": {
+			"success": "Produkt wurde archiviert."
 		}
 	}
 }

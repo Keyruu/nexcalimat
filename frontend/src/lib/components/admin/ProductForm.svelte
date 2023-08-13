@@ -18,6 +18,7 @@
 	import { FileDropzone, toastStore } from '@skeletonlabs/skeleton';
 	import { mutationStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
+	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
 	import { client } from '../../../urqlClient';
 
@@ -50,7 +51,6 @@
 	let deleteOldImage = false;
 
 	async function setFile(e: Event) {
-		console.log('file data:', e);
 		const target = e.target as HTMLInputElement;
 		if (target.files && target.files.length > 0) {
 			newImageFile = target.files![0];
@@ -59,7 +59,7 @@
 				newImage.src = e.target!.result as string;
 				newImage.onload = () => {
 					if (newImage.width > 2000 || newImage.height > 2000) {
-						toastStore.trigger(toastError('Image too big, max 2000x2000'));
+						toastStore.trigger(toastError($_('admin.image.too-large')));
 						newImageFile = undefined;
 						newImage = new Image();
 					}
@@ -104,14 +104,16 @@
 		if (newImageFile) {
 			const res = await uploadProductImage(newImageFile, product);
 			if (res.status === 201) {
-				console.log(res);
 				productSaved();
+			} else {
+				toastStore.trigger(toastError($_('admin.image.upload-failed')));
 			}
 		} else if (deleteOldImage) {
 			const res = await deleteProductImage(product);
 			if (res.status === 204) {
-				console.log(res);
 				productSaved();
+			} else {
+				toastStore.trigger(toastError($_('admin.image.upload-failed')));
 			}
 		} else {
 			productSaved();
@@ -119,7 +121,7 @@
 	}
 
 	function productSaved() {
-		toastStore.trigger(toastSuccess('Product saved'));
+		toastStore.trigger(toastSuccess($_('admin.product-form.save')));
 		goto('/admin/products');
 	}
 
@@ -136,7 +138,7 @@
 
 <form on:submit="{saveProduct}" class="flex justify-center items-center flex-col">
 	{#if productBind}
-		<h2 class="my-4">{editMode ? 'Edit Product' : 'Add Product'}</h2>
+		<h2 class="my-4">{editMode ? $_('admin.product-form.edit-title') : $_('admin.product-form.add-title')}</h2>
 
 		<div class="my-2 flex flex-row">
 			<div class="flex-shrink-0 relative">
@@ -158,52 +160,61 @@
 					alt="Product"
 				/>
 			</div>
-			<FileDropzone name="files" on:change="{setFile}" />
+			<FileDropzone name="files" on:change="{setFile}">
+				<svelte:fragment slot="message">{$_('admin.product-form.file-dropzone.message')}</svelte:fragment>
+				<svelte:fragment slot="meta">{$_('admin.product-form.file-dropzone.meta')}</svelte:fragment>
+			</FileDropzone>
 		</div>
 		{#if newImageFile}
-			<p>New Image: {newImageFile.name}</p>
+			<p>{$_('admin.product-form.new-image')}: {newImageFile.name}</p>
 			<button on:click="{clearNewImage}" class="btn variant-filled-surface">Clear</button>
 		{/if}
 		<hr class="w-[30rem] my-4" />
 
 		<div class="w-72">
 			<label class="label my-2">
-				<span>Name</span>
-				<input required class="input" type="text" placeholder="Input" bind:value="{productBind['name']}" />
+				<span>{$_('admin.product-form.name')}</span>
+				<input required class="input" type="text" placeholder="Spezi" bind:value="{productBind['name']}" />
 			</label>
 
 			<label class="label my-2">
-				<span>Type</span>
+				<span>{$_('admin.product-form.type')}</span>
 				<select class="select" required bind:value="{productBind['type']}">
-					<option value="{ProductType.HotDrink}">Hot drink</option>
-					<option value="{ProductType.ColdDrink}">Cold drink</option>
+					<option value="{ProductType.HotDrink}">{$_('admin.product-form.hot-drink')}</option>
+					<option value="{ProductType.ColdDrink}">{$_('admin.product-form.cold-drink')}</option>
 				</select>
 			</label>
 
 			<label class="label my-2">
-				<span>Price</span>
+				<span>{$_('admin.product-form.price')}</span>
 				<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
-					<input type="number" placeholder="Price" step=".01" min="0" bind:value="{productBind['price']}" />
+					<input
+						type="number"
+						placeholder="{$_('admin.product-form.price-placeholder')}"
+						step=".01"
+						min="0"
+						bind:value="{productBind['price']}"
+					/>
 					<div class="input-group-shim"><Icon icon="fa6-solid:euro-sign" /></div>
 				</div>
 			</label>
 
 			{#if productBind.type === ProductType.ColdDrink}
 				<label class="label my-2">
-					<span>Bundle size</span>
+					<span>{$_('admin.product-form.bundle-size')}</span>
 					<input
 						class="input"
 						type="number"
 						min="0"
 						max="30"
-						placeholder="Input"
+						placeholder="12"
 						bind:value="{productBind['bundleSize']}"
 					/>
 				</label>
 			{/if}
 			<div class="flex my-2">
-				<a href="/admin/products" class="btn variant-filled-error">Cancel</a>
-				<button class="btn variant-filled-success ml-auto" type="submit">Save</button>
+				<a href="/admin/products" class="btn variant-filled-error">{$_('cancel')}</a>
+				<button class="btn variant-filled-success ml-auto" type="submit">{$_('save')}</button>
 			</div>
 		</div>
 	{/if}

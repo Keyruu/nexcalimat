@@ -111,6 +111,7 @@
 		};
 		modalStore.trigger(modal);
 	}
+
 	function triggerReactivationModal() {
 		const modal: ModalSettings = {
 			type: 'confirm',
@@ -136,6 +137,7 @@
 		};
 		modalStore.trigger(modal);
 	}
+
 	function triggerErasingModal() {
 		const modal: ModalSettings = {
 			type: 'confirm',

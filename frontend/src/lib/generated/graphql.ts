@@ -464,6 +464,13 @@ export type DeleteAccountMutationVariables = Exact<{
 
 export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount?: boolean | null };
 
+export type DeleteProductMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+}>;
+
+
+export type DeleteProductMutation = { __typename?: 'Mutation', deleteProduct?: boolean | null };
+
 export type DeletedAccountsQueryVariables = Exact<{
   sort: SortPojoInput;
 }>;
@@ -632,6 +639,11 @@ export const CreateProductDocument = gql`
 export const DeleteAccountDocument = gql`
     mutation DeleteAccount($id: BigInteger!) {
   deleteAccount(id: $id)
+}
+    `;
+export const DeleteProductDocument = gql`
+    mutation DeleteProduct($id: BigInteger) {
+  deleteProduct(id: $id)
 }
     `;
 export const DeletedAccountsDocument = gql`

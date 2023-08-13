@@ -4,6 +4,7 @@
 	import { ProductsDocument, type ProductsQuery, type ProductsQueryVariables } from '$lib/generated/graphql';
 	import Icon from '@iconify/svelte';
 	import { queryStore, type OperationResultStore, type QueryArgs } from '@urql/svelte';
+	import { _ } from 'svelte-i18n';
 	import { client } from '../../../urqlClient';
 
 	let searchByName = '';
@@ -33,7 +34,9 @@
 	<div class="flex flex-row items-center">
 		<SearchField on:search="{(search) => (searchByName = search.detail)}" />
 		<span class="divider-vertical h-8 ml-6 mr-6"></span>
-		<a class="btn variant-filled" href="/admin/products/add"><Icon icon="fa-solid:plus" />&nbsp;Create Product</a>
+		<a class="btn variant-filled" href="/admin/products/add"
+			><Icon icon="fa-solid:plus" />&nbsp;{$_('admin.product.create')}</a
+		>
 	</div>
 	{#if $products.data?.products?.data && $products.data.products.data.length > 0}
 		<Products products="{$products.data.products.data}" on:refetch="{refetch}" />

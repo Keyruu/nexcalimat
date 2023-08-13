@@ -50,11 +50,39 @@
 			"title": "Erase account",
 			"body": "Are you sure you want to erase this account? This is irreversible!"
 		},
-		"archived": "Archived"
+		"archived": "Archived",
+		"image": {
+			"upload-failed": "Image upload failed.",
+			"too-large": "Image is too large."
+		},
+		"product": {
+			"create": "Create Product"
+		},
+		"product-form": {
+			"edit-title": "Edit Product",
+			"add-title": "Add Product",
+			"file-dropzone": {
+				"message": "Upload an image via drag and drop or click here.",
+				"meta": "PNG and JPG only, max. 2000x2000px"
+			},
+			"new-image": "New Image",
+			"name": "Name",
+			"type": "Type",
+			"hot-drink": "Hot Drink",
+			"cold-drink": "Cold Drink",
+			"price": "Price",
+			"price-placeholder": "0.60",
+			"bundle-size": "Bundle Size"
+		},
+		"archive-product-modal": {
+			"title": "Archive product",
+			"body": "Are you sure you want to archive this product?"
+		}
 	},
 	"forbidden": "You are not allowed to access this!",
 	"confirm": "Confirm",
 	"cancel": "Cancel",
+	"save": "Save",
 	"toast": {
 		"purchase": {
 			"success": "Purchase was refunded."
