@@ -43,13 +43,13 @@ public class ProductResource
 	@Inject
 	JwtUtils _jwtUtils;
 
- 	@Query
- 	@Description("Get all Products")
- 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
- 	public PaginationResponse<Product> products(Optional<PagePojo> page, Optional<SortPojo> sort, Optional<String> searchByName)
- 	{
- 		return _productService.listAll(Mapper.map(page, sort), searchByName);
- 	}
+	@Query
+	@Description("Get all Products")
+	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
+	public PaginationResponse<Product> products(Optional<PagePojo> page, Optional<SortPojo> sort, Optional<String> searchByName)
+	{
+		return _productService.listAll(Mapper.map(page, sort), searchByName);
+	}
 
 	@Query
 	@Description("Get all Products with Favorites")
