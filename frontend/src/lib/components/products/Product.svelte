@@ -14,7 +14,7 @@
 	import Icon from '@iconify/svelte';
 	import { modalStore, toastStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { mutationStore } from '@urql/svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
 	import { client } from '../../../urqlClient';
@@ -58,6 +58,10 @@
 		};
 		modalStore.trigger(modal);
 	}
+
+	onDestroy(() => {
+		archiveProductUnsubscribe?.();
+	});
 </script>
 
 <div

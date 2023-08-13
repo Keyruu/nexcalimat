@@ -108,6 +108,9 @@
 		},
 		"delete-product": {
 			"success": "Produkt wurde archiviert."
+		},
+		"product-save": {
+			"success": "Product wurde gespeichert."
 		}
 	}
 }

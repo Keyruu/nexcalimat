@@ -121,7 +121,7 @@
 	}
 
 	function productSaved() {
-		toastStore.trigger(toastSuccess($_('admin.product-form.save')));
+		toastStore.trigger(toastSuccess($_('toast.product-save.success')));
 		goto('/admin/products');
 	}
 

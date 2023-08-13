@@ -105,6 +105,12 @@
 		},
 		"reactivate-account": {
 			"success": "Account was reactivated."
+		},
+		"delete-product": {
+			"success": "Product was archived."
+		},
+		"product-save": {
+			"success": "Product was saved."
 		}
 	}
 }
