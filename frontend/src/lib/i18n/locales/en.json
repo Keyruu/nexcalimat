@@ -85,7 +85,7 @@
 	"save": "Save",
 	"toast": {
 		"purchase": {
-			"success": "Purchase was refunded."
+			"success": "Purchase was successful."
 		},
 		"refunded": {
 			"success": "Purchase was refunded."
