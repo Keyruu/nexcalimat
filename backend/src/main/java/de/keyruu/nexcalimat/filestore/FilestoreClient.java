@@ -46,25 +46,6 @@ public class FilestoreClient
 		ensureBucketExists();
 	}
 
-	public ResponseInputStream<GetObjectResponse> getFile(String objectKey)
-	{
-		if (!_bucketExists)
-		{
-			ensureBucketExists();
-		}
-
-		try
-		{
-			GetObjectRequest getRequest = buildGetRequest(objectKey);
-			return _s3.getObject(getRequest);
-		}
-		catch (NoSuchKeyException ex)
-		{
-			LOG.error(ex.getMessage());
-			throw new NotFoundException(ex);
-		}
-	}
-
 	public String uploadFile(FileFormData formData, String prefix, Long id) throws IOException
 	{
 		if (!_bucketExists)
@@ -92,14 +73,6 @@ public class FilestoreClient
 
 		DeleteObjectRequest deleteRequest = buildDeleteRequest(objectKey);
 		_s3.deleteObject(deleteRequest);
-	}
-
-	private GetObjectRequest buildGetRequest(String objectKey)
-	{
-		return GetObjectRequest.builder()
-			.bucket(_bucketName)
-			.key(objectKey)
-			.build();
 	}
 
 	private PutObjectRequest buildPutRequest(String objectKey, String mimetype)

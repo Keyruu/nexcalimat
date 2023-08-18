@@ -27,9 +27,6 @@ import de.keyruu.nexcalimat.service.ProductService;
 public class PictureResource
 {
 	@Inject
-	FilestoreClient _filestoreClient;
-
-	@Inject
 	AccountService _accountService;
 
 	@Inject
