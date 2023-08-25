@@ -29,6 +29,7 @@
 
 	const urqlClient = getContextClient();
 
+	localStorage.removeItem('authHeader')
 	authHeader.set('');
 
 	const account = queryStore<AccountByIdQuery, AccountByIdQueryVariables>({
@@ -36,6 +37,13 @@
 		query: AccountByIdDocument,
 		variables: {
 			id: Number($page.params.accountId)
+		},
+		context: {
+			fetchOptions: {
+				headers: {
+					Authorization: "",
+				}
+			}
 		}
 	});
 
