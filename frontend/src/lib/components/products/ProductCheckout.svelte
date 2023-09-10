@@ -18,15 +18,16 @@
 	import { toastSuccess } from '$lib/utils/toastUtils';
 	import Icon from '@iconify/svelte';
 	import { toastStore } from '@skeletonlabs/skeleton';
-	import { getContextClient, mutationStore } from '@urql/svelte';
+	import { mutationStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
+	import {storeClient} from "../../../urqlClient";
 
 	export let product: ProductWithFavorite;
 	export let amount: number;
 
-	const client = getContextClient();
+	const client = storeClient;
 	const toggleFavorite = () =>
 		mutationStore<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>({
 			client,
