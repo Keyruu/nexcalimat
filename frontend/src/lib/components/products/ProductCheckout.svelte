@@ -11,7 +11,7 @@
 		type ToggleFavoriteMutation,
 		type ToggleFavoriteMutationVariables
 	} from '$lib/generated/graphql';
-	import { authHeader } from '$lib/stores/authHeader';
+	import {pinHeader} from '$lib/stores/authHeader';
 	import { centToEuro } from '$lib/utils/formatEuro';
 	import { getProductPicture } from '$lib/utils/pictureUtils';
 	import { handleError } from '$lib/utils/storeError';
@@ -59,10 +59,8 @@
 	function checkout() {
 		makePurchaseUnsubscribe = makePurchase().subscribe((result) => {
 			if (result.data?.makePurchase) {
-				console.log(result.data?.makePurchase);
 				toastStore.trigger(toastSuccess($_('toast.purchase.success')));
-				localStorage.removeItem('authHeader')
-				authHeader.set('');
+				pinHeader.set(null);
 				goto(`${base}/store/accounts`);
 			} else if (result.error) {
 				handleError(result.error);

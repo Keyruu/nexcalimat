@@ -14,10 +14,10 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
-	import { client } from '../../../../../urqlClient';
+	import {storeClient} from '../../../../../urqlClient';
 
 	const queryOptions = {
-		client,
+		client: storeClient,
 		query: MyPurchasesDocument
 	};
 
@@ -32,7 +32,7 @@
 
 	const refund = (id: number) =>
 		mutationStore<RefundMutation, RefundMutationVariables>({
-			client,
+			client: storeClient,
 			query: RefundDocument,
 			variables: {
 				id: id

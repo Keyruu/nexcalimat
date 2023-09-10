@@ -7,12 +7,12 @@
 		type ProductByIdWithFavoriteQueryVariables
 	} from '$lib/generated/graphql';
 	import { handleError } from '$lib/utils/storeError';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { queryStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
+	import {storeClient} from "../../../../../../urqlClient";
 
-	const client = getContextClient();
 	const product = queryStore<ProductByIdWithFavoriteQuery, ProductByIdWithFavoriteQueryVariables>({
-		client,
+		client: storeClient,
 		query: ProductByIdWithFavoriteDocument,
 		variables: {
 			id: Number($page.params.productId)

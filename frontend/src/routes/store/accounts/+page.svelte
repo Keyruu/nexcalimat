@@ -3,16 +3,16 @@
     import Alert from '$lib/components/alerts/Alert.svelte';
     import UserCard from '$lib/components/storeLogin/UserCard.svelte';
     import {AccountsDocument, type AccountsQuery} from '$lib/generated/graphql';
-    import {authHeader} from '$lib/stores/authHeader';
+    import {pinHeader} from '$lib/stores/authHeader';
     import {AlertType} from '$lib/types/AlertType';
-    import {getContextClient, queryStore} from '@urql/svelte';
+    import {queryStore} from '@urql/svelte';
     import {_} from 'svelte-i18n';
+    import {storeClient} from "../../../urqlClient";
 
-    localStorage.removeItem('authHeader')
-    authHeader.set('');
+    pinHeader.set(null);
 
     const accounts = queryStore<AccountsQuery>({
-        client: getContextClient(),
+        client: storeClient,
         query: AccountsDocument,
         context: {
             fetchOptions: {

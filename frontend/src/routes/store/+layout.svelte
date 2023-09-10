@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { authHeader } from '$lib/stores/authHeader';
+	import { pinHeader } from '$lib/stores/authHeader';
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import type { URL } from 'url';
@@ -47,7 +47,7 @@
 	}
 
 	onDestroy(() => {
-		authHeader.set('');
+		pinHeader.set(null);
 	});
 </script>
 

@@ -12,25 +12,25 @@
 		type PinLoginQuery,
 		type PinLoginQueryVariables
 	} from '$lib/generated/graphql';
-	import { authHeader } from '$lib/stores/authHeader';
+	import {pinHeader} from '$lib/stores/authHeader';
 	import { AlertType } from '$lib/types/AlertType';
 	import { getInitials } from '$lib/utils/accountUtils';
 	import { getAccountPicture } from '$lib/utils/pictureUtils';
 	import { Avatar } from '@skeletonlabs/skeleton';
-	import { getContextClient, queryStore } from '@urql/svelte';
+	import { queryStore } from '@urql/svelte';
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import type { Unsubscriber } from 'svelte/store';
+	import {storeClient} from "../../../../urqlClient";
 
 	let pin: string;
 
 	let triggerSuccess: () => void;
 	let triggerMiss: () => void;
 
-	const urqlClient = getContextClient();
+	const urqlClient = storeClient;
 
-	localStorage.removeItem('authHeader')
-	authHeader.set('');
+	pinHeader.set(null);
 
 	const account = queryStore<AccountByIdQuery, AccountByIdQueryVariables>({
 		client: urqlClient,
@@ -68,8 +68,7 @@
 			if (result.fetching === false && result.data?.pinLogin) {
 				const token = result.data.pinLogin;
 				console.log(result);
-				localStorage.setItem('authHeader', `PIN ${token}`);
-				authHeader.set(`PIN ${token}`);
+				pinHeader.set(token);
 				triggerSuccess();
 				goToFunctionPage();
 			} else if (result.error) {

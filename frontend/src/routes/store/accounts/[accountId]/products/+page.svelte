@@ -9,16 +9,17 @@
 		type ProductsWithFavoritesQueryVariables
 	} from '$lib/generated/graphql';
 	import { handleError } from '$lib/utils/storeError';
-	import { getContextClient, queryStore, type OperationResultStore } from '@urql/svelte';
+	import { queryStore, type OperationResultStore } from '@urql/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
+	import {storeClient} from "../../../../../urqlClient";
 
 	let typeFilter: ProductType | undefined;
 
 	let products: OperationResultStore<ProductsWithFavoritesQuery, ProductsWithFavoritesQueryVariables>;
 
 	$: products = queryStore<ProductsWithFavoritesQuery, ProductsWithFavoritesQueryVariables>({
-		client: getContextClient(),
+		client: storeClient,
 		query: ProductsWithFavoritesDocument,
 		variables: {
 			type: typeFilter
