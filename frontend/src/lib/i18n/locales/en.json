@@ -1,7 +1,7 @@
 {
 	"homepage": {
 		"store-login": "Store",
-		"admin-login": "Admin"
+		"admin-login": "Setup"
 	},
 	"header": {
 		"setpin": "Set PIN",
