@@ -22,7 +22,7 @@ import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
-public class NexcalimatTest
+public abstract class NexcalimatTest
 {
 	protected Account dubinsky = TestUtils.dubinsky();
 	protected Account hai = TestUtils.hai();

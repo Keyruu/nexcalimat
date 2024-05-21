@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import de.keyruu.nexcalimat.graphql.exception.PinValidationException;
 
-public class AccountServiceTests
+class AccountServiceTests
 {
 	@ParameterizedTest
 	@ValueSource(strings = { "1234", "0123", "6969" })

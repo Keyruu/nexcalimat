@@ -13,10 +13,10 @@ import io.quarkus.test.oidc.server.OidcWiremockTestResource;
 
 @QuarkusTest
 @QuarkusTestResource(OidcWiremockTestResource.class)
-public class PictureResourceTests extends NexcalimatTest
+class PictureResourceTests extends NexcalimatTest
 {
 	@Test
-	public void updateAccountPicture()
+	void updateAccountPicture()
 	{
 		given()
 			.when()
@@ -29,7 +29,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void updateMyAccountPicture()
+	void updateMyAccountPicture()
 	{
 		given()
 			.when()
@@ -42,7 +42,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void updateOtherAccountPictureAsUser()
+	void updateOtherAccountPictureAsUser()
 	{
 		given()
 			.when()
@@ -55,7 +55,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void updateProductPicture()
+	void updateProductPicture()
 	{
 		given()
 			.when()
@@ -68,7 +68,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void deleteAccountPicture()
+	void deleteAccountPicture()
 	{
 		given()
 			.when()
@@ -88,7 +88,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void deleteAccountPictureAdmin()
+	void deleteAccountPictureAdmin()
 	{
 		given()
 			.when()
@@ -108,7 +108,7 @@ public class PictureResourceTests extends NexcalimatTest
 	}
 
 	@Test
-	public void deleteProductPicture()
+	void deleteProductPicture()
 	{
 		given()
 			.when()

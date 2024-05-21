@@ -16,10 +16,10 @@ import jakarta.transaction.Transactional;
 
 @QuarkusTest
 @QuarkusTestResource(OidcWiremockTestResource.class)
-public class AccountResourceTests extends GraphQLTest
+class AccountResourceTests extends GraphQLTest
 {
 	@Test
-	public void testSignUp()
+	void testSignUp()
 	{
 		given()
 			.when()
@@ -35,7 +35,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testAlreadyExisitingSignUp()
+	void testAlreadyExisitingSignUp()
 	{
 		given()
 			.when()
@@ -48,7 +48,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testPinLogin()
+	void testPinLogin()
 	{
 		given()
 			.when()
@@ -60,7 +60,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testWrongPinLogin()
+	void testWrongPinLogin()
 	{
 		given()
 			.when()
@@ -74,7 +74,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testWrongAccountPinLogin()
+	void testWrongAccountPinLogin()
 	{
 		given()
 			.when()
@@ -87,7 +87,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testSetPin()
+	void testSetPin()
 	{
 		given()
 			.when()
@@ -100,7 +100,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testWrongAccountSetPin()
+	void testWrongAccountSetPin()
 	{
 		given()
 			.when()
@@ -113,7 +113,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetAccounts()
+	void testGetAccounts()
 	{
 		given()
 			.when()
@@ -129,7 +129,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testUserDeleteAccount()
+	void testUserDeleteAccount()
 	{
 		given()
 			.when()
@@ -143,7 +143,7 @@ public class AccountResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testAdminDeleteAccount()
+	void testAdminDeleteAccount()
 	{
 		given()
 			.when()
@@ -157,7 +157,7 @@ public class AccountResourceTests extends GraphQLTest
 
 	@Test
 	@Transactional
-	public void testDeletedAccount()
+	void testDeletedAccount()
 	{
 		given()
 			.when()
@@ -175,7 +175,7 @@ public class AccountResourceTests extends GraphQLTest
 
 	@Test
 	@Transactional
-	public void testEraseAccount()
+	void testEraseAccount()
 	{
 		given()
 			.when()
@@ -189,7 +189,7 @@ public class AccountResourceTests extends GraphQLTest
 
 	@Test
 	@Transactional
-	public void testUpdateAccount()
+	void testUpdateAccount()
 	{
 		given()
 			.when()
@@ -206,7 +206,7 @@ public class AccountResourceTests extends GraphQLTest
 
 	@Test
 	@Transactional
-	public void testUpdateWrongAccount()
+	void testUpdateWrongAccount()
 	{
 		given()
 			.when()

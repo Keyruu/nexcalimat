@@ -11,10 +11,10 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.HttpHeaders;
 
 @QuarkusTest
-public class PurchaseResourceTests extends GraphQLTest
+class PurchaseResourceTests extends GraphQLTest
 {
 	@Test
-	public void testMakePurchase()
+	void testMakePurchase()
 	{
 		given()
 			.when()
@@ -29,7 +29,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testRefundYoyo()
+	void testRefundYoyo()
 	{
 		given()
 			.when()
@@ -42,7 +42,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testExpiredRefundPeitsche()
+	void testExpiredRefundPeitsche()
 	{
 		given()
 			.when()
@@ -57,7 +57,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testRefundForWrongPerson()
+	void testRefundForWrongPerson()
 	{
 		given()
 			.when()
@@ -72,7 +72,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetPurchasesForCustomer()
+	void testGetPurchasesForCustomer()
 	{
 		given()
 			.when()
@@ -88,7 +88,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetPurchasesForUser()
+	void testGetPurchasesForUser()
 	{
 		given()
 			.when()
@@ -106,7 +106,7 @@ public class PurchaseResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testAllGetPurchases()
+	void testAllGetPurchases()
 	{
 		given()
 			.when()

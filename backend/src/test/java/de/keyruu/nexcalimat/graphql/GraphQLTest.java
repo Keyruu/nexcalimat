@@ -12,7 +12,7 @@ import org.hamcrest.Matcher;
 
 import de.keyruu.nexcalimat.NexcalimatTest;
 
-public class GraphQLTest extends NexcalimatTest
+public abstract class GraphQLTest extends NexcalimatTest
 {
 	void testOidcGraphQlEndpoint(String idToken, String requestBody, Matcher<String> responseBodyMatcher)
 	{
