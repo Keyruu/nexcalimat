@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.keyruu.nexcalimat</groupId>
 	<artifactId>server</artifactId>
@@ -18,7 +18,7 @@
 		<quarkus.platform.version>3.10.1</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.2.3</surefire-plugin.version>
-		<jacoco.version>0.8.8</jacoco.version>
+		<jacoco.version>0.8.12</jacoco.version>
 	</properties>
 
 	<dependencyManagement>
@@ -183,8 +183,7 @@
 				<configuration>
 					<systemPropertyVariables>
 						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-						<!--suppress
-						UnresolvedMavenProperty -->
+						<!--suppress UnresolvedMavenProperty -->
 						<maven.home>${maven.home}</maven.home>
 					</systemPropertyVariables>
 				</configuration>
@@ -218,8 +217,7 @@
 								<native.image.path>${project.build.directory}/${project.build.finalName}-runner
 								</native.image.path>
 								<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-								<!--suppress
-								UnresolvedMavenProperty -->
+								<!--suppress UnresolvedMavenProperty -->
 								<maven.home>${maven.home}</maven.home>
 							</systemPropertyVariables>
 						</configuration>
@@ -232,16 +230,15 @@
 				<version>${jacoco.version}</version>
 				<executions>
 					<execution>
+						<id>default-prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
+						<configuration>
+							<exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+							<destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
+							<append>true</append>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
