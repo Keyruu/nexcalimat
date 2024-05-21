@@ -37,25 +37,25 @@ public class NexcalimatTest
 	protected Purchase expiredPurchase = TestUtils.purchase(dubinsky, yoyo, 90);
 
 	@Inject
-	AccountService _accountService;
+	AccountService accountService;
 
 	@Inject
-	AccountRepository _accountRepository;
+	AccountRepository accountRepository;
 
 	@Inject
-	ProductRepository _productRepository;
+	ProductRepository productRepository;
 
 	@Inject
-	PurchaseService _purchaseService;
+	PurchaseService purchaseService;
 
 	@Inject
-	PurchaseRepository _purchaseRepository;
+	PurchaseRepository purchaseRepository;
 
 	@Inject
-	FavoriteService _favoriteService;
+	FavoriteService favoriteService;
 
 	@Inject
-	FavoriteRepository _favoriteRepository;
+	FavoriteRepository favoriteRepository;
 
 	protected String getEarlsToken()
 	{
@@ -71,15 +71,15 @@ public class NexcalimatTest
 	@Transactional
 	protected void testData()
 	{
-		_accountRepository.persist(dubinsky, even, hai);
-		_productRepository.persist(peitsche, yoyo, maske);
-		_favoriteService.toggleFavorite(peitsche.getId(), even.getId());
-		_favoriteService.toggleFavorite(maske.getId(), dubinsky.getId());
-		_purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
-		_accountService.deleteById(hai.getId());
-		_purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
-		_purchaseRepository.persist(expiredPurchase);
-		_purchaseRepository.getEntityManager()
+		accountRepository.persist(dubinsky, even, hai);
+		productRepository.persist(peitsche, yoyo, maske);
+		favoriteService.toggleFavorite(peitsche.getId(), even.getId());
+		favoriteService.toggleFavorite(maske.getId(), dubinsky.getId());
+		purchaseRepository.persist(purchase1, purchase2, purchase3, purchase4);
+		accountService.deleteById(hai.getId());
+		purchaseService.refund(purchase4.getId(), purchase4.getAccount().getId());
+		purchaseRepository.persist(expiredPurchase);
+		purchaseRepository.getEntityManager()
 			.createNativeQuery("UPDATE purchase SET created_at = :created WHERE id = :id")
 			.setParameter("created", LocalDateTime.now().minusMinutes(10))
 			.setParameter("id", expiredPurchase.getId())
@@ -90,10 +90,10 @@ public class NexcalimatTest
 	@Transactional
 	protected void delete()
 	{
-		_favoriteRepository.deleteAll();
-		_purchaseRepository.deleteAll();
-		_accountRepository.deleteAll();
-		_productRepository.deleteAll();
+		favoriteRepository.deleteAll();
+		purchaseRepository.deleteAll();
+		accountRepository.deleteAll();
+		productRepository.deleteAll();
 	}
 
 	protected String getOidcToken(String userName, Set<String> groups, String email, String name)

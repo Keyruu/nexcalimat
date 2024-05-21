@@ -19,7 +19,7 @@ class PictureService
 	private static final Set<String> VALID_FILE_TYPES = Set.of("jpg", "jpeg", "png");
 
 	@Inject
-	FilestoreClient _filestoreClient;
+	FilestoreClient filestoreClient;
 
 	<T extends HasPicture> T updatePicture(T entity, FileFormData formData, PanacheRepository<T> repo, String type) throws IOException
 	{
@@ -28,12 +28,12 @@ class PictureService
 			throw new WrongFileTypeException();
 		}
 
-		String objectKey = _filestoreClient.uploadFile(formData, type, entity.getId());
+		String objectKey = filestoreClient.uploadFile(formData, type, entity.getId());
 
 		String oldPicture = entity.getPicture();
 		if (oldPicture != null && !oldPicture.isEmpty() && !oldPicture.trim().isEmpty())
 		{
-			_filestoreClient.deleteFile(FilestoreClient.buildFullObjectKey(type, oldPicture));
+			filestoreClient.deleteFile(FilestoreClient.buildFullObjectKey(type, oldPicture));
 		}
 
 		entity.setPicture(objectKey);
@@ -45,7 +45,7 @@ class PictureService
 	<T extends HasPicture> void deletePicture(T entity, PanacheRepository<T> repo, String type)
 	{
 		String picture = entity.getPicture();
-		_filestoreClient.deleteFile(FilestoreClient.buildFullObjectKey(type, picture));
+		filestoreClient.deleteFile(FilestoreClient.buildFullObjectKey(type, picture));
 
 		entity.setPicture(null);
 		repo.persist(entity);

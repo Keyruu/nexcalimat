@@ -20,11 +20,13 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class StatisticsService
 {
-	@Inject
-	ProductRepository _productRepository;
+	private static final String START = "start";
 
 	@Inject
-	AccountRepository _accountRepository;
+	ProductRepository productRepository;
+
+	@Inject
+	AccountRepository accountRepository;
 
 	public ProductPurchaseCount getPurchaseCountForProduct(Long productId)
 	{
@@ -62,8 +64,8 @@ public class StatisticsService
 			ORDER BY count DESC
 			""";
 		long total = getNotDeletedAccountsCount();
-		Parameters params = Parameters.with("start", firstDayOfMonth).and("end", today);
-		List<AccountPurchaseCount> data = _accountRepository.find(query, params)
+		Parameters params = Parameters.with(START, firstDayOfMonth).and("end", today);
+		List<AccountPurchaseCount> data = accountRepository.find(query, params)
 			.project(AccountPurchaseCount.class)
 			.page(mapper.getPage())
 			.list();
@@ -80,7 +82,7 @@ public class StatisticsService
 		if (start != null && end != null)
 		{
 			query += " AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
-			params.and("start", start)
+			params.and(START, start)
 				.and("end", end);
 		}
 		query += """
@@ -88,10 +90,10 @@ public class StatisticsService
 			GROUP BY p
 			""";
 
-		return _productRepository.find(query, params)
+		return productRepository.find(query, params)
 			.project(ProductPurchaseCount.class)
 			.firstResultOptional()
-			.orElseGet(() -> new ProductPurchaseCount(_productRepository.findById(productId), 0));
+			.orElseGet(() -> new ProductPurchaseCount(productRepository.findById(productId), 0));
 	}
 
 	private List<ProductPurchaseCount> getPurchaseCountForAllBoughtProductsInternal(LocalDateTime start, LocalDateTime end)
@@ -104,7 +106,7 @@ public class StatisticsService
 		if (start != null && end != null)
 		{
 			query += " AND pu.createdAt >= :start AND pu.createdAt <= :end\n";
-			params.and("start", start)
+			params.and(START, start)
 				.and("end", end);
 		}
 		query += """
@@ -113,13 +115,13 @@ public class StatisticsService
 			ORDER BY count DESC
 			""";
 
-		return _productRepository.find(query, params)
+		return productRepository.find(query, params)
 			.project(ProductPurchaseCount.class)
 			.list();
 	}
 
 	private long getNotDeletedAccountsCount()
 	{
-		return _accountRepository.find("SELECT a FROM Account a WHERE a.deletedAt IS NULL").count();
+		return accountRepository.find("SELECT a FROM Account a WHERE a.deletedAt IS NULL").count();
 	}
 }

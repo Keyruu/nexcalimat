@@ -29,26 +29,26 @@ import jakarta.transaction.Transactional;
 public class ProductResource
 {
 	@Inject
-	ProductRepository _productRepository;
+	ProductRepository productRepository;
 
 	@Inject
-	ProductService _productService;
+	ProductService productService;
 
 	@Inject
-	FavoriteService _favoriteService;
+	FavoriteService favoriteService;
 
 	@Inject
-	CurrentVertxRequest _request;
+	CurrentVertxRequest request;
 
 	@Inject
-	JwtUtils _jwtUtils;
+	JwtUtils jwtUtils;
 
 	@Query
 	@Description("Get all Products")
 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
 	public PaginationResponse<Product> products(Optional<PagePojo> page, Optional<SortPojo> sort, Optional<String> searchByName)
 	{
-		return _productService.listAll(Mapper.map(page, sort), searchByName);
+		return productService.listAll(Mapper.map(page, sort), searchByName);
 	}
 
 	@Query
@@ -59,9 +59,9 @@ public class ProductResource
 		Optional<SortPojo> sort,
 		Optional<ProductType> type)
 	{
-		return _productService
+		return productService
 			.listAllWithFavorites(Mapper.map(page, sort, Sort.descending("isFavorite")),
-				_jwtUtils.getPinJwtAccountId(_request), type);
+				jwtUtils.getPinJwtAccountId(request), type);
 	}
 
 	@Query
@@ -69,7 +69,7 @@ public class ProductResource
 	@RolesAllowed({ Roles.CUSTOMER, Roles.USER })
 	public Product product(Long id)
 	{
-		return _productService.findById(id);
+		return productService.findById(id);
 	}
 
 	@Query
@@ -77,7 +77,7 @@ public class ProductResource
 	@RolesAllowed(Roles.CUSTOMER)
 	public ProductWithFavorite productWithFavorite(Long id)
 	{
-		return _productService.findByIdWithFavorite(id, _jwtUtils.getPinJwtAccountId(_request));
+		return productService.findByIdWithFavorite(id, jwtUtils.getPinJwtAccountId(request));
 	}
 
 	@Mutation
@@ -86,7 +86,7 @@ public class ProductResource
 	@Transactional
 	public Product createProduct(Product product)
 	{
-		_productRepository.persist(product);
+		productRepository.persist(product);
 		return product;
 	}
 
@@ -95,7 +95,7 @@ public class ProductResource
 	@RolesAllowed(Roles.ADMIN)
 	public Product updateProduct(Product product)
 	{
-		return _productService.updateProduct(product);
+		return productService.updateProduct(product);
 	}
 
 	@Mutation
@@ -103,7 +103,7 @@ public class ProductResource
 	@RolesAllowed(Roles.ADMIN)
 	public Boolean deleteProduct(Long id)
 	{
-		return _productService.deleteById(id);
+		return productService.deleteById(id);
 	}
 
 	@Mutation
@@ -111,7 +111,7 @@ public class ProductResource
 	@RolesAllowed(Roles.ADMIN)
 	public Boolean eraseProduct(Long id)
 	{
-		return _productService.eraseById(id);
+		return productService.eraseById(id);
 	}
 
 	@Mutation
@@ -119,7 +119,7 @@ public class ProductResource
 	@RolesAllowed(Roles.ADMIN)
 	public Boolean reactivateProduct(Long id)
 	{
-		return _productService.reactivateProduct(id);
+		return productService.reactivateProduct(id);
 	}
 
 	@Mutation
@@ -127,6 +127,6 @@ public class ProductResource
 	@RolesAllowed(Roles.CUSTOMER)
 	public Boolean toggleFavorite(Long productId)
 	{
-		return _favoriteService.toggleFavorite(productId, _jwtUtils.getPinJwtAccountId(_request));
+		return favoriteService.toggleFavorite(productId, jwtUtils.getPinJwtAccountId(request));
 	}
 }

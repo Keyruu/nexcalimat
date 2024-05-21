@@ -25,31 +25,31 @@ import jakarta.transaction.Transactional;
 public class PurchaseService
 {
 	@Inject
-	PurchaseRepository _purchaseRepository;
+	PurchaseRepository purchaseRepository;
 
 	@Inject
-	ProductRepository _productRepository;
+	ProductRepository productRepository;
 
 	@Inject
-	AccountRepository _accountRepository;
+	AccountRepository accountRepository;
 
 	public PaginationResponse<Purchase> listAll(Mapper mapper)
 	{
-		List<Purchase> purchases = _purchaseRepository.findAll(mapper.getSort()).page(mapper.getPage()).list();
-		long count = _purchaseRepository.count();
+		List<Purchase> purchases = purchaseRepository.findAll(mapper.getSort()).page(mapper.getPage()).list();
+		long count = purchaseRepository.count();
 		return new PaginationResponse<>(purchases, count, mapper);
 	}
 
 	public Purchase findById(Long id)
 	{
-		return _purchaseRepository.findById(id);
+		return purchaseRepository.findById(id);
 	}
 
 	@Transactional
 	public List<Purchase> makePurchase(Long productId, Long accountId, Integer amount)
 	{
-		Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
-		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+		Product product = productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
+		Account account = accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
 		List<Purchase> purchases = new ArrayList<>();
 		for (int i = 0; i < amount; i++)
@@ -60,11 +60,11 @@ public class PurchaseService
 			purchase.setProduct(product);
 			purchase.setPaidPrice(product.getPrice());
 
-			_purchaseRepository.persist(purchase);
+			purchaseRepository.persist(purchase);
 
 			account.setBalance(account.getBalance() - product.getPrice());
 
-			_accountRepository.persist(account);
+			accountRepository.persist(account);
 
 			purchases.add(purchase);
 		}
@@ -75,8 +75,8 @@ public class PurchaseService
 	@Transactional
 	public Boolean refund(Long purchaseId, Long accountId)
 	{
-		Purchase purchase = _purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);
-		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+		Purchase purchase = purchaseRepository.findByIdOptional(purchaseId).orElseThrow(PurchaseNotFoundException::new);
+		Account account = accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
 		if (!purchase.getAccount().equals(account))
 		{
@@ -90,18 +90,18 @@ public class PurchaseService
 
 		purchase.setDeletedAt(LocalDateTime.now());
 
-		_purchaseRepository.persist(purchase);
+		purchaseRepository.persist(purchase);
 
 		account.setBalance(account.getBalance() + purchase.getPaidPrice());
 
-		_accountRepository.persist(account);
+		accountRepository.persist(account);
 
 		return Boolean.TRUE;
 	}
 
 	public PaginationResponse<Purchase> getPurchasesForUser(String extId, Mapper mapper)
 	{
-		Account account = _accountRepository.find("extId", extId).firstResultOptional()
+		Account account = accountRepository.find("extId", extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
 		return getPurchasesForAccount(account, mapper);
@@ -109,7 +109,7 @@ public class PurchaseService
 
 	public PaginationResponse<Purchase> getPurchasesForCustomer(Long pinJwtAccountId, Mapper mapper)
 	{
-		Account account = _accountRepository.findByIdOptional(pinJwtAccountId)
+		Account account = accountRepository.findByIdOptional(pinJwtAccountId)
 			.orElseThrow(AccountNotFoundException::new);
 
 		return getPurchasesForAccount(account, mapper);
@@ -118,8 +118,8 @@ public class PurchaseService
 	private PaginationResponse<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
 	{
 		String query = "account = ?1 AND deletedAt IS NULL";
-		List<Purchase> purchases = _purchaseRepository.find(query, mapper.getSort(), account).page(mapper.getPage()).list();
-		long count = _purchaseRepository.count(query, account);
+		List<Purchase> purchases = purchaseRepository.find(query, mapper.getSort(), account).page(mapper.getPage()).list();
+		long count = purchaseRepository.count(query, account);
 		return new PaginationResponse<>(purchases, count, mapper);
 	}
 }

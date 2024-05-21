@@ -14,10 +14,10 @@ import jakarta.ws.rs.core.HttpHeaders;
 
 @QuarkusTest
 @QuarkusTestResource(OidcWiremockTestResource.class)
-public class ProductResourceTests extends GraphQLTest
+class ProductResourceTests extends GraphQLTest
 {
 	@Test
-	public void testGetProductsUnauthorized()
+	void testGetProductsUnauthorized()
 	{
 		given()
 			.when()
@@ -31,7 +31,7 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetProducts()
+	void testGetProducts()
 	{
 		given()
 			.when()
@@ -50,7 +50,7 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetProductsWithSort()
+	void testGetProductsWithSort()
 	{
 		given()
 			.when()
@@ -69,7 +69,7 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetProductsWithFavorite()
+	void testGetProductsWithFavorite()
 	{
 		given()
 			.when()
@@ -88,7 +88,7 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testGetPeitsche()
+	void testGetPeitsche()
 	{
 		given()
 			.when()
@@ -104,7 +104,7 @@ public class ProductResourceTests extends GraphQLTest
 	}
 
 	@Test
-	public void testUpdatePeitsche()
+	void testUpdatePeitsche()
 	{
 		given()
 			.when()

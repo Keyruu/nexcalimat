@@ -33,20 +33,23 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class AccountService
 {
-	@Inject
-	AccountRepository _accountRepo;
+	private static final String EXT_ID = "extId";
 
 	@Inject
-	JwtUtils _jwtUtils;
+	AccountRepository accountRepo;
 
 	@Inject
-	PictureService _pictureService;
+	JwtUtils jwtUtils;
+
+	@Inject
+	PictureService pictureService;
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
-	String _nameClaim;
+	String nameClaim;
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.email")
-	String _emailClaim;
+	String emailClaim;
+
 	public PaginationResponse<Account> listAll(Mapper mapper, Optional<String> searchByName)
 	{
 		String query = "deletedAt IS NULL";
@@ -57,13 +60,13 @@ public class AccountService
 			query += " AND LOWER(name) LIKE :name";
 			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
 
-			panacheQuery = _accountRepo.find(query, mapper.getSort(), parameters);
-			count = _accountRepo.count(query, parameters);
+			panacheQuery = accountRepo.find(query, mapper.getSort(), parameters);
+			count = accountRepo.count(query, parameters);
 		}
 		else
 		{
-			panacheQuery = _accountRepo.find(query, mapper.getSort());
-			count = _accountRepo.count(query);
+			panacheQuery = accountRepo.find(query, mapper.getSort());
+			count = accountRepo.count(query);
 		}
 		List<Account> activeAccounts = panacheQuery.page(mapper.getPage()).list();
 		return new PaginationResponse<>(activeAccounts, count, mapper);
@@ -71,12 +74,12 @@ public class AccountService
 
 	public Account findById(Long id)
 	{
-		return _accountRepo.findById(id);
+		return accountRepo.findById(id);
 	}
 
 	public Account findByExtId(String extId)
 	{
-		return _accountRepo.find("extId", extId).firstResultOptional().orElseThrow(AccountNotFoundException::new);
+		return accountRepo.find(EXT_ID, extId).firstResultOptional().orElseThrow(AccountNotFoundException::new);
 	}
 
 	@Transactional
@@ -86,27 +89,27 @@ public class AccountService
 
 		Account account = new Account();
 
-		String extId = _jwtUtils.getExtIdFromToken(idToken);
+		String extId = jwtUtils.getExtIdFromToken(idToken);
 
-		if (_accountRepo.find("extId", extId).firstResultOptional().isPresent())
+		if (accountRepo.find(EXT_ID, extId).firstResultOptional().isPresent())
 		{
 			throw new AccountExistsException();
 		}
 
 		account.setExtId(extId);
-		account.setEmail((String)idToken.claim(_emailClaim).get());
-		account.setName((String)idToken.claim(_nameClaim).get());
+		idToken.claim(emailClaim).ifPresent(email -> account.setEmail((String)email));
+		idToken.claim(nameClaim).ifPresent(name -> account.setName((String)name));
 		account.setBalance(0L);
 		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
-		_accountRepo.persist(account);
+		accountRepo.persist(account);
 
 		return account;
 	}
 
 	public String pinLogin(PinLogin login)
 	{
-		Account account = _accountRepo.findByIdOptional(login.getId()).orElseThrow(AccountNotFoundException::new);
+		Account account = accountRepo.findByIdOptional(login.getId()).orElseThrow(AccountNotFoundException::new);
 
 		if (!BcryptUtil.matches(login.getPin(), account.getPinHash()))
 		{
@@ -121,12 +124,12 @@ public class AccountService
 	{
 		validatePin(pin);
 
-		Account account = _accountRepo.find("extId", extId).firstResultOptional()
+		Account account = accountRepo.find(EXT_ID, extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
 		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
-		_accountRepo.persist(account);
+		accountRepo.persist(account);
 
 		return Boolean.TRUE;
 	}
@@ -134,43 +137,43 @@ public class AccountService
 	@Transactional
 	public Account updateAccountPicture(Long id, FileFormData formData) throws IOException
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(id)
+		Account dbAccount = accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _pictureService.updatePicture(dbAccount, formData, _accountRepo, PictureType.ACCOUNT);
+		return pictureService.updatePicture(dbAccount, formData, accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
 	public Account updateMyAccountPicture(String extId, FileFormData formData) throws IOException
 	{
-		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
+		Account dbAccount = accountRepo.find(EXT_ID, extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		return _pictureService.updatePicture(dbAccount, formData, _accountRepo, PictureType.ACCOUNT);
+		return pictureService.updatePicture(dbAccount, formData, accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
 	public void deleteAccountPicture(Long id)
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(id)
+		Account dbAccount = accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
-		_pictureService.deletePicture(dbAccount, _accountRepo, PictureType.ACCOUNT);
+		pictureService.deletePicture(dbAccount, accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
 	public void deleteMyAccountPicture(String extId)
 	{
-		Account dbAccount = _accountRepo.find("extId", extId).firstResultOptional()
+		Account dbAccount = accountRepo.find(EXT_ID, extId).firstResultOptional()
 			.orElseThrow(AccountNotFoundException::new);
 
-		_pictureService.deletePicture(dbAccount, _accountRepo, PictureType.ACCOUNT);
+		pictureService.deletePicture(dbAccount, accountRepo, PictureType.ACCOUNT);
 	}
 
 	@Transactional
 	public Account updateAccount(Account account)
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(account.getId())
+		Account dbAccount = accountRepo.findByIdOptional(account.getId())
 			.orElseThrow(AccountNotFoundException::new);
 
 		if (account.getBalance() != null)
@@ -190,7 +193,7 @@ public class AccountService
 			dbAccount.setEmail(account.getEmail());
 		}
 
-		_accountRepo.persist(dbAccount);
+		accountRepo.persist(dbAccount);
 
 		return account;
 	}
@@ -198,7 +201,7 @@ public class AccountService
 	@Transactional
 	public Boolean reactivateAccount(Long id)
 	{
-		Account dbAccount = _accountRepo.findByIdOptional(id)
+		Account dbAccount = accountRepo.findByIdOptional(id)
 			.orElseThrow(AccountNotFoundException::new);
 
 		if (dbAccount.getDeletedAt() == null)
@@ -207,14 +210,14 @@ public class AccountService
 		}
 
 		dbAccount.setDeletedAt(null);
-		_accountRepo.persist(dbAccount);
+		accountRepo.persist(dbAccount);
 		return true;
 	}
 
 	@Transactional
 	public Boolean eraseAccount(Long id)
 	{
-		return _accountRepo.deleteById(id);
+		return accountRepo.deleteById(id);
 	}
 
 	public static void validatePin(String pin)
@@ -241,7 +244,7 @@ public class AccountService
 	@Transactional
 	public Boolean deleteById(Long id)
 	{
-		Account account = _accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
+		Account account = accountRepo.findByIdOptional(id).orElseThrow(AccountNotFoundException::new);
 
 		if (account.getDeletedAt() != null)
 		{
@@ -249,7 +252,7 @@ public class AccountService
 		}
 
 		account.setDeletedAt(LocalDateTime.now());
-		_accountRepo.persist(account);
+		accountRepo.persist(account);
 
 		return Boolean.TRUE;
 	}
@@ -257,8 +260,8 @@ public class AccountService
 	public PaginationResponse<Account> getDeletedAccounts(Mapper mapper)
 	{
 		String query = "deletedAt IS NOT NULL";
-		List<Account> deletedAccounts = _accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
-		long count = _accountRepo.count(query);
+		List<Account> deletedAccounts = accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
+		long count = accountRepo.count(query);
 		return new PaginationResponse<>(deletedAccounts, count, mapper);
 	}
 }

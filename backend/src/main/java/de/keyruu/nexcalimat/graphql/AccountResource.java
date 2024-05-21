@@ -27,29 +27,29 @@ import jakarta.transaction.Transactional;
 public class AccountResource
 {
 	@Inject
-	AccountService _accountService;
+	AccountService accountService;
 
 	@Inject
-	JwtUtils _jwtUtils;
+	JwtUtils jwtUtils;
 
 	@Inject
-	JsonWebToken _jwt;
+	JsonWebToken jwt;
 
 	@Inject
-	SecurityIdentity _identity;
+	SecurityIdentity identity;
 
 	@Query
 	@Description("Get all Accounts")
 	public PaginationResponse<Account> accounts(Optional<PagePojo> page, Optional<SortPojo> sort, Optional<String> searchByName)
 	{
-		return _accountService.listAll(Mapper.map(page, sort), searchByName);
+		return accountService.listAll(Mapper.map(page, sort), searchByName);
 	}
 
 	@Query
 	@Description("Get Account by ID")
 	public Account account(Long id)
 	{
-		return _accountService.findById(id);
+		return accountService.findById(id);
 	}
 
 	@Query
@@ -57,8 +57,8 @@ public class AccountResource
 	@RolesAllowed(Roles.USER)
 	public MyAccount myAccount()
 	{
-		boolean isAdmin = _identity.getRoles().contains(Roles.ADMIN);
-		Account account = _accountService.findByExtId(_jwtUtils.getExtIdFromToken(_jwt));
+		boolean isAdmin = identity.getRoles().contains(Roles.ADMIN);
+		Account account = accountService.findByExtId(jwtUtils.getExtIdFromToken(jwt));
 		return new MyAccount(account, isAdmin);
 	}
 
@@ -66,7 +66,7 @@ public class AccountResource
 	@Description("Login with PIN")
 	public String pinLogin(PinLogin login)
 	{
-		return _accountService.pinLogin(login);
+		return accountService.pinLogin(login);
 	}
 
 	@Query
@@ -74,7 +74,7 @@ public class AccountResource
 	@RolesAllowed(Roles.ADMIN)
 	public PaginationResponse<Account> deletedAccounts(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _accountService.getDeletedAccounts(Mapper.map(page, sort));
+		return accountService.getDeletedAccounts(Mapper.map(page, sort));
 	}
 
 	@Mutation
@@ -82,7 +82,7 @@ public class AccountResource
 	@RolesAllowed(Roles.ADMIN)
 	public Boolean eraseAccount(Long id)
 	{
-		return _accountService.eraseAccount(id);
+		return accountService.eraseAccount(id);
 	}
 
 	@Mutation
@@ -90,7 +90,7 @@ public class AccountResource
 	@RolesAllowed(Roles.ADMIN)
 	public Boolean reactivateAccount(Long id)
 	{
-		return _accountService.reactivateAccount(id);
+		return accountService.reactivateAccount(id);
 	}
 
 	@Mutation
@@ -98,7 +98,7 @@ public class AccountResource
 	@RolesAllowed(Roles.USER)
 	public Account signUp(String pin)
 	{
-		return _accountService.signUp(pin, _jwt);
+		return accountService.signUp(pin, jwt);
 	}
 
 	@Mutation
@@ -106,7 +106,7 @@ public class AccountResource
 	@RolesAllowed(Roles.ADMIN)
 	public Account updateAccount(Account account)
 	{
-		return _accountService.updateAccount(account);
+		return accountService.updateAccount(account);
 	}
 
 	@Mutation
@@ -115,7 +115,7 @@ public class AccountResource
 	@Transactional
 	public Boolean deleteAccount(Long id)
 	{
-		return _accountService.deleteById(id);
+		return accountService.deleteById(id);
 	}
 
 	@Mutation
@@ -123,6 +123,6 @@ public class AccountResource
 	@RolesAllowed(Roles.USER)
 	public Boolean setPin(String pin)
 	{
-		return _accountService.setPin(pin, _jwtUtils.getExtIdFromToken(_jwt));
+		return accountService.setPin(pin, jwtUtils.getExtIdFromToken(jwt));
 	}
 }

@@ -25,10 +25,10 @@ import jakarta.transaction.Transactional;
 public class ProductService
 {
 	@Inject
-	ProductRepository _productRepository;
+	ProductRepository productRepository;
 
 	@Inject
-	PictureService _pictureService;
+	PictureService pictureService;
 
 	public PaginationResponse<Product> listAll(Mapper mapper, Optional<String> searchByName)
 	{
@@ -40,13 +40,13 @@ public class ProductService
 			query += " AND LOWER(name) LIKE :name";
 			Parameters parameters = Parameters.with("name", "%" + searchByName.get().toLowerCase() + "%");
 
-			panacheQuery = _productRepository.find(query, mapper.getSort(), parameters);
-			count = _productRepository.count(query, parameters);
+			panacheQuery = productRepository.find(query, mapper.getSort(), parameters);
+			count = productRepository.count(query, parameters);
 		}
 		else
 		{
-			panacheQuery = _productRepository.find(query, mapper.getSort());
-			count = _productRepository.count(query);
+			panacheQuery = productRepository.find(query, mapper.getSort());
+			count = productRepository.count(query);
 		}
 		List<Product> products = panacheQuery
 			.page(mapper.getPage()).list();
@@ -56,41 +56,41 @@ public class ProductService
 
 	public PaginationResponse<ProductWithFavorite> listAllWithFavorites(Mapper mapper, Long accountId, Optional<ProductType> type)
 	{
-		List<ProductWithFavorite> products = _productRepository.findAllWithFavorite(accountId, mapper, type);
-		long count = _productRepository.findAllWithFavoriteCount(accountId, type);
+		List<ProductWithFavorite> products = productRepository.findAllWithFavorite(accountId, mapper, type);
+		long count = productRepository.findAllWithFavoriteCount(accountId, type);
 		return new PaginationResponse<>(products, count, mapper);
 	}
 
 	public ProductWithFavorite findByIdWithFavorite(Long id, Long accountId)
 	{
-		return _productRepository.findProductWithFavoriteById(id, accountId);
+		return productRepository.findProductWithFavoriteById(id, accountId);
 	}
 
 	public Product findById(Long id)
 	{
-		return _productRepository.findById(id);
+		return productRepository.findById(id);
 	}
 
 	@Transactional
 	public Product updateProductPicture(Long id, FileFormData formData) throws IOException
 	{
-		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+		Product dbProduct = productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
-		return _pictureService.updatePicture(dbProduct, formData, _productRepository, PictureType.PRODUCT);
+		return pictureService.updatePicture(dbProduct, formData, productRepository, PictureType.PRODUCT);
 	}
 
 	@Transactional
 	public void deleteProductPicture(Long id)
 	{
-		Product dbProduct = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+		Product dbProduct = productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
-		_pictureService.deletePicture(dbProduct, _productRepository, PictureType.PRODUCT);
+		pictureService.deletePicture(dbProduct, productRepository, PictureType.PRODUCT);
 	}
 
 	@Transactional
 	public Product updateProduct(Product product)
 	{
-		Product dbProduct = _productRepository.findByIdOptional(product.getId())
+		Product dbProduct = productRepository.findByIdOptional(product.getId())
 			.orElseThrow(ProductNotFoundException::new);
 
 		if (product.getBundleSize() != null)
@@ -110,7 +110,7 @@ public class ProductService
 			dbProduct.setType(product.getType());
 		}
 
-		_productRepository.persist(dbProduct);
+		productRepository.persist(dbProduct);
 
 		return dbProduct;
 	}
@@ -118,7 +118,7 @@ public class ProductService
 	@Transactional
 	public Boolean reactivateProduct(Long id)
 	{
-		Product dbProduct = _productRepository.findByIdOptional(id)
+		Product dbProduct = productRepository.findByIdOptional(id)
 			.orElseThrow(ProductNotFoundException::new);
 
 		if (dbProduct.getDeletedAt() == null)
@@ -127,14 +127,14 @@ public class ProductService
 		}
 
 		dbProduct.setDeletedAt(null);
-		_productRepository.persist(dbProduct);
+		productRepository.persist(dbProduct);
 		return true;
 	}
 
 	@Transactional
 	public Boolean deleteById(Long id)
 	{
-		Product product = _productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
+		Product product = productRepository.findByIdOptional(id).orElseThrow(ProductNotFoundException::new);
 
 		if (product.getDeletedAt() != null)
 		{
@@ -142,7 +142,7 @@ public class ProductService
 		}
 
 		product.setDeletedAt(LocalDateTime.now());
-		_productRepository.persist(product);
+		productRepository.persist(product);
 
 		return Boolean.TRUE;
 	}
@@ -150,6 +150,6 @@ public class ProductService
 	@Transactional
 	public Boolean eraseById(Long id)
 	{
-		return _productRepository.deleteById(id);
+		return productRepository.deleteById(id);
 	}
 }

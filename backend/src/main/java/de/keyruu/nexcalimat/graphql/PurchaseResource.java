@@ -26,26 +26,26 @@ import jakarta.inject.Inject;
 public class PurchaseResource
 {
 	@Inject
-	PurchaseService _purchaseService;
+	PurchaseService purchaseService;
 
 	@Inject
-	JwtUtils _jwtUtils;
+	JwtUtils jwtUtils;
 
 	@Inject
-	SecurityIdentity _securityIdentity;
+	SecurityIdentity securityIdentity;
 
 	@Inject
-	CurrentVertxRequest _request;
+	CurrentVertxRequest request;
 
 	@Inject
-	JsonWebToken _jwt;
+	JsonWebToken jwt;
 
 	@Query
 	@Description("Get all Purchases")
 	@RolesAllowed(Roles.ADMIN)
 	public PaginationResponse<Purchase> purchases(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
-		return _purchaseService.listAll(Mapper.map(page, sort));
+		return purchaseService.listAll(Mapper.map(page, sort));
 	}
 
 	@Query
@@ -54,13 +54,13 @@ public class PurchaseResource
 	public PaginationResponse<Purchase> myPurchases(Optional<PagePojo> page, Optional<SortPojo> sort)
 	{
 		Mapper mapper = Mapper.map(page, sort);
-		if (_securityIdentity.hasRole(Roles.CUSTOMER))
+		if (securityIdentity.hasRole(Roles.CUSTOMER))
 		{
-			return _purchaseService.getPurchasesForCustomer(_jwtUtils.getPinJwtAccountId(_request), mapper);
+			return purchaseService.getPurchasesForCustomer(jwtUtils.getPinJwtAccountId(request), mapper);
 		}
 		else
 		{
-			return _purchaseService.getPurchasesForUser(_jwtUtils.getExtIdFromToken(_jwt), mapper);
+			return purchaseService.getPurchasesForUser(jwtUtils.getExtIdFromToken(jwt), mapper);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class PurchaseResource
 	@RolesAllowed(Roles.ADMIN)
 	public Purchase purchase(Long id)
 	{
-		return _purchaseService.findById(id);
+		return purchaseService.findById(id);
 	}
 
 	@Mutation
@@ -77,7 +77,7 @@ public class PurchaseResource
 	@RolesAllowed(Roles.CUSTOMER)
 	public List<Purchase> makePurchase(Long productId, Integer amount)
 	{
-		return _purchaseService.makePurchase(productId, _jwtUtils.getPinJwtAccountId(_request), amount);
+		return purchaseService.makePurchase(productId, jwtUtils.getPinJwtAccountId(request), amount);
 	}
 
 	@Mutation
@@ -85,6 +85,6 @@ public class PurchaseResource
 	@RolesAllowed(Roles.CUSTOMER)
 	public Boolean refundPurchase(Long id)
 	{
-		return _purchaseService.refund(id, _jwtUtils.getPinJwtAccountId(_request));
+		return purchaseService.refund(id, jwtUtils.getPinJwtAccountId(request));
 	}
 }

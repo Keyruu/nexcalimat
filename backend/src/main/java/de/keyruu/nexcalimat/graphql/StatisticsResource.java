@@ -21,20 +21,20 @@ import jakarta.inject.Inject;
 public class StatisticsResource
 {
 	@Inject
-	StatisticsService _statisticsService;
+	StatisticsService statisticsService;
 
 	@Query
 	@Description("Get purchase counts for all bought products of the last month")
 	@RolesAllowed(Roles.ADMIN)
 	public List<ProductPurchaseCount> purchaseCountsLastMonth()
 	{
-		return _statisticsService.getPurchaseCountForAllBoughtProductsLastMonth();
+		return statisticsService.getPurchaseCountForAllBoughtProductsLastMonth();
 	}
 
 	@Query
 	@Description("Get account purchase counts for the last month aka the leaderboard")
 	public PaginationResponse<AccountPurchaseCount> leaderboard(Optional<PagePojo> page)
 	{
-		return _statisticsService.getLeaderboard(Mapper.map(page, Optional.empty()));
+		return statisticsService.getLeaderboard(Mapper.map(page, Optional.empty()));
 	}
 }

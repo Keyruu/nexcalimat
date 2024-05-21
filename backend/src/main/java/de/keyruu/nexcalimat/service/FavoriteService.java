@@ -18,27 +18,27 @@ import jakarta.transaction.Transactional;
 public class FavoriteService
 {
 	@Inject
-	FavoriteRepository _favoriteRepository;
+	FavoriteRepository favoriteRepository;
 
 	@Inject
-	ProductRepository _productRepository;
+	ProductRepository productRepository;
 
 	@Inject
-	AccountRepository _accountRepository;
+	AccountRepository accountRepository;
 
 	@Transactional
 	public Boolean toggleFavorite(Long productId, Long accountId)
 	{
-		Product product = _productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
-		Account account = _accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
+		Product product = productRepository.findByIdOptional(productId).orElseThrow(ProductNotFoundException::new);
+		Account account = accountRepository.findByIdOptional(accountId).orElseThrow(AccountNotFoundException::new);
 
-		Optional<Favorite> favorite = _favoriteRepository
+		Optional<Favorite> favorite = favoriteRepository
 			.find("product.id = ?1 AND account.id = ?2", productId, accountId)
 			.firstResultOptional();
 
 		if (favorite.isPresent())
 		{
-			_favoriteRepository.delete(favorite.get());
+			favoriteRepository.delete(favorite.get());
 			return false;
 		}
 		else
@@ -46,7 +46,7 @@ public class FavoriteService
 			Favorite newFavorite = new Favorite();
 			newFavorite.setAccount(account);
 			newFavorite.setProduct(product);
-			_favoriteRepository.persist(newFavorite);
+			favoriteRepository.persist(newFavorite);
 			return true;
 		}
 	}

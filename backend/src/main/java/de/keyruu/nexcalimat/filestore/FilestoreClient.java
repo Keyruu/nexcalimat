@@ -13,18 +13,13 @@ import org.slf4j.LoggerFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @ApplicationScoped
@@ -33,12 +28,12 @@ public class FilestoreClient
 	private static final Logger LOG = LoggerFactory.getLogger(FilestoreClient.class);
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.bucket.name")
-	String _bucketName;
+	String bucketName;
 
 	@Inject
-	S3Client _s3;
+	S3Client s3;
 
-	private boolean _bucketExists = false;
+	private boolean bucketExists = false;
 
 	@PostConstruct
 	public void init()
@@ -48,14 +43,14 @@ public class FilestoreClient
 
 	public String uploadFile(FileFormData formData, String prefix, Long id) throws IOException
 	{
-		if (!_bucketExists)
+		if (!bucketExists)
 		{
 			ensureBucketExists();
 		}
 
 		String objectKey = buildObjectKey(formData, id);
 		PutObjectRequest putRequest = buildPutRequest(buildFullObjectKey(prefix, objectKey), Files.probeContentType(Path.of(formData.filename)));
-		_s3.putObject(putRequest, RequestBody.fromFile(formData.file));
+		s3.putObject(putRequest, RequestBody.fromFile(formData.file));
 		return objectKey;
 	}
 
@@ -66,19 +61,19 @@ public class FilestoreClient
 
 	public void deleteFile(String objectKey)
 	{
-		if (!_bucketExists)
+		if (!bucketExists)
 		{
 			ensureBucketExists();
 		}
 
 		DeleteObjectRequest deleteRequest = buildDeleteRequest(objectKey);
-		_s3.deleteObject(deleteRequest);
+		s3.deleteObject(deleteRequest);
 	}
 
 	private PutObjectRequest buildPutRequest(String objectKey, String mimetype)
 	{
 		return PutObjectRequest.builder()
-			.bucket(_bucketName)
+			.bucket(bucketName)
 			.key(objectKey)
 			.contentType(mimetype)
 			.build();
@@ -87,7 +82,7 @@ public class FilestoreClient
 	private DeleteObjectRequest buildDeleteRequest(String objectKey)
 	{
 		return DeleteObjectRequest.builder()
-			.bucket(_bucketName)
+			.bucket(bucketName)
 			.key(objectKey)
 			.build();
 	}
@@ -104,7 +99,7 @@ public class FilestoreClient
 		{
 			createBucket();
 		}
-		_bucketExists = true;
+		bucketExists = true;
 	}
 
 	private boolean bucketExists()
@@ -112,7 +107,7 @@ public class FilestoreClient
 		HeadBucketRequest headBucketRequest = buildHeadBucketRequest();
 		try
 		{
-			HeadBucketResponse headBucket = _s3.headBucket(headBucketRequest);
+			HeadBucketResponse headBucket = s3.headBucket(headBucketRequest);
 			return headBucket.sdkHttpResponse().isSuccessful();
 		}
 		catch (NoSuchBucketException ex)
@@ -127,16 +122,16 @@ public class FilestoreClient
 	{
 		LOG.info("Creating bucket...");
 		CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-			.bucket(_bucketName)
+			.bucket(bucketName)
 			.build();
-		_s3.createBucket(createBucketRequest);
+		s3.createBucket(createBucketRequest);
 		LOG.info("Bucket created");
 	}
 
 	private HeadBucketRequest buildHeadBucketRequest()
 	{
 		return HeadBucketRequest.builder()
-			.bucket(_bucketName)
+			.bucket(bucketName)
 			.build();
 	}
 }

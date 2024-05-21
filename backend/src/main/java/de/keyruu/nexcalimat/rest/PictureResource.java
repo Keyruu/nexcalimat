@@ -2,6 +2,15 @@ package de.keyruu.nexcalimat.rest;
 
 import java.io.IOException;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import de.keyruu.nexcalimat.filestore.FileFormData;
+import de.keyruu.nexcalimat.security.JwtUtils;
+import de.keyruu.nexcalimat.security.Roles;
+import de.keyruu.nexcalimat.service.AccountService;
+import de.keyruu.nexcalimat.service.ProductService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -12,31 +21,21 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import jakarta.annotation.security.RolesAllowed;
-import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-
-import de.keyruu.nexcalimat.filestore.FileFormData;
-import de.keyruu.nexcalimat.filestore.FilestoreClient;
-import de.keyruu.nexcalimat.security.JwtUtils;
-import de.keyruu.nexcalimat.security.Roles;
-import de.keyruu.nexcalimat.service.AccountService;
-import de.keyruu.nexcalimat.service.ProductService;
 
 @Path("/api/v1/picture")
 public class PictureResource
 {
 	@Inject
-	AccountService _accountService;
+	AccountService accountService;
 
 	@Inject
-	ProductService _productService;
+	ProductService productService;
 
 	@Inject
-	JsonWebToken _jwt;
+	JsonWebToken jwt;
 
 	@Inject
-	JwtUtils _jwtUtils;
+	JwtUtils jwtUtils;
 
 	@POST
 	@Path("/account/{id}")
@@ -45,7 +44,7 @@ public class PictureResource
 	public Response updateAccountPicture(@PathParam("id") Long id,
 		@MultipartForm @Valid FileFormData formData) throws IOException
 	{
-		_accountService.updateAccountPicture(id, formData);
+		accountService.updateAccountPicture(id, formData);
 		return Response.status(Status.CREATED).build();
 	}
 
@@ -54,7 +53,7 @@ public class PictureResource
 	@RolesAllowed(Roles.ADMIN)
 	public Response deleteAccountPicture(@PathParam("id") Long id)
 	{
-		_accountService.deleteAccountPicture(id);
+		accountService.deleteAccountPicture(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -64,7 +63,7 @@ public class PictureResource
 	@RolesAllowed(Roles.USER)
 	public Response updateMyAccountPicture(@MultipartForm @Valid FileFormData formData) throws IOException
 	{
-		_accountService.updateMyAccountPicture(_jwtUtils.getExtIdFromToken(_jwt), formData);
+		accountService.updateMyAccountPicture(jwtUtils.getExtIdFromToken(jwt), formData);
 		return Response.status(Status.CREATED).build();
 	}
 
@@ -73,7 +72,7 @@ public class PictureResource
 	@RolesAllowed(Roles.USER)
 	public Response deleteMyAccountPicture()
 	{
-		_accountService.deleteMyAccountPicture(_jwtUtils.getExtIdFromToken(_jwt));
+		accountService.deleteMyAccountPicture(jwtUtils.getExtIdFromToken(jwt));
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -84,7 +83,7 @@ public class PictureResource
 	public Response updateProductPicture(@PathParam("id") Long id,
 		@MultipartForm @Valid FileFormData formData) throws IOException
 	{
-		_productService.updateProductPicture(id, formData);
+		productService.updateProductPicture(id, formData);
 		return Response.status(Status.CREATED).build();
 	}
 
@@ -93,7 +92,7 @@ public class PictureResource
 	@RolesAllowed(Roles.ADMIN)
 	public Response deleteProductPicture(@PathParam("id") Long id)
 	{
-		_productService.deleteProductPicture(id);
+		productService.deleteProductPicture(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 }
