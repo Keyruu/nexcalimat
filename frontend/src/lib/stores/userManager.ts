@@ -30,18 +30,18 @@ export const isAdmin = writable<boolean>(false);
 
 userManager.events.addAccessTokenExpired(async () => {
   console.error("addAccessTokenExpired");
-  userManager.signinRedirect();
+  await userManager.signinRedirect();
 });
 
 userManager.events.addSilentRenewError(async (error) => {
   const user = await userManager.getUser();
   console.error("addSilentRenewError", user, error);
-  userManager.signinRedirect();
+  await userManager.signinRedirect();
 });
 
 userManager.events.addUserLoaded(async (user) => {
   user.expires_at = user.profile.exp;
-  userManager.storeUser(user);
+  await userManager.storeUser(user);
 
   setUser(user);
 
