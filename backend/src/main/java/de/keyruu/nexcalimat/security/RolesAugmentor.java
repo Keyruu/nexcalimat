@@ -2,23 +2,20 @@ package de.keyruu.nexcalimat.security;
 
 import java.util.function.Supplier;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
+import de.keyruu.nexcalimat.configuration.GroupsConfiguration;
 import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RolesAugmentor implements SecurityIdentityAugmentor
 {
-	@ConfigProperty(name = "de.keyruu.nexcalimat.userGroupName")
-	String userGroupName;
-
-	@ConfigProperty(name = "de.keyruu.nexcalimat.adminGroupName")
-	String adminGroupName;
+	@Inject
+	GroupsConfiguration groupsConfiguration;
 
 	@Override
 	public Uni<SecurityIdentity> augment(SecurityIdentity identity, AuthenticationRequestContext context)
@@ -33,15 +30,20 @@ public class RolesAugmentor implements SecurityIdentityAugmentor
 		// from the original identity
 		QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder(identity);
 
-		if (identity.getRoles().contains(userGroupName))
+		if (identity.getRoles().contains(groupsConfiguration.userGroupName()))
 		{
 			builder.addRole(Roles.USER);
 		}
 
-		if (identity.getRoles().contains(adminGroupName))
+		if (identity.getRoles().contains(groupsConfiguration.adminGroupName()))
 		{
 			builder.addRole(Roles.USER);
 			builder.addRole(Roles.ADMIN);
+		}
+
+		if (identity.getRoles().contains(groupsConfiguration.discountedGroupName()))
+		{
+			builder.addRole(Roles.DISCOUNTED);
 		}
 
 		return builder::build;

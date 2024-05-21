@@ -54,6 +54,9 @@ public class Account implements HasPicture
 	@Ignore
 	private String pinHash;
 
+	@Column(name = "discounted", nullable = false)
+	private Boolean discounted;
+
 	@Transient
 	private Boolean hasPin;
 
@@ -157,6 +160,16 @@ public class Account implements HasPicture
 	public void setPinHash(String pinHash)
 	{
 		this.pinHash = pinHash;
+	}
+
+	public Boolean getDiscounted()
+	{
+		return discounted;
+	}
+
+	public void setDiscounted(Boolean discounted)
+	{
+		this.discounted = discounted;
 	}
 
 	public Boolean getHasPin()

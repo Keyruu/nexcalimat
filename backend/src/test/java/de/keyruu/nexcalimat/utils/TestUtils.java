@@ -16,6 +16,7 @@ public class TestUtils
 		a.setBalance(0L);
 		a.setExtId("dubinsky");
 		a.setPinHash(BcryptUtil.bcryptHash("0000"));
+		a.setDiscounted(false);
 		return a;
 	}
 
@@ -27,6 +28,7 @@ public class TestUtils
 		a.setBalance(0L);
 		a.setExtId("hai");
 		a.setPinHash(BcryptUtil.bcryptHash("0000"));
+		a.setDiscounted(false);
 		return a;
 	}
 
@@ -38,6 +40,7 @@ public class TestUtils
 		a.setBalance(0L);
 		a.setExtId("even");
 		a.setPinHash(BcryptUtil.bcryptHash("0000"));
+		a.setDiscounted(false);
 		return a;
 	}
 

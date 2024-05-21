@@ -41,23 +41,28 @@ public class ProductRepository implements PanacheRepository<Product>
 
 	private Tuple2<String, Parameters> buildQueryAndParams(Long accountId, Optional<ProductType> type, boolean isCount, Optional<Long> productId)
 	{
-		String query = "SELECT p";
-		query += !isCount ? ", f.account IS NOT NULL AS isFavorite " : " ";
-		query += "FROM Product p LEFT JOIN p.favorites f WITH f.account.id = :accountId WHERE p.deletedAt IS NULL";
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT p");
+		if (!isCount)
+		{
+			query.append(", f.account IS NOT NULL AS isFavorite");
+		}
+		query.append(" ");
+		query.append("FROM Product p LEFT JOIN p.favorites f WITH f.account.id = :accountId WHERE p.deletedAt IS NULL");
 		Parameters params = Parameters.with("accountId", accountId);
 
 		if (type.isPresent())
 		{
-			query += " AND type = :type";
+			query.append(" AND type = :type");
 			params = params.and("type", type.get());
 		}
 
 		if (productId.isPresent())
 		{
-			query += " AND p.id = :productId";
+			query.append(" AND p.id = :productId");
 			params = params.and("productId", productId.get());
 		}
 
-		return Tuple2.of(query, params);
+		return Tuple2.of(query.toString(), params);
 	}
 }

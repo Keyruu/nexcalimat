@@ -25,6 +25,7 @@ import de.keyruu.nexcalimat.security.Roles;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Parameters;
+import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -43,6 +44,9 @@ public class AccountService
 
 	@Inject
 	PictureService pictureService;
+
+	@Inject
+	SecurityIdentity securityIdentity;
 
 	@ConfigProperty(name = "de.keyruu.nexcalimat.claim.name")
 	String nameClaim;
@@ -83,6 +87,19 @@ public class AccountService
 	}
 
 	@Transactional
+	public Account updateDiscounted(Account account)
+	{
+		boolean eligibleForDiscount = isEligibleForDiscount();
+		if (eligibleForDiscount != Boolean.TRUE.equals(account.getDiscounted()))
+		{
+			account.setDiscounted(eligibleForDiscount);
+		}
+		accountRepo.persist(account);
+
+		return account;
+	}
+
+	@Transactional
 	public Account signUp(String pin, JsonWebToken idToken)
 	{
 		validatePin(pin);
@@ -90,6 +107,7 @@ public class AccountService
 		Account account = new Account();
 
 		String extId = jwtUtils.getExtIdFromToken(idToken);
+		boolean eligibleForDiscount = isEligibleForDiscount();
 
 		if (accountRepo.find(EXT_ID, extId).firstResultOptional().isPresent())
 		{
@@ -97,9 +115,10 @@ public class AccountService
 		}
 
 		account.setExtId(extId);
-		idToken.claim(emailClaim).ifPresent(email -> account.setEmail((String)email));
-		idToken.claim(nameClaim).ifPresent(name -> account.setName((String)name));
+		idToken.claim(emailClaim).map(String.class::cast).ifPresent(account::setEmail);
+		idToken.claim(nameClaim).map(String.class::cast).ifPresent(account::setName);
 		account.setBalance(0L);
+		account.setDiscounted(eligibleForDiscount);
 		account.setPinHash(BcryptUtil.bcryptHash(pin));
 
 		accountRepo.persist(account);
@@ -192,6 +211,10 @@ public class AccountService
 		{
 			dbAccount.setEmail(account.getEmail());
 		}
+		if (account.getDiscounted() != null)
+		{
+			dbAccount.setDiscounted(account.getDiscounted());
+		}
 
 		accountRepo.persist(dbAccount);
 
@@ -263,5 +286,14 @@ public class AccountService
 		List<Account> deletedAccounts = accountRepo.find(query, mapper.getSort()).page(mapper.getPage()).list();
 		long count = accountRepo.count(query);
 		return new PaginationResponse<>(deletedAccounts, count, mapper);
+	}
+
+	private boolean isEligibleForDiscount()
+	{
+		if (securityIdentity.isAnonymous())
+		{
+			return false;
+		}
+		return securityIdentity.hasRole(Roles.DISCOUNTED);
 	}
 }

@@ -57,8 +57,9 @@ public class AccountResource
 	@RolesAllowed(Roles.USER)
 	public MyAccount myAccount()
 	{
-		boolean isAdmin = identity.getRoles().contains(Roles.ADMIN);
+		boolean isAdmin = identity.hasRole(Roles.ADMIN);
 		Account account = accountService.findByExtId(jwtUtils.getExtIdFromToken(jwt));
+		account = accountService.updateDiscounted(account);
 		return new MyAccount(account, isAdmin);
 	}
 

@@ -1,5 +1,7 @@
 package de.keyruu.nexcalimat.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import de.keyruu.nexcalimat.model.Account;
 import de.keyruu.nexcalimat.model.Product;
 import de.keyruu.nexcalimat.model.Purchase;
 import de.keyruu.nexcalimat.repository.AccountRepository;
+import de.keyruu.nexcalimat.repository.DiscountRepository;
 import de.keyruu.nexcalimat.repository.ProductRepository;
 import de.keyruu.nexcalimat.repository.PurchaseRepository;
 import io.quarkus.security.ForbiddenException;
@@ -32,6 +35,9 @@ public class PurchaseService
 
 	@Inject
 	AccountRepository accountRepository;
+
+	@Inject
+	DiscountRepository discountRepository;
 
 	public PaginationResponse<Purchase> listAll(Mapper mapper)
 	{
@@ -55,14 +61,15 @@ public class PurchaseService
 		for (int i = 0; i < amount; i++)
 		{
 			Purchase purchase = new Purchase();
+			int price = getPaidPrice(product, account);
 
 			purchase.setAccount(account);
 			purchase.setProduct(product);
-			purchase.setPaidPrice(product.getPrice());
+			purchase.setPaidPrice(price);
 
 			purchaseRepository.persist(purchase);
 
-			account.setBalance(account.getBalance() - product.getPrice());
+			account.setBalance(account.getBalance() - price);
 
 			accountRepository.persist(account);
 
@@ -113,6 +120,20 @@ public class PurchaseService
 			.orElseThrow(AccountNotFoundException::new);
 
 		return getPurchasesForAccount(account, mapper);
+	}
+
+	private int getPaidPrice(Product product, Account account)
+	{
+		int productPrice = product.getPrice();
+		if (Boolean.FALSE.equals(account.getDiscounted()))
+		{
+			return productPrice;
+		}
+
+		return BigDecimal.valueOf(productPrice)
+			.multiply(BigDecimal.valueOf(((double)100 - discountRepository.getDiscount()) / 100))
+			.setScale(0, RoundingMode.HALF_UP)
+			.intValue();
 	}
 
 	private PaginationResponse<Purchase> getPurchasesForAccount(Account account, Mapper mapper)
