@@ -17,7 +17,6 @@
 			</button>
 		{/if}
 		<a class="btn variant-ghost ml-2" href="{$page.route.id?.startsWith('/store') ? '' : `${base}/`}">
-			<img class="w-6" src="{base}/img/exentra_logo.png" alt="excalimat" />
 			<h2 class="text-center align-middle text-2xl font-bold lowercase text-white">&nbsp;nexcalimat</h2>
 		</a>
 	</div>
