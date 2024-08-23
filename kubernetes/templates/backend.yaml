@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      {{- if .Values.global.imagePullSecret }}
+      imagePullSecrets:
+        - name: "{{ .Values.global.imagePullSecret }}"
+      {{- end }}
+      containers:
+        - name: backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+          env:
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: postgres
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://backend-postgres:5432/nexcalimat
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-postgres-credentials
+                  key: PATRONI_SUPERUSER_PASSWORD
+            - name: QUARKUS_OIDC_AUTH_SERVER_URL
+              value: {{ .Values.oidc.authServerUrl }}
+            - name: DE_KEYRUU_NEXCALIMAT_USERGROUPNAME
+              value: {{ .Values.oidc.userGroupName }}
+            - name: DE_KEYRUU_NEXCALIMAT_ADMINGROUPNAME
+              value: {{ .Values.oidc.adminGroupName }}
+            - name: DE_KEYRUU_NEXCALIMAT_CLAIM_USER_ID
+              value: {{ .Values.oidc.claimUserId }}
+            - name: SMALLRYE_JWT_SIGN_KEY_LOCATION
+              value: file:/deployments/app/keys/private.key
+            - name: MP_JWT_VERIFY_PUBLICKEY_LOCATION
+              value: file:/deployments/app/keys/public.key
+            - name: QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: minio-creds
+                  key: access-key
+            - name: QUARKUS_S3_AWS_CREDENTIALS_STATIC_PROVIDER_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-creds
+                  key: secret-key
+          startupProbe:
+            httpGet:
+              path: /nexcalimat/q/health/live
+              port: 8080
+            failureThreshold: 20
+            periodSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /nexcalimat/q/health/live
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "100m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+              name: app
+          volumeMounts:
+          - name: keys
+            mountPath: /deployments/app/keys
+      volumes:
+        - name: keys
+          secret:
+            secretName: nexcalimat-jwt-keys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: app
+      port: 80
+      targetPort: app

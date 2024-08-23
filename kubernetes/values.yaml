@@ -1,0 +1,21 @@
+global:
+  imagePullSecret: harbor
+
+backend:
+  image:
+    repository: ghcr.io/keyruu/nexcalimat/server
+    tag: latest
+
+oidc:
+  authServerUrl:
+  userGroupName:
+  adminGroupName:
+
+frontend:
+  image:
+    repository: ghcr.io/keyruu/nexcalimat/frontend
+    tag: latest
+
+timescaledb:
+  fullnameOverride: backend-postgres
+  clusterName: backend-postgres
